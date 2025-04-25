@@ -10,17 +10,13 @@ data class Students(
     @Column(name = "id")
     var id: Long? = null,
 
+    @ManyToOne(cascade = [(CascadeType.MERGE)])
+    @JoinColumn(name = "profile_id", nullable = false)
+    var profile: Profile,
+
     @Column(name = "description", columnDefinition = "TEXT")
     var description: String,
 
     @Column(name = "academic_center", nullable = false)
     var academicCenter: String,
-
-    @Column(name = "carrer", nullable = false)
-    var carrer: String,
-
-    @Column(name = "cv_url")
-    var cvUrl: String
-){
-
-}
+)
