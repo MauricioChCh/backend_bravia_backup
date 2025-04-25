@@ -5,7 +5,7 @@ import java.util.*
 
 @Entity
 @Table(name = "students")
-data class Students(
+data class Student(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -90,7 +90,7 @@ data class Hobbie(
 
     @ManyToOne
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -107,7 +107,7 @@ data class Certification(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -130,7 +130,7 @@ data class Experience(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -150,7 +150,7 @@ data class Skill(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "name", nullable = false)
     var name: String,
@@ -169,7 +169,7 @@ data class Career(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "carrer", nullable = false)
     var carrer: String,
@@ -185,7 +185,7 @@ data class CVUrl(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "url", nullable = false)
     var url: String,

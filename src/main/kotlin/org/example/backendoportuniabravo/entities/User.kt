@@ -40,6 +40,9 @@ data class User(
 
     ){
 
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val profile: Profile? = null
+
 }
 
 

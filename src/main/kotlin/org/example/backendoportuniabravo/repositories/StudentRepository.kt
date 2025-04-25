@@ -1,48 +1,46 @@
 package org.example.backendoportuniabravo.repositories
 
 import jakarta.persistence.*
-import org.example.backendoportuniabravo.entities.Hobbie
-import org.example.backendoportuniabravo.entities.Students
+import org.example.backendoportuniabravo.entities.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface StudentRepository : JpaRepository<Students, Long>
+interface StudentRepository : JpaRepository<Student, Long>
 
 @Repository
 interface HobbieRepository : JpaRepository<Hobbie, Long>
 
 @Repository
-interface CertificationRepository : JpaRepository<Hobbie, Long>
+interface CertificationRepository : JpaRepository<Certification, Long>
 
 @Repository
-interface ExperienceRepository : JpaRepository<Hobbie, Long>
+interface ExperienceRepository : JpaRepository<Experience, Long>
 
 @Repository
-interface SkillRepository : JpaRepository<Hobbie, Long>
+interface SkillRepository : JpaRepository<Skill, Long>
 
 @Repository
-interface CareerRepository : JpaRepository<Hobbie, Long>
+interface CareerRepository : JpaRepository<Career, Long>
 
 @Repository
-interface CVUrlRepository : JpaRepository<Hobbie, Long>
+interface CVUrlRepository : JpaRepository<CVUrl, Long>
 
 @Repository
-interface MockInterviewRepository : JpaRepository<Hobbie, Long>
+interface MockInterviewRepository : JpaRepository<MockInterview, Long>
 
 @Repository
-interface DegreeRepository : JpaRepository<Hobbie, Long>
+interface DegreeRepository : JpaRepository<Degree, Long>
 
 @Repository
-interface LanguageRepository : JpaRepository<Hobbie, Long>
+interface LanguageRepository : JpaRepository<Language, Long>
 
 @Repository
-interface CollegeRepository : JpaRepository<Hobbie, Long>
+interface CollegeRepository : JpaRepository<College, Long>
 
 @Repository
-interface InterestRepository : JpaRepository<Hobbie, Long>
-
+interface InterestRepository : JpaRepository<Interest, Long>
 
 
 

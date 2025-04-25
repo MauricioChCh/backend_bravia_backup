@@ -12,14 +12,13 @@ data class Profile(
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "user_id", nullable = false)
-    var userId: Int,
+    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    var user: User,
 
     @Column(name = "verified", nullable = false)
     var verified: Boolean,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val location: Location? = null
-    ){
-
-}
+)

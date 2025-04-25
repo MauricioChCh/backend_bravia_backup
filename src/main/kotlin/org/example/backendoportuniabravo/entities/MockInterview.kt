@@ -13,7 +13,7 @@ data class MockInterview(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)])
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "date", columnDefinition = "DATE")
     var date: Date,

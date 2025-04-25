@@ -35,7 +35,7 @@ class InternshipRepositoryTest @Autowired constructor(
         )
 
         val profile = profileRepository.save(
-            Profile(userId = user.id!!.toInt(), verified = true)
+            Profile(user = user, verified = true)
         )
 
         val country = countryRepository.save(Country(name = "Costa Rica"))

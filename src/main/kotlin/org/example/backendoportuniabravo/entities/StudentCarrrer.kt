@@ -12,7 +12,7 @@ data class StudentCarrrer(
 
     @ManyToOne(cascade = [(CascadeType.MERGE)])
     @JoinColumn(name = "student_id", nullable = false)
-    var student: Students,
+    var student: Student,
 
     @Column(name = "carrer", nullable = false)
     var carrer: String,
