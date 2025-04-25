@@ -14,5 +14,5 @@ data class Language(
     var name: String,
 
     @ManyToMany(mappedBy = "languages", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var student: MutableSet<Student> = mutableSetOf()
+    var students: MutableSet<Student> = mutableSetOf()
 )
