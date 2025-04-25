@@ -12,4 +12,7 @@ data class Degree(
 
     @Column(name = "name", nullable = false)
     var name: String,
+
+    @ManyToMany(mappedBy = "degrees", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var students: MutableSet<Students> = mutableSetOf()
 )

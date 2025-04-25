@@ -3,8 +3,8 @@ package org.example.backendoportuniabravo.entities
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "interests")
-data class Interest(
+@Table(name = "Languages")
+data class Language(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -13,7 +13,6 @@ data class Interest(
     @Column(name = "name", nullable = false)
     var name: String,
 
-
-    @ManyToMany(mappedBy = "interests")
+    @ManyToMany(mappedBy = "languages", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var students: MutableSet<Students> = mutableSetOf()
 )

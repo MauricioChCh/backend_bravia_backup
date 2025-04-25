@@ -23,4 +23,5 @@ data class MockInterview(
 
     @Column(name = "transcription")
     var transcription: String,
+
 )
