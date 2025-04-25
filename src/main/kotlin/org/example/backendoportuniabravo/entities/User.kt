@@ -5,8 +5,8 @@ import java.util.*
 
 
 @Entity
-@Table(name = "users")
-data class Users(
+@Table(name = "user")
+data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -33,6 +33,10 @@ data class Users(
 
     @Column(name = "enabled", nullable = false)
     var enabled: Boolean,
+
+
+    @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    val company: Company? = null
 
     ){
 

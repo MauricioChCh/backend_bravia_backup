@@ -15,13 +15,13 @@ interface InternshipRepository : JpaRepository<Internship, Long> {
     fun findByTitleContainingIgnoreCase(title: String): List<Internship>
 
     // Buscar pasantías por ubicación
-    fun findByLocationIgnoreCase(location: String): List<Internship>
-
+//    fun findByLocationIgnoreCase(location: String): List<Internship>
+//
     // Buscar pasantías por modalidad
     fun findByModalityIgnoreCase(modality: String): List<Internship>
 
     // Buscar pasantías por área de negocio
-    fun findByBusinessAreasId(businessAreaId: Long): List<Internship>
+//    fun findByBusinessAreasId(businessAreaId: Long): List<Internship>
 
     // Obtener pasantías más recientes primero
     fun findAllByOrderByPublicationDateDesc(): List<Internship>
