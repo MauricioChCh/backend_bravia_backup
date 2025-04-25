@@ -19,4 +19,12 @@ data class Students(
 
     @Column(name = "academic_center", nullable = false)
     var academicCenter: String,
+
+    @ManyToMany
+    @JoinTable(
+        name = "students_interests",
+        joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "interest_id", referencedColumnName = "id")],
+    )
+    var interests: MutableSet<Interest> = mutableSetOf()
 )
