@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.entities
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 import java.util.*
 
@@ -11,9 +12,9 @@ data class Student(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)])
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "profile_id", nullable = false)
-    var profile: Profile,
+    var profile: Profile? = null,
 
     @Column(name = "description", columnDefinition = "TEXT")
     var description: String,
@@ -42,7 +43,7 @@ data class Student(
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
     var mockInterviews: MutableList<MockInterview> = mutableListOf(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "students_languages",
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
@@ -50,7 +51,7 @@ data class Student(
     )
     var languages: MutableSet<Language> = mutableSetOf(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "students_degrees",
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
@@ -58,7 +59,7 @@ data class Student(
     )
     var degrees: MutableSet<Degree> = mutableSetOf(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "students_colleges",
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
@@ -66,14 +67,18 @@ data class Student(
     )
     var colleges: MutableSet<College> = mutableSetOf(),
 
-    @ManyToMany
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "students_interests",
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "interest_id", referencedColumnName = "id")],
     )
     var interests: MutableSet<Interest> = mutableSetOf()
-)
+) {
+    override fun toString(): String {
+        return "Student(description='$description', academicCenter='$academicCenter')"
+    }
+}
 
 
 
@@ -88,13 +93,17 @@ data class Hobbie(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 
     @Column(name = "name", nullable = false)
     var name: String,
-)
+) {
+    override fun toString(): String {
+        return "Hobbie(name='$name')"
+    }
+}
 
 
 @Entity
@@ -105,7 +114,7 @@ data class Certification(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 
@@ -117,7 +126,11 @@ data class Certification(
 
     @Column(name = "organization", nullable = false)
     var organization: String,
-)
+) {
+    override fun toString(): String {
+        return "Certification(name='$name', date=$date, organization='$organization')"
+    }
+}
 
 
 @Entity
@@ -128,8 +141,9 @@ data class Experience(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
+    @JsonIgnore
     var student: Student,
 
     @Column(name = "name", nullable = false)
@@ -137,7 +151,12 @@ data class Experience(
 
     @Column(name = "description", nullable = false)
     var description: String,
-)
+) {
+    override fun toString(): String {
+        return "Experience(name='$name', description='$description')"
+    }
+
+}
 
 
 @Entity
@@ -148,7 +167,7 @@ data class Skill(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 
@@ -167,7 +186,7 @@ data class Career(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 
@@ -183,7 +202,7 @@ data class CVUrl(
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(cascade = [(CascadeType.MERGE)], fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 

@@ -1,46 +1,66 @@
 package org.example.backendoportuniabravo.repositories
 
-import jakarta.persistence.*
 import org.example.backendoportuniabravo.entities.*
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
-import java.util.*
 
 @Repository
 interface StudentRepository : JpaRepository<Student, Long>
 
 @Repository
-interface HobbieRepository : JpaRepository<Hobbie, Long>
+interface HobbieRepository : JpaRepository<Hobbie, Long> {
+    fun findByStudent(student: Student): List<Hobbie>
+}
 
 @Repository
-interface CertificationRepository : JpaRepository<Certification, Long>
+interface CertificationRepository : JpaRepository<Certification, Long> {
+    fun findByStudent(student: Student): List<Certification>
+}
 
 @Repository
-interface ExperienceRepository : JpaRepository<Experience, Long>
+interface ExperienceRepository : JpaRepository<Experience, Long> {
+    fun findByStudent(student: Student): List<Experience>
+}
 
 @Repository
-interface SkillRepository : JpaRepository<Skill, Long>
+interface SkillRepository : JpaRepository<Skill, Long> {
+    fun findByStudent(student: Student): List<Skill>
+}
 
 @Repository
-interface CareerRepository : JpaRepository<Career, Long>
+interface CareerRepository : JpaRepository<Career, Long> {
+    fun findByStudent(student: Student): List<Career>
+}
 
 @Repository
-interface CVUrlRepository : JpaRepository<CVUrl, Long>
+interface CVUrlRepository : JpaRepository<CVUrl, Long> {
+    fun findByStudent(student: Student): List<CVUrl>
+}
 
 @Repository
-interface MockInterviewRepository : JpaRepository<MockInterview, Long>
+interface MockInterviewRepository : JpaRepository<MockInterview, Long> {
+    fun findByStudent(student: Student): List<MockInterview>
+}
 
 @Repository
-interface DegreeRepository : JpaRepository<Degree, Long>
+interface DegreeRepository : JpaRepository<Degree, Long> {
+    fun findByStudentContaining (student: MutableSet<Student>): List<Degree>?
+}
 
 @Repository
-interface LanguageRepository : JpaRepository<Language, Long>
+interface LanguageRepository : JpaRepository<Language, Long> {
+    fun findByStudentContaining(student: MutableSet<Student>): List<Language>
+}
 
 @Repository
-interface CollegeRepository : JpaRepository<College, Long>
+interface CollegeRepository : JpaRepository<College, Long> {
+    fun findByStudentContaining(student: Student): List<College>?
+}
 
 @Repository
-interface InterestRepository : JpaRepository<Interest, Long>
+interface InterestRepository : JpaRepository<Interest, Long> {
+    fun findByStudentContaining(student: MutableSet<Student>): List<Interest>?
+}
 
 
 

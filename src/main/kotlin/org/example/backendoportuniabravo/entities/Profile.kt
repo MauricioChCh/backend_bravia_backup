@@ -12,13 +12,26 @@ data class Profile(
     @Column(name = "id")
     var id: Long? = null,
 
-    @OneToOne(cascade = [(CascadeType.ALL)], fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    var user: User,
+    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
+    var user: User? = null,
 
     @Column(name = "verified", nullable = false)
     var verified: Boolean,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val location: Location? = null
-)
+    val location: Location? = null,
+
+    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var student: Student? = null
+
+) {
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Profile) return false
+        return id == other.id
+    }
+}

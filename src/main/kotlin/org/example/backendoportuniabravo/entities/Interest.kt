@@ -15,5 +15,5 @@ data class Interest(
 
 
     @ManyToMany(mappedBy = "interests")
-    var students: MutableSet<Student> = mutableSetOf()
+    var student: MutableSet<Student> = mutableSetOf()
 )
