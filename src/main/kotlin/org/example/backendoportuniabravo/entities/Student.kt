@@ -73,7 +73,16 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "interest_id", referencedColumnName = "id")],
     )
-    var interests: MutableSet<Interest> = mutableSetOf()
+    var interests: MutableSet<Interest> = mutableSetOf(),
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "apply_students",
+        joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "internship_id", referencedColumnName = "id")]
+    )
+    var internships: MutableSet<Internship> = mutableSetOf(),
+
 ) {
     override fun toString(): String {
         return "Student(description='$description', academicCenter='$academicCenter')"
