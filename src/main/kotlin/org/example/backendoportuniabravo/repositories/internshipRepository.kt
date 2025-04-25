@@ -8,25 +8,26 @@ import org.springframework.stereotype.Repository
 @Repository
 interface InternshipRepository : JpaRepository<Internship, Long> {
 
-    // Búsqueda básica por ID (ya viene con JpaRepository)
-    // Optional<Internship> findById(Long id)
-
     // Buscar pasantías por título (búsqueda parcial)
     fun findByTitleContainingIgnoreCase(title: String): List<Internship>
-
-    // Buscar pasantías por ubicación
-//    fun findByLocationIgnoreCase(location: String): List<Internship>
-//
-    // Buscar pasantías por modalidad
-    fun findByModalityIgnoreCase(modality: String): List<Internship>
-
-    // Buscar pasantías por área de negocio
-//    fun findByBusinessAreasId(businessAreaId: Long): List<Internship>
 
     // Obtener pasantías más recientes primero
     fun findAllByOrderByPublicationDateDesc(): List<Internship>
 
-    // Obtener pasantías aleatorias (alternativa simple)
+    // Buscar pasantías por modalidad
+    fun findByModalityIgnoreCase(modality: String): List<Internship>
+
+    // Buscar pasantías por ubicación
+    fun findByLocation_Province_NameContainingIgnoreCase(provinceName: String): List<Internship>
+    fun findByLocation_Country_NameContainingIgnoreCase(countryName: String): List<Internship>
+    fun findByLocation_AddressContainingIgnoreCase(address: String): List<Internship>
+
+
+    // Buscar pasantías por área de negocio
+//    fun findByBusinessAreasId(businessAreaId: Long): List<Internship>
+
+
+    // Obtener pasantías aleatorias (alternativa simple) de momento antes de hacer las recomendadas
     @Query("SELECT i FROM Internship i ORDER BY RANDOM() LIMIT :limit")
-    fun findRandomInternships(limit: Int): List<Internship>
+    fun findAllRecommended(limit: Int): List<Internship>
 }

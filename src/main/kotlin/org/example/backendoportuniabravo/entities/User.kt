@@ -5,7 +5,7 @@ import java.util.*
 
 
 @Entity
-@Table(name = "user")
+@Table(name = "app_user") //user esta reservado en postgres
 data class User(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
