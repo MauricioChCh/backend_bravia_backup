@@ -11,20 +11,21 @@ data class Internship(
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "company_id")
-    var companyId: Int,
+    // Relación con el usuario que creó la pasantía
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "company_id")
+    val company: Company,
+
+    //Relacion con su localidad
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "location_id")
+    val location: Location,
 
     @Column(name = "title", nullable = false)
     var title: String,
 
-    @Column(name = "company", nullable = false)
-    var company: String,
-
     @Column(name = "imageurl")
     var imageUrl: String? = null,
-
-    @Column(name = "location")
-    var location: String,
 
     @Column(name = "publication_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -45,35 +46,33 @@ data class Internship(
     @Column(name = "requirements", columnDefinition = "TEXT")
     var requirements: String,
 
-    @Column(name = "percentage")
-    var percentage: String? = null,
-
     @Column(name = "activities", columnDefinition = "TEXT")
     var activities: String,
-
-    @Column(name = "contact")
-    var contact: String,
 
     @Column(name = "link")
     var link: String,
 
-    // Relación con áreas de negocio
-    @ManyToMany
-    @JoinTable(
-        name = "company_business_area",
-        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "company_id")],
-        inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
-    )
-    var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
+    //No hace falta contact por que lo tiene la compañia, mejor un dto
+
+
+
+//    // Relación con áreas de negocio
+//    @ManyToMany
+//    @JoinTable(
+//        name = "company_business_area",
+//        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "company_id")],
+//        inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
+//    )
+//    var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
 
     // Campo calculado/transitorio para el frontend (no se persiste) creo que ni siquiera va aca, esto deberia dser otra tabla
     @Transient
     var isBookmarked: Boolean = false
 ) {
-
-    @Transient
-    var description: String = ""
-        get() = "$title at $company - $location"
+//
+//    @Transient
+//    var description: String = ""
+//        get() = "$title at $company - $location"
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true

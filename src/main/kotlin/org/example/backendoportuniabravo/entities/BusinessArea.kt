@@ -12,8 +12,8 @@ data class BusinessArea(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(mappedBy = "businessAreas")
-    var internships: MutableSet<Internship> = mutableSetOf()
+//    @ManyToMany(mappedBy = "businessAreas")
+//    var internships: MutableSet<Internship> = mutableSetOf()
 ) {
     // Métodos equals, hashCode y toString...
 }

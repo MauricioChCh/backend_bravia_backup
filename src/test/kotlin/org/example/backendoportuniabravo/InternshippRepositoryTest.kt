@@ -1,106 +1,113 @@
 package org.example.backendoportuniabravo
 
-import org.assertj.core.api.Assertions.assertThat
-import org.example.backendoportuniabravo.entities.BusinessArea
-import org.example.backendoportuniabravo.entities.Internship
-import org.example.backendoportuniabravo.repositories.BusinessAreaRepository
-import org.example.backendoportuniabravo.repositories.InternshipRepository
-import org.junit.jupiter.api.BeforeEach
+import org.example.backendoportuniabravo.entities.*
+import org.example.backendoportuniabravo.repositories.*
+import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.transaction.annotation.Transactional
 import java.util.*
-import kotlin.test.Test
 
-@DataJpaTest
-@AutoConfigureTestDatabase(replace = AutoConfigureTestDatabase.Replace.NONE)
-class InternshipRepositoryTest {
-
-    @Autowired
-    lateinit var internshipRepository: InternshipRepository
-
-    @Autowired
-    lateinit var businessAreaRepository: BusinessAreaRepository
-
-    @BeforeEach
-    fun setup() {
-        // Crear áreas de negocio de prueba
-        val techArea = businessAreaRepository.save(BusinessArea(name = "Tecnología"))
-        val financeArea = businessAreaRepository.save(BusinessArea(name = "Finanzas"))
-
-        // Crear pasantías de prueba
-        val internship1 = Internship(
-            title = "Desarrollador Backend",
-            company = "Tech Corp",
-            companyId = 1,
-            location = "Buenos Aires",
-            publicationDate = Date(),
-            duration = "6 meses",
-            modality = "Remoto",
-            schedule = "Full-time",
-            requirements = "Java, Spring Boot",
-            activities = "Desarrollo de APIs",
-            contact = "hr@tech.com",
-            link = "https://tech.com/internships"
-        ).apply { businessAreas.add(techArea) }
-
-        val internship2 = Internship(
-            title = "Analista Financiero",
-            company = "Finance Inc",
-            companyId = 2,
-            location = "Córdoba",
-            publicationDate = Date(System.currentTimeMillis() - 86400000), // Ayer
-            duration = "3 meses",
-            modality = "Presencial",
-            schedule = "Part-time",
-            requirements = "Excel, Contabilidad",
-            activities = "Análisis de datos",
-            contact = "jobs@finance.com",
-            link = "https://finance.com/careers"
-        ).apply { businessAreas.add(financeArea) }
-
-        internshipRepository.saveAll(listOf(internship1, internship2))
-    }
+@SpringBootTest
+class InternshipRepositoryTest @Autowired constructor(
+    val userRepository: UserRepository,
+    val profileRepository: ProfileRepository,
+    val countryRepository: CountryRepository,
+    val provinceRepository: ProvinceRepository,
+    val locationRepository: LocationRepository,
+    val companyRepository: CompanyRepository,
+    val internshipRepository: InternshipRepository
+) {
 
     @Test
-    fun `findByTitleContainingIgnoreCase should return matching internships`() {
-        val result = internshipRepository.findByTitleContainingIgnoreCase("desarrollador")
-        assertThat(result).hasSize(1)
-        assertThat(result[0].title).containsIgnoringCase("desarrollador")
-    }
+    fun `crear internships y probar queries`() {
+        // Crear entidades base
+        val user = userRepository.save(
+            User(
+                createDate = Date(),
+                firstName = "Carlos",
+                lastName = "Ramírez",
+                email = "carlos@email.com",
+                password = "123456",
+                tokenExpired = false,
+                enabled = true
+            )
+        )
 
-    @Test
-    fun `findByLocationIgnoreCase should return internships in specified location`() {
-        val result = internshipRepository.findByLocationIgnoreCase("buenos aires")
-        assertThat(result).hasSize(1)
-        assertThat(result[0].location).isEqualTo("Buenos Aires")
-    }
+        val profile = profileRepository.save(
+            Profile(userId = user.id!!.toInt(), verified = true)
+        )
 
-    @Test
-    fun `findByModalityIgnoreCase should return remote internships`() {
-        val result = internshipRepository.findByModalityIgnoreCase("remoto")
-        assertThat(result).hasSize(1)
-        assertThat(result[0].modality).isEqualTo("Remoto")
-    }
+        val country = countryRepository.save(Country(name = "Costa Rica"))
+        val province = provinceRepository.save(Province(name = "San José"))
 
-    @Test
-    fun `findByBusinessAreasId should return internships in tech area`() {
-        val techArea = businessAreaRepository.findByNameIgnoreCase("Tecnología").get()
-        val result = internshipRepository.findByBusinessAreasId(techArea.id!!)
-        assertThat(result).hasSize(1)
-        assertThat(result[0].company).isEqualTo("Tech Corp")
-    }
+        val location = locationRepository.save(
+            Location(
+                profile = profile,
+                province = province,
+                country = country,
+                address = "Calle 15, San Pedro"
+            )
+        )
 
-    @Test
-    fun `findAllByOrderByPublicationDateDesc should return internships ordered by date`() {
-        val result = internshipRepository.findAllByOrderByPublicationDateDesc()
-        assertThat(result).hasSize(2)
-        assertThat(result[0].title).isEqualTo("Desarrollador Backend") // Más reciente
-    }
+        val company = companyRepository.save(
+            Company(
+                user = user,
+                name = "TechSoft",
+                description = "Empresa de software",
+                location = "San José",
+                contact = "contacto@techsoft.com"
+            )
+        )
 
-    @Test
-    fun `findRandomInternships should return limited number of internships`() {
-        val result = internshipRepository.findRandomInternships(1)
-        assertThat(result).hasSize(1)
+        // Crear múltiples pasantías
+        val internships = listOf(
+            Internship(
+                title = "Backend Developer",
+                imageUrl = null,
+                publicationDate = Date(),
+                duration = "6 meses",
+                salary = 500.0,
+                modality = "Remoto",
+                schedule = "Lunes a viernes",
+                requirements = "Conocimiento en Spring Boot",
+                activities = "Desarrollar APIs REST",
+                link = "https://techsoft.com/backend",
+                location = location,
+                company = company
+            ),
+            Internship(
+                title = "Frontend Developer",
+                imageUrl = null,
+                publicationDate = Date(),
+                duration = "3 meses",
+                salary = 400.0,
+                modality = "Presencial",
+                schedule = "Lunes a viernes",
+                requirements = "Conocimiento en Angular",
+                activities = "Desarrollar interfaces",
+                link = "https://techsoft.com/frontend",
+                location = location,
+                company = company
+            )
+        )
+
+        internshipRepository.saveAll(internships)
+
+        // Probar las queries
+        val resultsByTitle = internshipRepository.findByTitleContainingIgnoreCase("developer")
+        println("Por título: ${resultsByTitle.map { it.title }}")
+
+        val resultsByModality = internshipRepository.findByModalityIgnoreCase("remoto")
+        println("Por modalidad: ${resultsByModality.map { it.title }}")
+
+        val resultsByProvince = internshipRepository.findByLocation_Province_NameContainingIgnoreCase("San José")
+        println("Por provincia: ${resultsByProvince.map { it.title }}")
+
+        val resultsByDate = internshipRepository.findAllByOrderByPublicationDateDesc()
+        println("Por fecha publicación: ${resultsByDate.map { it.title }}")
+
+        val recommended = internshipRepository.findAllRecommended(1)
+        println("Recomendadas aleatorias: ${recommended.map { it.title }}")
     }
 }

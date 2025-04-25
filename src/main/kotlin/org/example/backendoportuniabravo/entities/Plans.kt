@@ -1,10 +1,11 @@
 package org.example.backendoportuniabravo.entities
 
 import jakarta.persistence.*
+import java.math.BigDecimal
 
 @Entity
-@Table(name = "plans")
-data class Plans(
+@Table(name = "plan")
+data class Plan(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -14,7 +15,7 @@ data class Plans(
     var name: String,
 
     @Column(name = "price", nullable = false, precision = 10, scale = 2)
-    var price: Double,
+    var price: BigDecimal,
 
     @Column(name = "duration_days", nullable = false)
     var durationDays: Int,
@@ -22,6 +23,6 @@ data class Plans(
     @Column(name = "benefits", columnDefinition = "TEXT")
     var benefits: String,
 
-){
+    ){
 
 }
