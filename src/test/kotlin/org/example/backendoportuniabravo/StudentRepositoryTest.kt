@@ -6,11 +6,13 @@ import org.example.backendoportuniabravo.repositories.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
+import org.springframework.test.context.ActiveProfiles
 import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
 @Transactional
+@ActiveProfiles("test")
 class StudentRepositoryTest(
     @Autowired val studentRepository: StudentRepository,
     @Autowired val hobbieRepository: HobbieRepository,

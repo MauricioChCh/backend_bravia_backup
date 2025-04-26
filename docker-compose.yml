@@ -1,0 +1,32 @@
+
+
+services:
+  db:
+    image: postgres
+    container_name: database
+    restart: always
+    environment:
+      - POSTGRES_USER=bravia
+      - POSTGRES_PASSWORD=root
+      - POSTGRES_DB=braviabd
+    ports:
+      - "5433:5432"  # puerto 5433 en la máquina real → 5432 dentro del contenedor con el obgetivo de no colicionar con el local en caso de hacerse pruebas con ambos
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: .
+    container_name: application
+    ports:
+      - '8081:8080'
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/braviabd
+      - SPRING_DATASOURCE_USERNAME=bravia
+      - SPRING_DATASOURCE_PASSWORD=root
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=update
+      - SPRING_PROFILES_ACTIVE=docker
+    depends_on:
+      - db
+
+volumes:
+  postgres_data:
