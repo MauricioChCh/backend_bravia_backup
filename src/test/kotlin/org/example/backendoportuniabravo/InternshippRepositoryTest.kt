@@ -7,14 +7,22 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 //import org.springframework.test.annotation.Commit
 import org.springframework.test.context.ActiveProfiles
+import org.springframework.test.context.DynamicPropertyRegistry
+import org.springframework.test.context.DynamicPropertySource
 import org.springframework.transaction.annotation.Transactional
+import org.testcontainers.containers.PostgreSQLContainer
+import org.testcontainers.junit.jupiter.Container
+import org.testcontainers.junit.jupiter.Testcontainers
 import java.util.*
 
+//@SpringBootTest
+//@ActiveProfiles("test")
+//@Transactional //Evita que se guarden los cambios en la base de datos
+////@Commit
+
 @SpringBootTest
-@ActiveProfiles("test")
-@Transactional //Evita que se guarden los cambios en la base de datos
-//@Commit
-class InternshipRepositoryTest @Autowired constructor(
+@Testcontainers
+class InternshipRepositoryTest  @Autowired constructor (
     val userRepository: UserRepository,
     val profileRepository: ProfileRepository,
     val countryRepository: CountryRepository,
@@ -22,7 +30,8 @@ class InternshipRepositoryTest @Autowired constructor(
     val locationRepository: LocationRepository,
     val companyRepository: CompanyRepository,
     val internshipRepository: InternshipRepository
-) {
+): BaseIntegrationTest() {
+
 
     @Test
     fun `crear internships y probar queries`() {

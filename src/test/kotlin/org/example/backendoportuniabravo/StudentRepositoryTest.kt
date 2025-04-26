@@ -11,8 +11,6 @@ import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
-@Transactional
-@ActiveProfiles("test")
 class StudentRepositoryTest(
     @Autowired val studentRepository: StudentRepository,
     @Autowired val hobbieRepository: HobbieRepository,
@@ -28,7 +26,7 @@ class StudentRepositoryTest(
     @Autowired val interestRepository: InterestRepository,
     @Autowired val profileRepository: ProfileRepository,
     @Autowired val userRepository: UserRepository,
-) {
+) : BaseIntegrationTest() {
 
     lateinit var user: User
     lateinit var profile: Profile
