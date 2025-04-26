@@ -11,6 +11,7 @@ import java.util.*
 import kotlin.test.Test
 
 @SpringBootTest
+@Transactional
 class StudentRepositoryTest(
     @Autowired val studentRepository: StudentRepository,
     @Autowired val hobbieRepository: HobbieRepository,

@@ -21,7 +21,8 @@ import java.util.*
 ////@Commit
 
 @SpringBootTest
-@Testcontainers
+@Transactional
+//@Testcontainers
 class InternshipRepositoryTest  @Autowired constructor (
     val userRepository: UserRepository,
     val profileRepository: ProfileRepository,
