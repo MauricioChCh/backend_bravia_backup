@@ -22,7 +22,12 @@ data class Profile(
     val location: Location? = null,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var student: Student? = null
+    var student: Student? = null,
+
+    @OneToOne(mappedBy = "admin", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var admin: Admin? = null
+
+
 
 ) {
     override fun hashCode(): Int {

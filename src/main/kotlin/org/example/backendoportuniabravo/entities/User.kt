@@ -38,8 +38,15 @@ package org.example.backendoportuniabravo.entities
 
         @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "profile_id")
-        var profile: Profile? = null
-    ) {
+        var profile: Profile? = null,
+
+        @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        var reportsMade: MutableSet<UserReports> = mutableSetOf(),
+
+        @OneToMany(mappedBy = "userReported", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+        var reportsReceived: MutableSet<UserReports> = mutableSetOf(),
+
+        ) {
         override fun hashCode(): Int {
             return id?.hashCode() ?: 0
         }
