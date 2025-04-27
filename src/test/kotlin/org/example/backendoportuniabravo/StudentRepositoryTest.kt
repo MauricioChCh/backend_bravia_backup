@@ -26,11 +26,18 @@ class StudentRepositoryTest(
     @Autowired val interestRepository: InterestRepository,
     @Autowired val profileRepository: ProfileRepository,
     @Autowired val userRepository: UserRepository,
+    @Autowired val internshipRepository: InternshipRepository,
+    @Autowired val countryRepository: CountryRepository,
+    @Autowired val provinceRepository: ProvinceRepository,
+    @Autowired val locationRepository: LocationRepository,
+    @Autowired val companyRepository: CompanyRepository,
+
 ) {
 
     lateinit var user: User
     lateinit var profile: Profile
     lateinit var student: Student
+    lateinit var internship: Internship
 
     @Test
     fun testCreateStudent() {
@@ -259,5 +266,95 @@ class StudentRepositoryTest(
         val interests = interestRepository.findAll()
         assertFalse(interests.any { it.students.contains(student) })
     }
+
+
+    @Test
+    fun testInsertInternshipApplied() {
+        // Crear el estudiante y sus relaciones
+        testCreateStudent()
+
+        createInternship()
+
+
+        val savedInternship = internshipRepository.findAll().first()
+
+        // Aplicar a la pasantía (solo desde el lado dueño)
+        student.internships.add(savedInternship)
+        savedInternship.students.add(student)
+
+        // Guardar cambios (solo student)
+        studentRepository.save(student)
+
+        // Verificar que la pasantía fue aplicada correctamente
+        val updatedStudent = studentRepository.findById(student.id!!).orElse(null)
+        assertNotNull(updatedStudent)
+        assertTrue(updatedStudent!!.internships.any { it.id == savedInternship.id })
+
+        val updatedInternship = internshipRepository.findById(savedInternship.id!!).orElse(null)
+        assertNotNull(updatedInternship)
+        assertTrue(updatedInternship!!.students.any { it.id == student.id })
+    }
+
+
+    fun createInternship() {
+        // Crear entidades base
+        val user = userRepository.save(
+            User(
+                createDate = Date(),
+                firstName = "Carlos",
+                lastName = "Ramírez",
+                email = "carlos@email.com",
+                password = "123456",
+                tokenExpired = false,
+                enabled = true
+            )
+        )
+
+        val profile = profileRepository.save(
+            Profile(user = user, verified = true)
+        )
+        val country = countryRepository.save(Country(name = "Costa Rica"))
+        val province = provinceRepository.save(Province(name = "San José"))
+
+        val location = locationRepository.save(
+            Location(
+                profile = profile,
+                province = province,
+                country = country,
+                address = "Calle 15, San Pedro"
+            )
+        )
+
+        val company = companyRepository.save(
+            Company(
+                user = user,
+                name = "TechSoft",
+                description = "Empresa de software",
+                location = "San José",
+                contact = "contacto@techsoft.com"
+            )
+        )
+
+
+
+        internship = Internship(
+                title = "Backend Developer",
+                imageUrl = null,
+                publicationDate = Date(),
+                duration = "6 meses",
+                salary = 500.0,
+                modality = "Remoto",
+                schedule = "Lunes a viernes",
+                requirements = "Conocimiento en Spring Boot",
+                activities = "Desarrollar APIs REST",
+                link = "https://techsoft.com/backend",
+                location = location,
+                company = company
+            )
+
+        // Guardar la pasantía
+        internshipRepository.save(internship)
+    }
+
 }
 
