@@ -17,4 +17,7 @@ data class ReportAction(
     @ManyToOne(cascade = [(CascadeType.MERGE)])
     @JoinColumn(name = "admin_user_id", nullable = false)
     var admin: Admin,
+
+    @Column(name = "action", nullable = false)
+    var action: String,
 )
