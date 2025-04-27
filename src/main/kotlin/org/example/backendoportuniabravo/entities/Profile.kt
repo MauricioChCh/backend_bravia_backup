@@ -24,7 +24,7 @@ data class Profile(
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var student: Student? = null,
 
-    @OneToOne(mappedBy = "admin", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var admin: Admin? = null
 
 
