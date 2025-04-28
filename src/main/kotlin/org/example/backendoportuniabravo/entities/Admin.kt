@@ -12,9 +12,12 @@ data class Admin(
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "user_id", nullable = false)
-    var userId: Int,
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "profile_id", nullable = false)
+    var profile: Profile? = null,
 
+    @OneToMany(mappedBy = "admin", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var reportsAction: MutableSet<ReportAction> = mutableSetOf(),
     ){
 
 }

@@ -52,9 +52,10 @@ data class Internship(
     @Column(name = "link")
     var link: String,
 
+    @ManyToMany(mappedBy = "internships")
+    var students: MutableSet<Student> = mutableSetOf(),
+
     //No hace falta contact por que lo tiene la compañia, mejor un dto
-
-
 
 //    // Relación con áreas de negocio
 //    @ManyToMany
