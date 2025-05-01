@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.entities
 
+import com.fasterxml.jackson.annotation.JsonBackReference
 import jakarta.persistence.*
 
 @Entity
@@ -29,7 +30,12 @@ data class Location (
 
     //Cada internship tiene una localizacion
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
-    val internships: List<Internship> = listOf()
+    val internships: List<Internship> = listOf(),
+
+    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
+    @JsonBackReference
+    val company: Company? = null
+
 ){
 
 }

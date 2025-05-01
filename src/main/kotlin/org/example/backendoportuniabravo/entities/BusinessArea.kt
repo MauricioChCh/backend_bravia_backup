@@ -12,8 +12,16 @@ data class BusinessArea(
     @Column(name = "name", nullable = false)
     var name: String,
 
-//    @ManyToMany(mappedBy = "businessAreas")
-//    var internships: MutableSet<Internship> = mutableSetOf()
+    @ManyToMany(mappedBy = "businessAreas", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var companies: MutableSet<Company> = mutableSetOf()
 ) {
-    // Métodos equals, hashCode y toString...
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Student) return false
+        return id == other.id
+    }
 }
