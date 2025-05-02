@@ -21,6 +21,15 @@ data class CompanyUserInput(
     var businessAreaId: BusinessAreaDetails? = null
 )
 
+data class CompanyUserResult(
+    var id: Long? = null,
+    var email: String? = null,
+    var name: String? = null,
+    var lastName: String? = null,
+    var companyName: String? = null,
+    var businessAreaId: BusinessAreaDetails? = null
+)
+
 data class CompanyUserUpdate(
     var id: Long? = null,
     var email: String? = null,

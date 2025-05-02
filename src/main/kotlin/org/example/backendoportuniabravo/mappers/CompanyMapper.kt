@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.mappers
 import org.example.backendoportuniabravo.dto.BusinessAreaDetails
 import org.example.backendoportuniabravo.dto.CompanyUserInput
 import org.example.backendoportuniabravo.dto.CompanyUserResponse
+import org.example.backendoportuniabravo.dto.CompanyUserResult
 import org.example.backendoportuniabravo.dto.CompanyUserUpdate
 import org.mapstruct.*
 import org.example.backendoportuniabravo.dto.TagDetails
@@ -31,5 +32,6 @@ interface CompanyMapper {
   fun companyUserInputToCompany(companyUserInput: CompanyUserInput): Company
   fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
   fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
+  fun companyToCompanyUserResult(company: Company): CompanyUserResult
   fun companyListToCompanyUserResponseList(companyList: List<Company>): List<CompanyUserResponse>
 }
