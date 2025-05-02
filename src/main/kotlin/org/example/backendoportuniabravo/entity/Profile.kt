@@ -15,11 +15,11 @@ data class Profile(
     @Column(name = "verified", nullable = false)
     var verified: Boolean,
 
-    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER)
     var user: User? = null,
 
-    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val location: Location? = null,
+//    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+//    val location: Location? = null,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var student: Student? = null,

@@ -1,6 +1,8 @@
 package org.example.backendoportuniabravo.dto
 
 
+
+
 data class TagDetails(
     var id: Long? = null,
     var name: String? = null,
@@ -73,7 +75,7 @@ data class CompanyUserUpdate(
 
 data class CompanyUserResponse(
     var id: Long? = null,
-    var user: UserResult? = null,
+    var profile: ProfileDetails? = null,
     var name: String? = null,
     var description: String? = null,
     var businessAreas: List<BusinessAreaDetails>? = null,
@@ -81,4 +83,5 @@ data class CompanyUserResponse(
     var location: LocationDetails? = null,
     var contacts: List<ContactDetails>? = null,
 )
+
 
