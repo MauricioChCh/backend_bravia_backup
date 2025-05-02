@@ -1,25 +1,23 @@
 package org.example.backendoportuniabravo.service
 
-import org.example.backendoportuniabravo.dto.CompanyUserInput
-import org.example.backendoportuniabravo.dto.CompanyUserResponse
-import org.example.backendoportuniabravo.dto.CompanyUserResult
-import org.example.backendoportuniabravo.dto.CompanyUserUpdate
+import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Profile
 import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.CompanyMapper
-import org.example.backendoportuniabravo.repository.BusinessAreaRepository
-import org.example.backendoportuniabravo.repository.CompanyRepository
-import org.example.backendoportuniabravo.repository.ProfileRepository
-import org.example.backendoportuniabravo.repository.UserRepository
+import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
 import kotlin.jvm.Throws
 
 interface CompanyService {
     fun create(companyUserInput: CompanyUserInput): CompanyUserResult?
-    fun update(companyUserInput: CompanyUserUpdate): CompanyUserResponse?
+//    fun update(companyUserInput: CompanyUserUpdate): CompanyUserResponse?
+    fun updateName(id: Long, companyName: CompanyNameUpdate): CompanyNameResult?
+    fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult?
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -35,34 +33,13 @@ class CompanyServiceImpl(
     @Autowired
     private val profileRepository: ProfileRepository,
     @Autowired
-    private val businessAreaRepository: BusinessAreaRepository
+    private val businessAreaRepository: BusinessAreaRepository,
+    @Autowired
+    private val tagRepository: TagRepository,
+    @Autowired
+    private val contactRepository: ContactRepository,
+
 ) : CompanyService {
-
-//    override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
-//        val user = companyUserInput.user?.let { userInput ->
-//            User(
-//                firstName = userInput.name ?: throw IllegalArgumentException("User name cannot be null"),
-//                lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
-//                email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
-//                password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
-//                createDate = java.util.Date(),
-//                tokenExpired = false,
-//                enabled = true
-//            ).also { savedUser -> userRepository.save(savedUser) }
-//        } ?: throw IllegalArgumentException("User input cannot be null")
-//
-//        val profile = Profile(user = user, verified = false)
-//            .also { savedProfile -> profileRepository.save(savedProfile) }
-//
-//        // Mapear el input a la entidad Company
-//        val company = companyMapper.companyUserInputToCompany(companyUserInput)
-//        company.profile = profile // Asignar el perfil a la empresa
-//
-//        val savedCompany = companyRepository.save(company)
-//
-//        return companyMapper.companyToCompanyUserResult(savedCompany)
-//    }
-
 
     override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
         // Validate input
@@ -83,7 +60,7 @@ class CompanyServiceImpl(
             tokenExpired = false,
             enabled = true
         )
-        val savedUser = userRepository.save(user)
+
 
         val businessArea = companyUserInput.businessArea?.id?.let {
             businessAreaRepository.findById(it).orElseThrow {
@@ -92,7 +69,10 @@ class CompanyServiceImpl(
         } ?: throw IllegalArgumentException("Business area is required")
 
         // Create profile, associate with User and persist it
-        val profile = Profile(user = savedUser, verified = false)
+
+        val profile = Profile(user = user, verified = false)
+        user.profile = profile
+        userRepository.save(user)
         val savedProfile = profileRepository.save(profile)
 
         // Create and persist the Company
@@ -112,13 +92,31 @@ class CompanyServiceImpl(
         return companyMapper.companyToCompanyUserResult(savedCompany)
     }
 
-    @Throws(NoSuchElementException::class)
-    override fun update(companyUserInput: CompanyUserUpdate): CompanyUserResponse? {
-        val companyUser = companyMapper.companyUserUpdateToCompany(companyUserInput)
-        return companyMapper.companyToCompanyUserResponse(
-            companyRepository.save(companyUser)
-        )
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateName(id: Long, companyName: CompanyNameUpdate): CompanyNameResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        company.name = companyName.name.toString()
+        val saved = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyNameResult(saved)
     }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        company.description = companyDescription.description.toString()
+        val saved = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyDescriptionResult(saved)
+    }
+
+
 
     @Throws(NoSuchElementException::class)
     override fun deleteById(id: Long) {

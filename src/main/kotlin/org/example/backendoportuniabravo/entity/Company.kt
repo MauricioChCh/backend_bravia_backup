@@ -27,18 +27,18 @@ data class Company(
         joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
     )
-    val businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
+    var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val contacts: MutableList<Contact> = mutableListOf(),
+    var contacts: MutableList<Contact> = mutableListOf(),
 
     @OneToOne(cascade = [CascadeType.ALL])
     @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
-    val location: Location? = null,
+    var location: Location? = null,
 
     @ManyToMany(mappedBy = "companies", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val tags: MutableSet<Tag> = mutableSetOf(),
+    var tags: MutableSet<Tag> = mutableSetOf(),
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val internships: MutableList<Internship> = mutableListOf(),

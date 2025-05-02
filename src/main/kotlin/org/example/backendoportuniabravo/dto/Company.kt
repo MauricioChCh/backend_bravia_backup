@@ -40,6 +40,26 @@ data class CompanyUserResult(
     var user: UserResult? = null,
 )
 
+data class CompanyDescriptionUpdate(
+    var id: Long? = null,
+    var description: String? = null,
+)
+
+data class CompanyDescriptionResult(
+    var id: Long? = null,
+    var description: String? = null,
+)
+
+data class CompanyNameUpdate(
+    var id: Long? = null,
+    var name: String? = null,
+)
+
+data class CompanyNameResult(
+    var id: Long? = null,
+    var name: String? = null,
+)
+
 data class CompanyUserUpdate(
     var id: Long? = null,
     var user: UserUpdate? = null,

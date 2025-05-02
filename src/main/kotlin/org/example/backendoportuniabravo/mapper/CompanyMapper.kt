@@ -1,12 +1,7 @@
 package org.example.backendoportuniabravo.mapper
 
-import org.example.backendoportuniabravo.dto.BusinessAreaDetails
-import org.example.backendoportuniabravo.dto.CompanyUserInput
-import org.example.backendoportuniabravo.dto.CompanyUserResponse
-import org.example.backendoportuniabravo.dto.CompanyUserResult
-import org.example.backendoportuniabravo.dto.CompanyUserUpdate
+import org.example.backendoportuniabravo.dto.*
 import org.mapstruct.*
-import org.example.backendoportuniabravo.dto.TagDetails
 import org.example.backendoportuniabravo.entity.BusinessArea
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Tag
@@ -44,6 +39,12 @@ interface CompanyMapper {
   // mapping for the companyUserInput to company
   @Mapping(target = "user", source = "profile.user")
   fun companyToCompanyUserResult(company: Company): CompanyUserResult
+
+  fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
+  fun companyDescriptionUpdateToCompany(companyDescriptionUpdate: CompanyDescriptionUpdate): Company
+  fun companyToCompanyDescriptionResult(company: Company): CompanyDescriptionResult
+  fun companyToCompanyNameResult(company: Company): CompanyNameResult
+
 
   fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
   fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
