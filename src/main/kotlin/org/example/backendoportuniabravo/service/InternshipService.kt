@@ -2,11 +2,11 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
-import org.example.backendoportuniabravo.entities.Internship
+import org.example.backendoportuniabravo.entity.Internship
 import org.example.backendoportuniabravo.mapper.InternshipMapper
-import org.example.backendoportuniabravo.repositories.CompanyRepository
-import org.example.backendoportuniabravo.repositories.InternshipRepository
-import org.example.backendoportuniabravo.repositories.LocationRepository
+import org.example.backendoportuniabravo.repository.CompanyRepository
+import org.example.backendoportuniabravo.repository.InternshipRepository
+import org.example.backendoportuniabravo.repository.LocationRepository
 import org.springframework.stereotype.Service
 
 @Service
