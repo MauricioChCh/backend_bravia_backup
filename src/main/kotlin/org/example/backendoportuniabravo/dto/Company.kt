@@ -11,6 +11,11 @@ data class BusinessAreaDetails(
     var name: String? = null,
 )
 
+data class ContactDetails(
+    var id: Long? = null,
+    var url: String? = null,
+)
+
 data class CompanyUserInput(
     var id: Long? = null,
     var email: String? = null,
@@ -40,6 +45,7 @@ data class CompanyUserUpdate(
     var businessArea: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
     var location: LocationDetails? = null,
+    var contacts: List<ContactDetails>? = null,
 )
 
 data class CompanyUserResponse(
@@ -52,4 +58,5 @@ data class CompanyUserResponse(
     var businessArea: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
     var location: LocationDetails? = null,
+    var contacts: List<ContactDetails>? = null,
 )

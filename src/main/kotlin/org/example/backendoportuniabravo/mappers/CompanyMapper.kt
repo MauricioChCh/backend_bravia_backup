@@ -33,5 +33,5 @@ interface CompanyMapper {
   fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
   fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
   fun companyToCompanyUserResult(company: Company): CompanyUserResult
-  fun companyListToCompanyUserResponseList(companyList: List<Company>): List<CompanyUserResponse>
 }
+

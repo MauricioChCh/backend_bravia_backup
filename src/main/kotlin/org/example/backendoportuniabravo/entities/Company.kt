@@ -22,7 +22,7 @@ data class Company(
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
-        name = "company_ausiness_area",
+        name = "company_business_area",
         joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
     )
