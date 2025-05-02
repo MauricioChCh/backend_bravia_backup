@@ -1,6 +1,6 @@
 package org.example.backendoportuniabravo.dto
 
-data class ReportActionResponse(
+data class ReportActionResponseDTO(
     val id: Long,
     val userReportId: Long,
     val reportedUserName: String,
