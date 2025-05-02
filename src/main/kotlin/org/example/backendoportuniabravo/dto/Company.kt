@@ -16,31 +16,24 @@ data class ContactDetails(
     var url: String? = null,
 )
 
+
 data class CompanyUserInput(
-    var id: Long? = null,
-    var email: String? = null,
-    var password: String? = null,
+    var user: UserInput? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
-    var businessAreaId: BusinessAreaDetails? = null
+    var businessArea: BusinessAreaDetails? = null
 )
 
 data class CompanyUserResult(
     var id: Long? = null,
-    var email: String? = null,
+    var user: UserResult? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
-    var businessAreaId: BusinessAreaDetails? = null
+    var businessArea: BusinessAreaDetails? = null
 )
 
 data class CompanyUserUpdate(
     var id: Long? = null,
-    var email: String? = null,
+    var user: UserUpdate? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
     var description: String? = null,
     var businessArea: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
@@ -50,10 +43,8 @@ data class CompanyUserUpdate(
 
 data class CompanyUserResponse(
     var id: Long? = null,
-    var email: String? = null,
+    var user: UserResult? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
     var description: String? = null,
     var businessArea: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
