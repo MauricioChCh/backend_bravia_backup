@@ -10,11 +10,12 @@ data class Company(
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long? = null,
+
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     val profile: Profile,
 
-    @Column(name = "description", columnDefinition = "TEXT")
+    @Column(name = "description", columnDefinition = "TEXT", nullable = true)
     var description: String,
 
     @Column(name = "name", nullable = false)
@@ -32,16 +33,11 @@ data class Company(
     val contacts: MutableList<Contact> = mutableListOf(),
 
     @OneToOne(cascade = [CascadeType.ALL])
-    @JoinColumn(name = "location_id", referencedColumnName = "id")
+    @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
-    val location: Location,
+    val location: Location? = null,
 
-    @ManyToMany(mappedBy = "tags", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "tags",
-        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")]
-    )
+    @ManyToMany(mappedBy = "companies", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val tags: MutableSet<Tag> = mutableSetOf(),
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -92,9 +88,15 @@ data class Tag(
     var id: Long? = null,
 
     @Column(name = "name", nullable = false)
-    var Name: String,
 
-    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
+    var name: String,
+
+    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "tags",
+        joinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
+    )
     var companies: MutableSet<Company> = mutableSetOf()
 
 )

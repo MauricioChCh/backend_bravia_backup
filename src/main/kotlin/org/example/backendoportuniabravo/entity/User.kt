@@ -11,7 +11,7 @@ package org.example.backendoportuniabravo.entity
         @Column(name = "id")
         var id: Long? = null,
 
-        @Column(name = "create_date", nullable = false)
+        @Column(name = "create_date", nullable = true)
         @Temporal(TemporalType.TIMESTAMP)
         var createDate: Date,
 
@@ -30,11 +30,8 @@ package org.example.backendoportuniabravo.entity
         @Column(name = "token_expired", nullable = false)
         var tokenExpired: Boolean,
 
-        @Column(name = "enabled", nullable = false)
+        @Column(name = "enabled")
         var enabled: Boolean,
-
-        @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        val company: Company? = null,
 
         @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "profile_id")
