@@ -10,6 +10,7 @@ import org.example.backendoportuniabravo.dto.TagDetails
 import org.example.backendoportuniabravo.entity.BusinessArea
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Tag
+import java.time.LocalDateTime
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface TagMapper {
