@@ -32,7 +32,7 @@ data class Internship(
     var publicationDate: Date,
 
     @Column(name = "duration")
-    var duration: String,
+    var duration: String? = null,
 
     @Column(name = "salary")
     var salary: Double? = null,

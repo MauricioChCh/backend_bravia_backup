@@ -4,6 +4,7 @@ plugins {
 	id("org.springframework.boot") version "3.4.4"
 	id("io.spring.dependency-management") version "1.1.7"
 	kotlin("plugin.jpa") version "1.9.25"
+	kotlin("kapt") version "1.9.25"
 }
 
 group = "org.example"
@@ -31,9 +32,11 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	runtimeOnly("org.postgresql:postgresql")
 
-	testImplementation("org.testcontainers:junit-jupiter:1.19.3")
 	testImplementation("org.testcontainers:postgresql:1.19.3")
 
+	implementation ("org.mapstruct:mapstruct:1.6.3")
+//	annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.3")
+	kapt("org.mapstruct:mapstruct-processor:1.6.3")
 }
 
 kotlin {
@@ -50,4 +53,8 @@ allOpen {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+kapt {
+	correctErrorTypes = true
 }
