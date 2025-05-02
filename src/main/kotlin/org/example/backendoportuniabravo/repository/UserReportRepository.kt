@@ -1,6 +1,6 @@
-package org.example.backendoportuniabravo.repositories
+package org.example.backendoportuniabravo.repository
 
-import org.example.backendoportuniabravo.entities.UserReports
+import org.example.backendoportuniabravo.entity.UserReports
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

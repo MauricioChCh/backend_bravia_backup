@@ -1,12 +1,11 @@
 package org.example.backendoportuniabravo
 
 import jakarta.transaction.Transactional
-import org.example.backendoportuniabravo.entities.*
-import org.example.backendoportuniabravo.repositories.*
+import org.example.backendoportuniabravo.entity.*
+import org.example.backendoportuniabravo.repository.*
 import org.junit.jupiter.api.Assertions.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.test.context.ActiveProfiles
 import java.util.*
 import kotlin.test.Test
 

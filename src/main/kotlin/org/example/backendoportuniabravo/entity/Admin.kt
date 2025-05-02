@@ -1,7 +1,6 @@
-package org.example.backendoportuniabravo.entities
+package org.example.backendoportuniabravo.entity
 
 import jakarta.persistence.*
-import java.util.*
 
 
 @Entity

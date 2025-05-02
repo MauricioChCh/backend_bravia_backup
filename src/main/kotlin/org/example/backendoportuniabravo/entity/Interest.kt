@@ -1,10 +1,10 @@
-package org.example.backendoportuniabravo.entities
+package org.example.backendoportuniabravo.entity
 
 import jakarta.persistence.*
 
 @Entity
-@Table(name = "degrees")
-data class Degree(
+@Table(name = "interests")
+data class Interest(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -13,6 +13,7 @@ data class Degree(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(mappedBy = "degrees", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+
+    @ManyToMany(mappedBy = "interests")
     var students: MutableSet<Student> = mutableSetOf()
 )

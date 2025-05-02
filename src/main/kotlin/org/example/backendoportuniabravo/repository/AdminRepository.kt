@@ -1,7 +1,7 @@
-package org.example.backendoportuniabravo.repositories
+package org.example.backendoportuniabravo.repository
 
-import org.example.backendoportuniabravo.entities.Admin
-import org.example.backendoportuniabravo.entities.ReportAction
+import org.example.backendoportuniabravo.entity.Admin
+import org.example.backendoportuniabravo.entity.ReportAction
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 

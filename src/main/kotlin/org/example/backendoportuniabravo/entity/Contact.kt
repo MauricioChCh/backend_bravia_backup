@@ -1,4 +1,4 @@
-package org.example.backendoportuniabravo.entities
+package org.example.backendoportuniabravo.entity
 
 import jakarta.persistence.*
 
@@ -10,13 +10,11 @@ data class Contact (
     val id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "profile_id")
+    @JoinColumn(name = "company_id", referencedColumnName = "id")
     val company: Company,
 
 
     @Column(name = "url", nullable = false)
     var url: String,
 
-    ){
-
-}
+    )
