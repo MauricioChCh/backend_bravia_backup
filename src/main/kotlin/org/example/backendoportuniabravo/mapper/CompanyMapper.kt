@@ -23,16 +23,29 @@ interface TagMapper {
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface BusinessAreaMapper {
   fun businessAreaToBusinessAreaDetails(businessArea: BusinessArea): BusinessAreaDetails
+
   fun businessAreaListToBusinessAreaDetailsList(businessAreaList: List<BusinessArea>): List<BusinessAreaDetails>
+
   fun businessAreaDetailsToBusinessArea(businessAreaDetails: BusinessAreaDetails): BusinessArea
+
   fun businessAreaDetailsListToBusinessArea(businessAreaDetailsList: List<BusinessAreaDetails>): List<BusinessArea>
 }
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(
+  componentModel = "spring",
+  unmappedTargetPolicy = ReportingPolicy.IGNORE,
+  uses = [UserMapper::class]
+)
 interface CompanyMapper {
+
+  @Mapping(target = "profile", ignore = true)
   fun companyUserInputToCompany(companyUserInput: CompanyUserInput): Company
-  fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
-  fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
+
+  // mapping for the companyUserInput to company
+  @Mapping(target = "user", source = "profile.user")
   fun companyToCompanyUserResult(company: Company): CompanyUserResult
+
+  fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
+  fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
 }
 

@@ -35,40 +35,81 @@ class CompanyServiceImpl(
     @Autowired
     private val profileRepository: ProfileRepository,
     @Autowired
-    private val bussinessAreaRepository: BusinessAreaRepository
+    private val businessAreaRepository: BusinessAreaRepository
 ) : CompanyService {
 
-    override fun create(input: CompanyUserInput): CompanyUserResult? {
-        val userInput = input.user ?: throw IllegalArgumentException("User input cannot be null")
+//    override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
+//        val user = companyUserInput.user?.let { userInput ->
+//            User(
+//                firstName = userInput.name ?: throw IllegalArgumentException("User name cannot be null"),
+//                lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
+//                email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
+//                password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
+//                createDate = java.util.Date(),
+//                tokenExpired = false,
+//                enabled = true
+//            ).also { savedUser -> userRepository.save(savedUser) }
+//        } ?: throw IllegalArgumentException("User input cannot be null")
+//
+//        val profile = Profile(user = user, verified = false)
+//            .also { savedProfile -> profileRepository.save(savedProfile) }
+//
+//        // Mapear el input a la entidad Company
+//        val company = companyMapper.companyUserInputToCompany(companyUserInput)
+//        company.profile = profile // Asignar el perfil a la empresa
+//
+//        val savedCompany = companyRepository.save(company)
+//
+//        return companyMapper.companyToCompanyUserResult(savedCompany)
+//    }
 
-        val user = userRepository.save(
-            User(
-                firstName = userInput.name ?: throw IllegalArgumentException("User name cannot be null"),
-                lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
-                email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
-                password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
-                createDate = java.util.Date(),
-                tokenExpired = false,
-                enabled = true
-            )
+
+    override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
+        // Validate input
+        val userInput = companyUserInput.user ?: throw IllegalArgumentException("User input cannot be null")
+
+        // Check if the user already exists
+        if (userRepository.existsByEmail(userInput.email!!)) {
+            throw IllegalArgumentException("User with email '${userInput.email}' already exists")
+        }
+
+        // Create and persist the User entity
+        val user = User(
+            firstName = userInput.name ?: throw IllegalArgumentException("User name cannot be null"),
+            lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
+            email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
+            password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
+            createDate = java.util.Date(),
+            tokenExpired = false,
+            enabled = true
         )
+        val savedUser = userRepository.save(user)
 
-        val profile = profileRepository.save(Profile(user = user, verified = false))
+        val businessArea = companyUserInput.businessArea?.id?.let {
+            businessAreaRepository.findById(it).orElseThrow {
+                IllegalArgumentException("Business area with id $it not found")
+            }
+        } ?: throw IllegalArgumentException("Business area is required")
 
-        val businessArea = input.businessArea ?.let {
-            bussinessAreaRepository.findById(it.id ?: throw IllegalArgumentException("Business area id cannot be null"))
-                .orElseThrow {throw IllegalArgumentException("Business area not found with ID: ${it.id}}")}
-        } ?: throw IllegalArgumentException("Business area must be provided")
+        // Create profile, associate with User and persist it
+        val profile = Profile(user = savedUser, verified = false)
+        val savedProfile = profileRepository.save(profile)
 
+        // Create and persist the Company
         val company = Company(
-            profile = profile,
-            name = input.name ?: throw IllegalArgumentException("Company name is required"),
+            profile = savedProfile,
+            name = companyUserInput.name ?: throw IllegalArgumentException("Company name is required"),
             businessAreas = mutableSetOf(businessArea),
             description = "",
             location = null
         )
+        savedProfile.company = company // Back-reference for consistency
 
-        return companyMapper.companyToCompanyUserResult(companyRepository.save(company))
+        // Persist the company
+        val savedCompany = companyRepository.save(company)
+
+
+        return companyMapper.companyToCompanyUserResult(savedCompany)
     }
 
     @Throws(NoSuchElementException::class)
