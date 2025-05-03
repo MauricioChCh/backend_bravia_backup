@@ -1,9 +1,15 @@
 package org.example.backendoportuniabravo.dto
 
 
+
+
 data class TagDetails(
     var id: Long? = null,
     var name: String? = null,
+)
+
+data class TagInput(
+    var id: Long? = null,
 )
 
 data class BusinessAreaDetails(
@@ -11,52 +17,71 @@ data class BusinessAreaDetails(
     var name: String? = null,
 )
 
+data class BusinessAreaInput(
+    var id: Long? = null,
+)
+
 data class ContactDetails(
     var id: Long? = null,
     var url: String? = null,
 )
 
+data class ContactInput(
+    var url: String? = null,
+)
+
 data class CompanyUserInput(
-    var id: Long? = null,
-    var email: String? = null,
-    var password: String? = null,
+    var user: UserInput? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
-    var businessAreaId: BusinessAreaDetails? = null
+    var businessArea: BusinessAreaDetails? = null
 )
 
 data class CompanyUserResult(
     var id: Long? = null,
-    var email: String? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
-    var businessAreaId: BusinessAreaDetails? = null
+    var user: UserResult? = null,
+)
+
+data class CompanyDescriptionUpdate(
+    var id: Long? = null,
+    var description: String? = null,
+)
+
+data class CompanyDescriptionResult(
+    var id: Long? = null,
+    var description: String? = null,
+)
+
+data class CompanyNameUpdate(
+    var id: Long? = null,
+    var name: String? = null,
+)
+
+data class CompanyNameResult(
+    var id: Long? = null,
+    var name: String? = null,
 )
 
 data class CompanyUserUpdate(
     var id: Long? = null,
-    var email: String? = null,
+    var user: UserUpdate? = null,
     var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
     var description: String? = null,
-    var businessArea: List<BusinessAreaDetails>? = null,
+    var businessAreas: List<BusinessAreaInput>? = null,
+    var tags: List<TagInput>? = null,
+    var location: LocationInput? = null,
+    var contacts: List<ContactInput>? = null,
+)
+
+data class CompanyUserResponse(
+    var id: Long? = null,
+    var profile: ProfileDetails? = null,
+    var name: String? = null,
+    var description: String? = null,
+    var businessAreas: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
     var location: LocationDetails? = null,
     var contacts: List<ContactDetails>? = null,
 )
 
-data class CompanyUserResponse(
-    var id: Long? = null,
-    var email: String? = null,
-    var name: String? = null,
-    var lastName: String? = null,
-    var companyName: String? = null,
-    var description: String? = null,
-    var businessArea: List<BusinessAreaDetails>? = null,
-    var tags: List<TagDetails>? = null,
-    var location: LocationDetails? = null,
-    var contacts: List<ContactDetails>? = null,
-)
+

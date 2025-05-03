@@ -9,12 +9,11 @@ data class Contact (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long? = null,
 
+    @Column(name = "url", nullable = false)
+    var url: String,
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     val company: Company,
-
-
-    @Column(name = "url", nullable = false)
-    var url: String,
 
     )

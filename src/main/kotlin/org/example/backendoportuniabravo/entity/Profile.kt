@@ -12,22 +12,23 @@ data class Profile(
     @Column(name = "id")
     var id: Long? = null,
 
-    @OneToOne(mappedBy = "profile", fetch = FetchType.LAZY)
-    var user: User? = null,
-
     @Column(name = "verified", nullable = false)
     var verified: Boolean,
 
-    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    val location: Location? = null,
+    @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER)
+    var user: User? = null,
+
+//    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+//    val location: Location? = null,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var student: Student? = null,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-    var admin: Admin? = null
+    var admin: Admin? = null,
 
-
+    @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    var company: Company? = null,
 
 ) {
     override fun hashCode(): Int {

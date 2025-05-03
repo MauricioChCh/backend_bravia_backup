@@ -11,6 +11,12 @@ interface BusinessAreaRepository : JpaRepository<BusinessArea, Long> {
     fun findByNameIgnoreCase(name: String): Optional<BusinessArea>
 }
 
+@Repository
+interface TagRepository : JpaRepository<BusinessArea, Long>
+
+
+@Repository
+interface ContactRepository : JpaRepository<BusinessArea, Long>
 
 @Repository
 interface CompanyRepository : JpaRepository<Company, Long>
