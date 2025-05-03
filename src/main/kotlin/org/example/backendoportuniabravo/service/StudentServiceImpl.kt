@@ -2,9 +2,9 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO
-import org.example.backendoportuniabravo.entities.*
+import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.StudentMapper
-import org.example.backendoportuniabravo.repositories.*
+import org.example.backendoportuniabravo.repository.*
 import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional

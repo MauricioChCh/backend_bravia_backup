@@ -2,8 +2,8 @@ package org.example.backendoportuniabravo.mapper
 
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO
-import org.example.backendoportuniabravo.entities.Profile
-import org.example.backendoportuniabravo.entities.Student
+import org.example.backendoportuniabravo.entity.Profile
+import org.example.backendoportuniabravo.entity.Student
 import org.mapstruct.*
 
 interface StudentMapper {

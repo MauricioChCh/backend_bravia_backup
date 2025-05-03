@@ -1,9 +1,9 @@
 package org.example.backendoportuniabravo.mapper.impl
 
 import org.example.backendoportuniabravo.dto.*
-import org.example.backendoportuniabravo.entities.*
+import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.StudentMapper
-import org.example.backendoportuniabravo.repositories.*
+import org.example.backendoportuniabravo.repository.*
 import org.mapstruct.Mapping
 import org.mapstruct.MappingTarget
 import org.springframework.beans.factory.annotation.Autowired
