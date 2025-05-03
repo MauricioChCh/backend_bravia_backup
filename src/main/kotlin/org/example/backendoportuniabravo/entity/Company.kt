@@ -21,7 +21,7 @@ data class Company(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     @JoinTable(
         name = "company_business_area",
         joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
@@ -37,7 +37,7 @@ data class Company(
     @JsonManagedReference
     var location: Location? = null,
 
-    @ManyToMany(mappedBy = "companies", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "companies", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     var tags: MutableSet<Tag> = mutableSetOf(),
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -50,7 +50,7 @@ data class Company(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Student) return false
+        if (other !is Company) return false
         return id == other.id
     }
 }
@@ -65,7 +65,7 @@ data class BusinessArea(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(mappedBy = "businessAreas", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "businessAreas", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     var companies: MutableSet<Company> = mutableSetOf()
 ) {
     override fun hashCode(): Int {
@@ -74,7 +74,7 @@ data class BusinessArea(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Student) return false
+        if (other !is BusinessArea) return false
         return id == other.id
     }
 }
@@ -88,15 +88,23 @@ data class Tag(
     var id: Long? = null,
 
     @Column(name = "name", nullable = false)
-
     var name: String,
 
-    @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
     @JoinTable(
         name = "tags",
         joinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
     )
     var companies: MutableSet<Company> = mutableSetOf()
+) {
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
 
-)
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Tag) return false
+        return id == other.id
+    }
+}

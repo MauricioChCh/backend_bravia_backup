@@ -2,29 +2,7 @@ package org.example.backendoportuniabravo.mapper
 
 import org.example.backendoportuniabravo.dto.*
 import org.mapstruct.*
-import org.example.backendoportuniabravo.entity.BusinessArea
 import org.example.backendoportuniabravo.entity.Company
-import org.example.backendoportuniabravo.entity.Tag
-import java.time.LocalDateTime
-
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-interface TagMapper {
-  fun tagToTagDetails(tag: Tag): TagDetails
-  fun tagListToTagDetailsList(tagList: List<Tag>): List<TagDetails>
-  fun tagDetailsToTag(tagDetails: TagDetails): Tag
-  fun tagDetailsListToTag(tagDetailsList: List<TagDetails>): List<Tag>
-}
-
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-interface BusinessAreaMapper {
-  fun businessAreaToBusinessAreaDetails(businessArea: BusinessArea): BusinessAreaDetails
-
-  fun businessAreaListToBusinessAreaDetailsList(businessAreaList: List<BusinessArea>): List<BusinessAreaDetails>
-
-  fun businessAreaDetailsToBusinessArea(businessAreaDetails: BusinessAreaDetails): BusinessArea
-
-  fun businessAreaDetailsListToBusinessArea(businessAreaDetailsList: List<BusinessAreaDetails>): List<BusinessArea>
-}
 
 @Mapper(
   componentModel = "spring",
@@ -40,10 +18,16 @@ interface CompanyMapper {
   @Mapping(target = "user", source = "profile.user")
   fun companyToCompanyUserResult(company: Company): CompanyUserResult
 
+  @Mapping(target = "tags",   source = "company.tags")
+  fun companyToCompanyTagsResult(company: Company): CompanyTagsResult
+
+
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
+  fun companyToCompanyNameResult(company: Company): CompanyNameResult
+
   fun companyDescriptionUpdateToCompany(companyDescriptionUpdate: CompanyDescriptionUpdate): Company
   fun companyToCompanyDescriptionResult(company: Company): CompanyDescriptionResult
-  fun companyToCompanyNameResult(company: Company): CompanyNameResult
+
 
 
   fun companyToCompanyUserResponse(company: Company): CompanyUserResponse

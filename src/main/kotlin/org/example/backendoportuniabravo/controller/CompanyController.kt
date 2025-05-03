@@ -6,8 +6,9 @@ import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
+
 @RestController
-@RequestMapping("/api/companies")
+@RequestMapping("\${url.companies}")
 class CompanyController (private val service: CompanyService) {
 
 
@@ -30,6 +31,12 @@ class CompanyController (private val service: CompanyService) {
     @PatchMapping("{id}/description")
     fun updateCompanyDescription(@PathVariable id: Long, @RequestBody companyDescription: CompanyDescriptionUpdate) : ResponseEntity<CompanyDescriptionResult>? {
         val updated = service.updateDescription(id, companyDescription)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
+    @PatchMapping("{id}/tags")
+    fun updateCompanyTags(@PathVariable id: Long, @RequestBody companyTags: CompanyTagsUpdate) : ResponseEntity<CompanyTagsResult>? {
+        val updated = service.updateTags(id, companyTags)
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 

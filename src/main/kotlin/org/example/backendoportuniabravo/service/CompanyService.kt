@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Profile
+import org.example.backendoportuniabravo.entity.Tag
 import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.repository.*
@@ -18,6 +19,7 @@ interface CompanyService {
 //    fun update(companyUserInput: CompanyUserUpdate): CompanyUserResponse?
     fun updateName(id: Long, companyName: CompanyNameUpdate): CompanyNameResult?
     fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult?
+    fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult?
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -116,15 +118,40 @@ class CompanyServiceImpl(
         return companyMapper.companyToCompanyDescriptionResult(saved)
     }
 
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
 
+        val tags = companyTags.tags?.map { tagInput ->
+            tagRepository.findById(tagInput.id!!)
+                .orElseThrow { NoSuchElementException("Tag with id ${tagInput.id} not found") }
+        } ?: throw IllegalArgumentException("Tags are required")
+
+        // Limpiar relaciones existentes
+        company.tags.forEach { it.companies.remove(company) }
+        company.tags.clear()
+
+        // Actualizar relaciones bidireccionales
+        tags.forEach { tag ->
+            tag.companies.add(company)
+        }
+        company.tags = tags.toMutableSet() as MutableSet<Tag>
+
+        // Guardar cambios
+        tagRepository.saveAll(tags) // Asegura que los cambios en los tags se persistan
+        val savedCompany = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyTagsResult(savedCompany)
+    }
 
     @Throws(NoSuchElementException::class)
     override fun deleteById(id: Long) {
-        if(!companyRepository.findById(id).isEmpty) {
-            companyRepository.deleteById(id)
-        } else {
-            throw NoSuchElementException("Company with id $id not found")
-        }
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        companyRepository.deleteById(company.id!!)
     }
 
     @Throws(NoSuchElementException::class)
