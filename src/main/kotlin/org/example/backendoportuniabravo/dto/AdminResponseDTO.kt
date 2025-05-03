@@ -5,5 +5,4 @@ data class AdminResponseDTO(
     val profileId: Long,
     val fullName: String,
     val email: String,
-    val totalActions: Int
 )

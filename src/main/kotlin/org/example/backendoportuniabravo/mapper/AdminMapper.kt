@@ -11,5 +11,7 @@ interface AdminMapper{
     fun adminRequestDTOToAdmin(adminRequestDTO: AdminRequestDTO): Admin
     fun adminToAdminResponseDTO(admin: Admin): AdminResponseDTO
     fun adminResponseDTOToAdmin(adminResponseDTO: AdminResponseDTO): Admin
+    fun adminListToAdminResponseDTOList(adminList: List<Admin>): List<AdminResponseDTO>
+    fun adminResponseDTOListToAdminList(dtoList: List<AdminResponseDTO>): List<Admin>
 
 }
