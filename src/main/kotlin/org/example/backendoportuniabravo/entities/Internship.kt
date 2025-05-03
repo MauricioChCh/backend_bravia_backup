@@ -14,12 +14,12 @@ data class Internship(
     // Relación con el usuario que creó la pasantía
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    val company: Company,
+    var company: Company,
 
     //Relacion con su localidad
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
-    val location: Location,
+    var location: Location,
 
     @Column(name = "title", nullable = false)
     var title: String,
