@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("\${url.companies}")
 class CompanyController (private val service: CompanyService) {
 
-
     @GetMapping("{id}")
     @ResponseBody
     fun getCompanyById(@PathVariable id : Long) = service.findById(id)
@@ -46,8 +45,19 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
+    @PostMapping("{id}/contacts")
+    fun addCompanyContact(@PathVariable id: Long, @RequestBody contactInput: ContactInput) : ResponseEntity<CompanyContactsResult>? {
+        val updated = service.addContact(id, contactInput)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
+    @DeleteMapping("{id}/contacts/{contactId}")
+    fun deleteCompanyContact(@PathVariable id: Long, @PathVariable contactId: Long) : ResponseEntity<CompanyContactsResult>? {
+        val updated = service.deleteContact(id, contactId)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
     @DeleteMapping("{id}")
     @ResponseBody
     fun deleteCompany(@PathVariable id: Long) = service.deleteById(id)
-
 }

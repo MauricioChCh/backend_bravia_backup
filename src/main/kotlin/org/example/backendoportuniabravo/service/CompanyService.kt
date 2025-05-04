@@ -21,6 +21,8 @@ interface CompanyService {
     fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult?
     fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult?
     fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult?
+    fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult?
+    fun deleteContact(id: Long, contactId: Long): CompanyContactsResult?
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -171,6 +173,37 @@ class CompanyServiceImpl(
         val savedCompany = companyRepository.save(company)
 
         return companyMapper.companyToCompanyBusinessAreaResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val contact = companyMapper.contactInputToContact(contactInput)
+
+        contact.company = company
+        contactRepository.save(contact)
+
+        company.contacts.add(contact)
+        return companyMapper.companyToCompanyContactsResult(companyRepository.save(company))
+
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun deleteContact(id: Long, contactId: Long): CompanyContactsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val contact = contactRepository.findById(contactId)
+            .orElseThrow { NoSuchElementException("Contact with id $contactId not found") }
+
+        company.contacts.remove(contact)
+        contactRepository.delete(contact)
+
+        return companyMapper.companyToCompanyContactsResult(companyRepository.save(company))
     }
 
     @Throws(NoSuchElementException::class)

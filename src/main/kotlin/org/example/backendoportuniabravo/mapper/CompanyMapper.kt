@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.mapper
 import org.example.backendoportuniabravo.dto.*
 import org.mapstruct.*
 import org.example.backendoportuniabravo.entity.Company
+import org.example.backendoportuniabravo.entity.Contact
 
 @Mapper(
   componentModel = "spring",
@@ -23,6 +24,13 @@ interface CompanyMapper {
 
   @Mapping(target = "businessAreas", source = "company.businessAreas")
   fun companyToCompanyBusinessAreaResult(company: Company): CompanyBusinessAreaResult
+
+  @Mapping(target = "contacts", source = "company.contacts")
+  fun companyToCompanyContactsResult(company: Company): CompanyContactsResult
+
+  @Mapping(target = "id", ignore = true)
+  @Mapping(target = "company", ignore = true)
+  fun contactInputToContact(contactInput: ContactInput): Contact
 
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
   fun companyToCompanyNameResult(company: Company): CompanyNameResult

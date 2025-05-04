@@ -14,6 +14,6 @@ data class Contact (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id", referencedColumnName = "id")
-    val company: Company,
+    var company: Company,
 
     )

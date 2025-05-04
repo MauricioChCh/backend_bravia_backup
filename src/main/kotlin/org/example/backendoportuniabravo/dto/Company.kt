@@ -33,6 +33,9 @@ data class CompanyTagsResult(
 data class CompanyBusinessAreaResult(
     var businessAreas: List<BusinessAreaDetails>? = null,
 )
+data class CompanyContactsResult(
+    var contacts: List<ContactDetails>? = null,
+)
 
 // details DTO
 data class TagDetails(
