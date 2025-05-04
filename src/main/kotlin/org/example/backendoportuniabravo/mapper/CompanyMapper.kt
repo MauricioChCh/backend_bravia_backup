@@ -4,6 +4,7 @@ import org.example.backendoportuniabravo.dto.*
 import org.mapstruct.*
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Contact
+import org.example.backendoportuniabravo.entity.Location
 
 @Mapper(
   componentModel = "spring",
@@ -15,7 +16,6 @@ interface CompanyMapper {
   @Mapping(target = "profile", ignore = true)
   fun companyUserInputToCompany(companyUserInput: CompanyUserInput): Company
 
-  // mapping for the companyUserInput to company
   @Mapping(target = "user", source = "profile.user")
   fun companyToCompanyUserResult(company: Company): CompanyUserResult
 
@@ -31,6 +31,15 @@ interface CompanyMapper {
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "company", ignore = true)
   fun contactInputToContact(contactInput: ContactInput): Contact
+
+  @Mapping(target = "id", source = "company.location.id")
+  @Mapping(target = "address", source = "company.location.address")
+  @Mapping(target = "country", source = "company.location.country")
+  @Mapping(target = "province", source = "company.location.province")
+  fun companyToLocationDetails(company: Company): LocationResult
+
+  fun locationInputToLocation(locationInput: LocationInput): Location
+
 
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
   fun companyToCompanyNameResult(company: Company): CompanyNameResult

@@ -1,6 +1,7 @@
 package org.example.backendoportuniabravo.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import jakarta.persistence.*
 
 @Entity
@@ -10,11 +11,6 @@ data class Location (
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long? = null,
-
-
-    @OneToOne
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    val profile: Profile,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id", referencedColumnName = "id")
@@ -30,11 +26,12 @@ data class Location (
 
     //Cada internship tiene una localizacion
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
-    val internships: List<Internship> = listOf(),
+    @JsonDeserialize(contentAs = Internship::class)
+    val internships: Set<Internship> = emptySet(),
 
     @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonBackReference
-    val company: Company? = null
+    var company: Company? = null
 
 ){
 
@@ -49,7 +46,7 @@ data class Province (
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     var name: String,
 
 ){
@@ -64,7 +61,7 @@ data class Country (
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "name", nullable = false)
+    @Column(name = "name")
     var name: String,
 
 ){

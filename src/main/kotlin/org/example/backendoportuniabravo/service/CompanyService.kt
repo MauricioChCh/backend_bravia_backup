@@ -1,18 +1,14 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.*
-import org.example.backendoportuniabravo.entity.Company
-import org.example.backendoportuniabravo.entity.Profile
-import org.example.backendoportuniabravo.entity.Tag
-import org.example.backendoportuniabravo.entity.User
+import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.Optional
-import kotlin.jvm.Throws
+import kotlin.Throws
 
 interface CompanyService {
     fun create(companyUserInput: CompanyUserInput): CompanyUserResult?
@@ -23,6 +19,8 @@ interface CompanyService {
     fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult?
     fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult?
     fun deleteContact(id: Long, contactId: Long): CompanyContactsResult?
+    fun addLocation(id: Long, locationInput: LocationInput): LocationResult?
+
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -43,8 +41,11 @@ class CompanyServiceImpl(
     private val tagRepository: TagRepository,
     @Autowired
     private val contactRepository: ContactRepository,
+    private val locationRepository: LocationRepository,
+    private val countryRepository: CountryRepository,
+    private val provinceRepository: ProvinceRepository,
 
-) : CompanyService {
+    ) : CompanyService {
 
     override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
         // Validate input
@@ -205,6 +206,35 @@ class CompanyServiceImpl(
 
         return companyMapper.companyToCompanyContactsResult(companyRepository.save(company))
     }
+
+    @Transactional
+    @Throws(NoSuchElementException::class)
+    override fun addLocation(id: Long, locationInput: LocationInput): LocationResult? {
+        var location: Location? = null
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val country = locationInput.country?.id?.let { countryRepository.findById(it) }
+            ?: throw IllegalArgumentException("Country is required")
+        val province = locationInput.province?.id?.let { provinceRepository.findById(it) }
+            ?: throw IllegalArgumentException("Province is required")
+
+        if (!country.isEmpty || !province.isEmpty) {
+             location = Location(
+                address = locationInput.address ?: throw IllegalArgumentException("Address is required"),
+                country = country.get(),
+                province = province.get()
+            )
+        }
+
+        location?.company = company
+        company.location = location
+        val saved = companyRepository.save(company)
+
+        return companyMapper.companyToLocationDetails(saved)
+    }
+
+
 
     @Throws(NoSuchElementException::class)
     override fun deleteById(id: Long) {

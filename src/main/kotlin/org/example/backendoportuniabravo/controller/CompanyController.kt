@@ -51,6 +51,12 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
+    @PostMapping("{id}/location")
+    fun addCompanyLocation(@PathVariable id: Long, @RequestBody locationInput: LocationInput) : ResponseEntity<LocationResult>? {
+        val updated = service.addLocation(id, locationInput)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
     @DeleteMapping("{id}/contacts/{contactId}")
     fun deleteCompanyContact(@PathVariable id: Long, @PathVariable contactId: Long) : ResponseEntity<CompanyContactsResult>? {
         val updated = service.deleteContact(id, contactId)
