@@ -40,6 +40,12 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
+    @PatchMapping("{id}/business_areas")
+    fun updateCompanyBusinessArea(@PathVariable id: Long, @RequestBody companyBusinessArea: CompanyBusinessAreaUpdate) : ResponseEntity<CompanyBusinessAreaResult>? {
+        val updated = service.updateBusinessArea(id, companyBusinessArea)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
     @DeleteMapping("{id}")
     @ResponseBody
     fun deleteCompany(@PathVariable id: Long) = service.deleteById(id)

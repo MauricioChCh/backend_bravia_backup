@@ -21,6 +21,8 @@ interface CompanyMapper {
   @Mapping(target = "tags",   source = "company.tags")
   fun companyToCompanyTagsResult(company: Company): CompanyTagsResult
 
+  @Mapping(target = "businessAreas", source = "company.businessAreas")
+  fun companyToCompanyBusinessAreaResult(company: Company): CompanyBusinessAreaResult
 
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
   fun companyToCompanyNameResult(company: Company): CompanyNameResult

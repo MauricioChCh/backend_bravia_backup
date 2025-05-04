@@ -20,6 +20,7 @@ interface CompanyService {
     fun updateName(id: Long, companyName: CompanyNameUpdate): CompanyNameResult?
     fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult?
     fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult?
+    fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult?
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -144,6 +145,32 @@ class CompanyServiceImpl(
         val savedCompany = companyRepository.save(company)
 
         return companyMapper.companyToCompanyTagsResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val businessAreas = companyBusinessArea.businessAreas?.map { businessAreaInput ->
+            businessAreaRepository.findById(businessAreaInput.id!!)
+                .orElseThrow { NoSuchElementException("Business area with id ${businessAreaInput.id} not found") }
+        } ?: throw IllegalArgumentException("Business areas are required")
+
+        company.businessAreas.forEach { it.companies.remove(company) }
+        company.businessAreas.clear()
+
+        businessAreas.forEach { businessArea ->
+            businessArea.companies.add(company)
+        }
+        company.businessAreas = businessAreas.toMutableSet()
+
+        // Guardar cambios
+        businessAreaRepository.saveAll(businessAreas) // Asegura que los cambios en los tags se persistan
+        val savedCompany = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyBusinessAreaResult(savedCompany)
     }
 
     @Throws(NoSuchElementException::class)

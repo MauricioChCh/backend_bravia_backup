@@ -30,6 +30,9 @@ data class CompanyNameResult(
 data class CompanyTagsResult(
     var tags: List<TagDetails>? = null,
 )
+data class CompanyBusinessAreaResult(
+    var businessAreas: List<BusinessAreaDetails>? = null,
+)
 
 // details DTO
 data class TagDetails(
@@ -66,6 +69,9 @@ data class CompanyUserUpdate(
 )
 data class CompanyTagsUpdate(
     var tags: List<TagInput>? = null,
+)
+data class CompanyBusinessAreaUpdate(
+    var businessAreas: List<BusinessAreaInput>? = null,
 )
 
 // input DTO
