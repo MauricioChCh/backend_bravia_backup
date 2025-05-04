@@ -5,6 +5,7 @@ import org.mapstruct.*
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Contact
 import org.example.backendoportuniabravo.entity.Location
+import org.example.backendoportuniabravo.entity.User
 
 @Mapper(
   componentModel = "spring",
@@ -15,6 +16,9 @@ interface CompanyMapper {
 
   @Mapping(target = "profile", ignore = true)
   fun companyUserInputToCompany(companyUserInput: CompanyUserInput): Company
+
+  @Mapping(target = "createDate", ignore = true)
+  fun companyUserInputToUser(companyUserInput: CompanyUserInput): User
 
   @Mapping(target = "user", source = "profile.user")
   fun companyToCompanyUserResult(company: Company): CompanyUserResult

@@ -12,6 +12,8 @@ import java.time.LocalDateTime
 )
 interface UserMapper {
 
+    @Mapping(target = "createDate", ignore = true)
+    @Mapping(target = "tokenExpired", ignore = true)
     fun userInputToUser(userInput: UserInput): User
     fun userToUserResult(user: org.example.backendoportuniabravo.entity.User): org.example.backendoportuniabravo.dto.UserResult
     fun userToCompanyUserResponse(user: org.example.backendoportuniabravo.entity.User): org.example.backendoportuniabravo.dto.CompanyUserResponse

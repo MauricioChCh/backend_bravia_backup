@@ -58,7 +58,7 @@ class CompanyServiceImpl(
 
         // Create and persist the User entity
         val user = User(
-            firstName = userInput.firstname ?: throw IllegalArgumentException("User name cannot be null"),
+            firstName = userInput.firstName ?: throw IllegalArgumentException("User name cannot be null"),
             lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
             email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
             password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),

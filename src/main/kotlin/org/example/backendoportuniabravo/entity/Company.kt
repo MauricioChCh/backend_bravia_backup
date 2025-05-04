@@ -13,7 +13,7 @@ data class Company(
 
     @OneToOne
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    val profile: Profile,
+    var profile: Profile? = null,
 
     @Column(name = "description", columnDefinition = "TEXT", nullable = true)
     var description: String,

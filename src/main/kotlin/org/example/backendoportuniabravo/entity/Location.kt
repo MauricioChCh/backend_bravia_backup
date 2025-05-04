@@ -27,7 +27,7 @@ data class Location (
     //Cada internship tiene una localizacion
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonDeserialize(contentAs = Internship::class)
-    val internships: Set<Internship>? = emptySet(),
+    val internships: MutableList<Internship>? = mutableListOf(),
 
     @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonBackReference

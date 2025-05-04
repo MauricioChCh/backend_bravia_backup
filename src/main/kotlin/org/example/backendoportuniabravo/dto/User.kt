@@ -4,7 +4,7 @@ import java.util.*
 
 
 data class UserInput(
-    var firstname: String? = null,
+    var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null,
     var password: String? = null,
@@ -13,21 +13,21 @@ data class UserInput(
 data class UserResult(
     var id: Long? = null,
     var email: String? = null,
-    var firstname: String? = null,
+    var firstName: String? = null,
     var lastName: String? = null,
 )
 
 
 data class UserUpdate(
     var id: Long? = null,
-    var firstname: String? = null,
+    var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null,
 )
 
 data class UserDetails(
     var id: Long? = null,
-    var firstname: String? = null,
+    var firstName: String? = null,
     var lastName: String? = null,
     var email: String? = null,
     var createDate: Date? = null,

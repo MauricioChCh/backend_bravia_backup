@@ -87,7 +87,7 @@ data class BusinessAreaInput(
 data class CompanyUserInput(
     var user: UserInput? = null,
     var name: String? = null,
-    var businessArea: BusinessAreaDetails? = null
+    var businessArea: BusinessAreaInput? = null
 )
 data class TagInput(
     var id: Long? = null,
