@@ -34,7 +34,12 @@ data class LocationDetails(
 )
 
 // update DTO
-
+data class LocationUpdate(
+    var id: Long? = null,
+    var address: String? = null,
+    var province: ProvinceInput? = null,
+    var country: ProvinceInput? = null,
+)
 
 // input
 data class ProvinceInput(

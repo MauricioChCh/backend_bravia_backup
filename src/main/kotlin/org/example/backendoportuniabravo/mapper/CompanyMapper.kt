@@ -30,15 +30,16 @@ interface CompanyMapper {
 
   @Mapping(target = "id", ignore = true)
   @Mapping(target = "company", ignore = true)
-  fun contactInputToContact(contactInput: ContactInput): Contact
+  fun companyContactInputToContact(contactInput: ContactInput): Contact
 
   @Mapping(target = "id", source = "company.location.id")
   @Mapping(target = "address", source = "company.location.address")
   @Mapping(target = "country", source = "company.location.country")
   @Mapping(target = "province", source = "company.location.province")
-  fun companyToLocationDetails(company: Company): LocationResult
+  fun companyToLocationResult(company: Company): LocationResult
 
-  fun locationInputToLocation(locationInput: LocationInput): Location
+  fun companyLocationInputToLocation(locationInput: LocationInput): Location
+  fun companyLocationUpdateToLocation(locationUpdate: LocationUpdate): Location
 
 
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company

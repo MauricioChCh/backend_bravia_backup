@@ -20,7 +20,7 @@ interface CompanyService {
     fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult?
     fun deleteContact(id: Long, contactId: Long): CompanyContactsResult?
     fun addLocation(id: Long, locationInput: LocationInput): LocationResult?
-
+    fun updateLocation(id: Long, locationUpdate: LocationUpdate): LocationResult?
     fun deleteById(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -182,7 +182,7 @@ class CompanyServiceImpl(
         val company = companyRepository.findById(id)
             .orElseThrow { NoSuchElementException("Company with id $id not found") }
 
-        val contact = companyMapper.contactInputToContact(contactInput)
+        val contact = companyMapper.companyContactInputToContact(contactInput)
 
         contact.company = company
         contactRepository.save(contact)
@@ -214,6 +214,10 @@ class CompanyServiceImpl(
         val company = companyRepository.findById(id)
             .orElseThrow { NoSuchElementException("Company with id $id not found") }
 
+        if(company.location != null) { // TODO: Check if company just can have one location
+            throw IllegalArgumentException("Company already has a location")
+        }
+
         val country = locationInput.country?.id?.let { countryRepository.findById(it) }
             ?: throw IllegalArgumentException("Country is required")
         val province = locationInput.province?.id?.let { provinceRepository.findById(it) }
@@ -231,9 +235,44 @@ class CompanyServiceImpl(
         company.location = location
         val saved = companyRepository.save(company)
 
-        return companyMapper.companyToLocationDetails(saved)
+        return companyMapper.companyToLocationResult(saved)
     }
 
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateLocation(id: Long, locationUpdate: LocationUpdate): LocationResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val country = locationUpdate.country?.id?.let { countryRepository.findById(it) }
+            ?: throw IllegalArgumentException("Country is required")
+        val province = locationUpdate.province?.id?.let { provinceRepository.findById(it) }
+            ?: throw IllegalArgumentException("Province is required")
+
+        val location = companyMapper.companyLocationUpdateToLocation(locationUpdate)
+
+        if (!country.isEmpty && !province.isEmpty) {
+            if(country != company.location?.country) {
+                location.country = country.get()
+            } else {
+                location.country = company.location?.country!!
+            }
+            if(province != company.location?.province) {
+                location.province = province.get()
+            } else {
+                location.province = company.location?.province!!
+            }
+        }
+
+
+        
+
+        location.company = company
+        company.location = location
+        val saved = companyRepository.save(company)
+
+        return companyMapper.companyToLocationResult(saved)
+    }
 
 
     @Throws(NoSuchElementException::class)

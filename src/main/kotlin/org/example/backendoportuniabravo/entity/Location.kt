@@ -14,26 +14,36 @@ data class Location (
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "province_id", referencedColumnName = "id")
-    val province: Province,
+    var province: Province,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "id")
-    val country: Country,
+    var country: Country,
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     var address: String,
 
 
     //Cada internship tiene una localizacion
     @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonDeserialize(contentAs = Internship::class)
-    val internships: Set<Internship> = emptySet(),
+    val internships: Set<Internship>? = emptySet(),
 
     @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
     @JsonBackReference
     var company: Company? = null
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Location) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
 
 }
 
@@ -47,9 +57,20 @@ data class Province (
     var id: Long? = null,
 
     @Column(name = "name")
-    var name: String,
+    var name: String? = null,
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Province) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
 
 }
 
@@ -65,5 +86,16 @@ data class Country (
     var name: String,
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Province) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
 
 }
