@@ -8,10 +8,8 @@ import java.util.*
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
 
-
 @Configuration
 class DataSeeder {
-    // DataSeeder.kt con correcciones
     @Bean
     fun insertSampleInternships(
         userRepository: UserRepository,
@@ -24,9 +22,9 @@ class DataSeeder {
     ): CommandLineRunner {
         return CommandLineRunner {
 
-            // Solo insertar si la tabla está vacía
+            // Only insert if the table is empty
             if (internshipRepository.count() == 0L) {
-                println("📦 Insertando datos de prueba en Docker...")
+                println("📦 Inserting test data into Docker...")
 
                 val user = userRepository.save(
                     User(
@@ -44,40 +42,43 @@ class DataSeeder {
                 val country = countryRepository.save(Country(name = "Costa Rica"))
                 val province = provinceRepository.save(Province(name = "Heredia"))
 
-                val location = locationRepository.save(
-                    Location(
+                val location = Location(
                         profile = profile,
                         province = province,
                         country = country,
                         address = "Barrio Tournón"
-                    )
                 )
 
-                // Primero creamos la compañía
-                val company = companyRepository.save(
-                    Company(
-                        profile = profile,  // Cambio: usar profile en lugar de user
-                        name = "DevTechDockeeer",
-                        description = "Compañía de desarrollo",
-                        location = location,  // Cambio: usar objeto Location en lugar de String
-                        // No asignamos contacts ahora porque necesitamos la compañía ya guardada
-                    )
+//                // Refetch or re-attach the 'location' to ensure it is managed
+//                val managedLocation = locationRepository.findById(location.id!!).orElseThrow {
+//                    RuntimeException("Location not found")
+//                }
+
+                // Create the company with the managed location
+                val company = Company(
+                    profile = profile,  // Use profile instead of user
+                    name = "DevTechDockeeer",
+                    description = "Compañía de desarrollo",
+                    location = location  // Pass managed location here
                 )
 
-                // Ahora creamos el contacto con la compañía ya guardada
-                // No usamos contactRepository directamente para evitar errores de tipo
+                // Save the company first
+                val savedCompany = companyRepository.save(company)
+
+                // Add contact to the saved company
                 val contact = Contact(
-                    id = null,  // El ID se generará automáticamente
-                    url = "https://devtech.com/contacto",  // URL de contacto
-                    company = company
+                    id = null,  // ID will be generated automatically
+                    url = "https://devtech.com/contacto",  // Contact URL
+                    company = savedCompany
                 )
 
-                // Añadimos el contacto directamente a la lista de contactos de la compañía
-                company.contacts.add(contact)
+                // Use the contactRepository or company object directly to handle the relationship
+                savedCompany.contacts.add(contact)
 
-                // Guardamos la compañía actualizada con sus contactos
-                companyRepository.save(company)
+                // Save company again with its updated contacts
+                companyRepository.save(savedCompany)
 
+                // Create internship using the managed location and saved company
                 val internship = Internship(
                     title = "Fullstack Developer Docker",
                     imageUrl = null,
@@ -89,15 +90,15 @@ class DataSeeder {
                     requirements = "Kotlin, Angular",
                     activities = "Desarrollar frontend y backend",
                     link = "https://devtech.com/oportunidad",
-                    location = location,
-                    company = company
+                    location = location,  // Use managed location
+                    company = savedCompany  // Use saved (managed) company instance
                 )
 
                 internshipRepository.save(internship)
 
-                println("✅ Internship de prueba insertado")
+                println("✅ Test internship inserted")
             } else {
-                println("⚠️ Ya existen datos. No se insertó nada.")
+                println("⚠️ Data already exists. No data was inserted.")
             }
         }
     }
