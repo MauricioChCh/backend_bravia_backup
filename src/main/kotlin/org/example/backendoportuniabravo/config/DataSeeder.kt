@@ -97,4 +97,33 @@ class DataSeeder {
             }
         }
     }
+
+    @Bean
+    fun insertSampleForCompany(businessAreaRepository: BusinessAreaRepository, tagRepository: TagRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting test data into Docker...")
+
+            // Only insert if the table is empty
+            if (businessAreaRepository.findAll().isEmpty()) {
+                businessAreaRepository.save(BusinessArea(name = "Ventas"))
+                businessAreaRepository.save(BusinessArea(name = "Desarrollo"))
+                businessAreaRepository.save(BusinessArea(name = "Marketing"))
+                println("✅ Test  inserted")
+            } else {
+                println("⚠️ Data for bvusiness areas already exists. No data was inserted.")
+            }
+            if (tagRepository.findAll().isEmpty()){
+                tagRepository.save(Tag(name = "Desarrollo"))
+                tagRepository.save(Tag(name = "Backend"))
+                tagRepository.save(Tag(name = "Frontend"))
+                tagRepository.save(Tag(name = "Kotlin"))
+                tagRepository.save(Tag(name = "Java"))
+                println("✅ Test  inserted")
+            } else {
+                println("⚠️ Data for tags already exists. No data was inserted.")
+            }
+
+
+        }
+    }
 }
