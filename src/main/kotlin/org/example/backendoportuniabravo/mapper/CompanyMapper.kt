@@ -43,6 +43,8 @@ interface CompanyMapper {
   fun companyToLocationResult(company: Company): LocationResult
 
   fun companyLocationInputToLocation(locationInput: LocationInput): Location
+
+  @Mapping(target = "country.name", ignore = true)
   fun companyLocationUpdateToLocation(locationUpdate: LocationUpdate): Location
 
 

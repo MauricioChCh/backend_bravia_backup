@@ -83,7 +83,7 @@ data class Country (
     var id: Long? = null,
 
     @Column(name = "name")
-    var name: String,
+    var name: String? = null
 
 ){
     override fun equals(other: Any?): Boolean {

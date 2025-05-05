@@ -244,31 +244,23 @@ class CompanyServiceImpl(
         val company = companyRepository.findById(id)
             .orElseThrow { NoSuchElementException("Company with id $id not found") }
 
-        val country = locationUpdate.country?.id?.let { countryRepository.findById(it) }
-            ?: throw IllegalArgumentException("Country is required")
-        val city = locationUpdate.city?.id?.let { cityRepository.findById(it) }
-            ?: throw IllegalArgumentException("Province is required")
+        val country = locationUpdate.country?.id?.let { countryRepository.findById(it).orElseThrow { IllegalArgumentException("Country not found") } }
+        val city = locationUpdate.city?.id?.let { cityRepository.findById(it).orElseThrow { IllegalArgumentException("City not found") } }
 
-        val location = companyMapper.companyLocationUpdateToLocation(locationUpdate)
+        val location = Location(
+            address = locationUpdate.address ?: throw IllegalArgumentException("Address is required"),
+            country = country!!,
+            city = city!!
+        )
 
-        if (!country.isEmpty && !city.isEmpty) {
-            if(country != company.location?.country) {
-                location.country = country.get()
-            } else {
-                location.country = company.location?.country!!
-            }
-            if(city != company.location?.city) {
-                location.city = city.get()
-            } else {
-                location.city = company.location?.city!!
-            }
-        }
+        // Save the new Location to ensure a unique ID
+        val savedLocation = locationRepository.save(location)
 
-        location.company = company
-        company.location = location
-        val saved = companyRepository.save(company)
+        // Assign the new Location to the Company
+        company.location = savedLocation
+        val savedCompany = companyRepository.save(company)
 
-        return companyMapper.companyToLocationResult(saved)
+        return companyMapper.companyToLocationResult(savedCompany)
     }
 
 
