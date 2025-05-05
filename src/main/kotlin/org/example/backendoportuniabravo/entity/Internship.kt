@@ -11,7 +11,7 @@ data class Internship(
     @Column(name = "id")
     var id: Long? = null,
 
-    // Relación con el usuario que creó la pasantía
+    // Relation con el user que  la pasantía
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     var company: Company,

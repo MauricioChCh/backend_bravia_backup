@@ -2,7 +2,7 @@ package org.example.backendoportuniabravo.dto
 
 import java.util.*
 
-// Salidas->  backend -> cliente
+// Output->  backend -> client
 data class InternshipResponseDTO(
     val id: Long?,
     val title: String,
@@ -19,7 +19,7 @@ data class InternshipResponseDTO(
     val duration: String? = null,
     val salary: Double? = null,
 
-    // Campo calculado
+    // Campo calculated
     val locationFullName: String? = "$cityName, $countryName"
 )
 

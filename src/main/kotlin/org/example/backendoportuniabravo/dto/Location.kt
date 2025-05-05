@@ -2,12 +2,12 @@ package org.example.backendoportuniabravo.dto
 
 
 // response DTO
-data class LocationResponse(
-    var id: Long? = null,
-    var address: String? = null,
-    var city: CityDetails? = null,
-    var country: CountryDetails? = null,
-)
+//data class LocationResponse(
+//    var id: Long? = null,
+//    var address: String? = null,
+//    var city: CityDetails? = null,
+//    var country: CountryDetails? = null,
+//) // TODO:  look if we can remove this DTO
 
 // result DTO
 data class LocationResult(

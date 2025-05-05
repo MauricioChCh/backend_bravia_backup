@@ -32,7 +32,7 @@ class StudentServiceImpl(
             academicCenter = dto.academicCenter
         )
 
-        dto.hobbies.forEach { name -> student.hobbies.add(Hobbie(name = name, student = student)) }
+        dto.hobbies.forEach { name -> student.hobbies.add(Hobby(name = name, student = student)) }
 
         dto.certifications.forEach {
             student.certifications.add(
@@ -51,7 +51,7 @@ class StudentServiceImpl(
         }
 
         dto.careers.forEach {
-            student.careers.add(Career(carrer = it, student = student))
+            student.careers.add(Career(career = it, student = student))
         }
 
         dto.cvUrls.forEach {

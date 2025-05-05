@@ -23,7 +23,7 @@ data class Student(
     var academicCenter: String,
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var hobbies: MutableList<Hobbie> = mutableListOf(),
+    var hobbies: MutableList<Hobby> = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
     var certifications: MutableList<Certification> = mutableListOf(),
@@ -106,7 +106,7 @@ data class Student(
 
 @Entity
 @Table(name = "hobbies")
-data class Hobbie(
+data class Hobby(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -120,7 +120,7 @@ data class Hobbie(
     var name: String,
 ) {
     override fun toString(): String {
-        return "Hobbie(name='$name')"
+        return "Hobby(name='$name')"
     }
 
     override fun hashCode(): Int {
@@ -129,7 +129,7 @@ data class Hobbie(
 
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Hobbie) return false
+        if (other !is Hobby) return false
         return id == other.id
     }
 }
@@ -208,7 +208,7 @@ data class Skill(
 )
 
 @Entity
-@Table(name = "carrer")
+@Table(name = "career")
 data class Career(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -219,8 +219,8 @@ data class Career(
     @JoinColumn(name = "student_id", nullable = false)
     var student: Student,
 
-    @Column(name = "carrer", nullable = false)
-    var carrer: String,
+    @Column(name = "career", nullable = false)
+    var career: String,
 )
 
 @Entity

@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository
 interface StudentRepository : JpaRepository<Student, Long>
 
 @Repository
-interface HobbieRepository : JpaRepository<Hobbie, Long> {
-    fun findByStudent(student: Student): List<Hobbie>
+interface HobbieRepository : JpaRepository<Hobby, Long> {
+    fun findByStudent(student: Student): List<Hobby>
 }
 
 @Repository

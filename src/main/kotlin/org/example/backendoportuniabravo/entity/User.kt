@@ -4,7 +4,7 @@ package org.example.backendoportuniabravo.entity
     import java.util.*
 
     @Entity
-    @Table(name = "app_user") // "user" is reserved in PostgreSQL
+    @Table(name = "app_user") // "user" is reserved in PostgresSQL
     data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)

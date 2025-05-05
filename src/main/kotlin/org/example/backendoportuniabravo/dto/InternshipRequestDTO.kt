@@ -1,9 +1,9 @@
 package org.example.backendoportuniabravo.dto
 
-import java.time.LocalDate
+
 import java.util.*
 
-// Entrada -> cliente backend
+// Input -> client backend
 data class InternshipRequestDTO(
     val companyId: Long,
     val locationId: Long,

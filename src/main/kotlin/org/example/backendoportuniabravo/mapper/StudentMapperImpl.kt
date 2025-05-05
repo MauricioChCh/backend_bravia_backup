@@ -1,11 +1,8 @@
-package org.example.backendoportuniabravo.mapper.impl
+package org.example.backendoportuniabravo.mapper
 
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
-import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.*
-import org.mapstruct.Mapping
-import org.mapstruct.MappingTarget
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Component
 
@@ -61,7 +58,7 @@ class StudentMapperImpl : StudentMapper {
 
         // Mapear hobbies
         dto.hobbies.forEach { name ->
-            student.hobbies.add(Hobbie(name = name, student = student))
+            student.hobbies.add(Hobby(name = name, student = student))
         }
 
         // Mapear certificaciones
@@ -99,8 +96,8 @@ class StudentMapperImpl : StudentMapper {
         }
 
         // Mapear carreras
-        dto.careers.forEach { carrer ->
-            student.careers.add(Career(carrer = carrer, student = student))
+        dto.careers.forEach { career ->
+            student.careers.add(Career(career = career, student = student))
         }
 
         // Mapear URLs de CV

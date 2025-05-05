@@ -16,4 +16,4 @@ data class Contact (
     @JoinColumn(name = "company_id", referencedColumnName = "id")
     var company: Company? = null,
 
-    )
+    ) //TODO:  add equals, hashCode and toString methods

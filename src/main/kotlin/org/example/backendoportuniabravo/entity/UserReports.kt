@@ -31,7 +31,7 @@ data class UserReports(
 
 
 
-    ){
-
-}
+    )/*{
+    // TODO:  add equals, hashCode and toString methods
+}*/
 

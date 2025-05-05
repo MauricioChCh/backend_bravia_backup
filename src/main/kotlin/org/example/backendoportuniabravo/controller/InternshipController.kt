@@ -52,7 +52,7 @@ class InternshipController(private val service: InternshipService) {
         ResponseEntity.ok(service.search(query))
 
 
-    //Pruebas
+    //Tests
     @GetMapping("/recommended/{studentId}")
     fun getRecommended(@PathVariable studentId: Long): ResponseEntity<List<InternshipResponseDTO>> =
         ResponseEntity.ok(service.getRecommendedForStudent(studentId))

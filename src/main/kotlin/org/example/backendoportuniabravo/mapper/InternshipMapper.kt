@@ -4,9 +4,6 @@ import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
 import org.example.backendoportuniabravo.entity.Internship
 import org.mapstruct.*
-import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.RequestParam
 
 @Mapper(componentModel = "spring")
 interface InternshipMapper {
