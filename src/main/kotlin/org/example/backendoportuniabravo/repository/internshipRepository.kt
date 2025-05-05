@@ -19,7 +19,7 @@ interface InternshipRepository : JpaRepository<Internship, Long> {
     fun findByModalityIgnoreCase(modality: String): List<Internship>
 
     // Buscar pasantías por ubicación
-    fun findByLocation_Province_NameContainingIgnoreCase(provinceName: String): List<Internship>
+    fun findByLocation_City_NameContainingIgnoreCase(cityName: String): List<Internship>
     fun findByLocation_Country_NameContainingIgnoreCase(countryName: String): List<Internship>
     fun findByLocation_AddressContainingIgnoreCase(address: String): List<Internship>
 

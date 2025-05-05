@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository
 interface CountryRepository : JpaRepository<Country, Long>
 
 @Repository
-interface ProvinceRepository : JpaRepository<Province, Long>
+interface CityRepository : JpaRepository<City, Long>
 
 @Repository
 interface LocationRepository : JpaRepository<Location, Long>

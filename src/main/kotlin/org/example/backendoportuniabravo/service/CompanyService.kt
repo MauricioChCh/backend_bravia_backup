@@ -43,7 +43,7 @@ class CompanyServiceImpl(
     private val contactRepository: ContactRepository,
     private val locationRepository: LocationRepository,
     private val countryRepository: CountryRepository,
-    private val provinceRepository: ProvinceRepository,
+    private val cityRepository: CityRepository
 
     ) : CompanyService {
 
@@ -220,14 +220,14 @@ class CompanyServiceImpl(
 
         val country = locationInput.country?.id?.let { countryRepository.findById(it) }
             ?: throw IllegalArgumentException("Country is required")
-        val province = locationInput.province?.id?.let { provinceRepository.findById(it) }
+        val city = locationInput.city?.id?.let { cityRepository.findById(it) }
             ?: throw IllegalArgumentException("Province is required")
 
-        if (!country.isEmpty || !province.isEmpty) {
+        if (!country.isEmpty || !city.isEmpty) {
              location = Location(
                 address = locationInput.address ?: throw IllegalArgumentException("Address is required"),
                 country = country.get(),
-                province = province.get()
+                city = city.get()
             )
         }
 
@@ -246,26 +246,23 @@ class CompanyServiceImpl(
 
         val country = locationUpdate.country?.id?.let { countryRepository.findById(it) }
             ?: throw IllegalArgumentException("Country is required")
-        val province = locationUpdate.province?.id?.let { provinceRepository.findById(it) }
+        val city = locationUpdate.city?.id?.let { cityRepository.findById(it) }
             ?: throw IllegalArgumentException("Province is required")
 
         val location = companyMapper.companyLocationUpdateToLocation(locationUpdate)
 
-        if (!country.isEmpty && !province.isEmpty) {
+        if (!country.isEmpty && !city.isEmpty) {
             if(country != company.location?.country) {
                 location.country = country.get()
             } else {
                 location.country = company.location?.country!!
             }
-            if(province != company.location?.province) {
-                location.province = province.get()
+            if(city != company.location?.city) {
+                location.city = city.get()
             } else {
-                location.province = company.location?.province!!
+                location.city = company.location?.city!!
             }
         }
-
-
-        
 
         location.company = company
         company.location = location

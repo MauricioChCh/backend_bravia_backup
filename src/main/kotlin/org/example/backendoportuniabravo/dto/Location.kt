@@ -5,7 +5,7 @@ package org.example.backendoportuniabravo.dto
 data class LocationResponse(
     var id: Long? = null,
     var address: String? = null,
-    var province: ProvinceDetails? = null,
+    var city: CityDetails? = null,
     var country: CountryDetails? = null,
 )
 
@@ -13,12 +13,12 @@ data class LocationResponse(
 data class LocationResult(
     var id: Long? = null,
     var address: String? = null,
-    var province: ProvinceDetails? = null,
+    var city: CityDetails? = null,
     var country: CountryDetails? = null,
 )
 
 // details DTO
-data class ProvinceDetails(
+data class CityDetails(
     var id: Long? = null,
     var name: String? = null,
 )
@@ -29,7 +29,7 @@ data class CountryDetails(
 data class LocationDetails(
     var id: Long? = null,
     var address: String? = null,
-    var province: ProvinceDetails? = null,
+    var city: CityDetails? = null,
     var country: CountryDetails? = null,
 )
 
@@ -37,12 +37,12 @@ data class LocationDetails(
 data class LocationUpdate(
     var id: Long? = null,
     var address: String? = null,
-    var province: ProvinceInput? = null,
-    var country: ProvinceInput? = null,
+    var city: CityInput? = null,
+    var country: CityInput? = null,
 )
 
 // input
-data class ProvinceInput(
+data class CityInput(
     var id: Long? = null,
 )
 data class CountryInput(
@@ -50,7 +50,7 @@ data class CountryInput(
 )
 data class LocationInput(
     var address: String? = null,
-    var province: ProvinceInput? = null,
+    var city: CityInput? = null,
     var country: CountryInput? = null,
 )
 

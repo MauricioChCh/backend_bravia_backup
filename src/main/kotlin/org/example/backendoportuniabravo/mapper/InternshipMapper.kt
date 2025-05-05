@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam
 interface InternshipMapper {
 
     @Mapping(source = "company.name", target = "companyName")
-    @Mapping(source = "location.province.name", target = "provinceName")
+    @Mapping(source = "location.city.name", target = "cityName")
     @Mapping(source = "location.country.name", target = "countryName")
     fun toDto(internship: Internship): InternshipResponseDTO
 

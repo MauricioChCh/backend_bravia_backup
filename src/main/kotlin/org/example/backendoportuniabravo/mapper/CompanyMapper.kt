@@ -39,7 +39,7 @@ interface CompanyMapper {
   @Mapping(target = "id", source = "company.location.id")
   @Mapping(target = "address", source = "company.location.address")
   @Mapping(target = "country", source = "company.location.country")
-  @Mapping(target = "province", source = "company.location.province")
+  @Mapping(target = "city", source = "company.location.city")
   fun companyToLocationResult(company: Company): LocationResult
 
   fun companyLocationInputToLocation(locationInput: LocationInput): Location

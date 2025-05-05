@@ -7,7 +7,7 @@ data class InternshipResponseDTO(
     val id: Long?,
     val title: String,
     val companyName: String,
-    val provinceName: String,
+    val cityName: String,
     val countryName: String,
     val modality: String,
     val schedule: String,
@@ -20,6 +20,6 @@ data class InternshipResponseDTO(
     val salary: Double? = null,
 
     // Campo calculado
-    val locationFullName: String? = "$provinceName, $countryName"
+    val locationFullName: String? = "$cityName, $countryName"
 )
 

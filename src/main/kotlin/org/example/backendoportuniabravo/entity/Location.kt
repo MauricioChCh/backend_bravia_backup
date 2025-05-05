@@ -13,8 +13,8 @@ data class Location (
     var id: Long? = null,
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id", referencedColumnName = "id")
-    var province: Province,
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    var city: City,
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "country_id", referencedColumnName = "id")
@@ -49,8 +49,8 @@ data class Location (
 
 
 @Entity
-@Table(name= "province")
-data class Province (
+@Table(name= "city")
+data class City (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
@@ -62,7 +62,7 @@ data class Province (
 ){
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Province) return false
+        if (other !is City) return false
 
         return id != null && id == other.id
     }
@@ -88,7 +88,7 @@ data class Country (
 ){
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
-        if (other !is Province) return false
+        if (other !is Country) return false
 
         return id != null && id == other.id
     }
