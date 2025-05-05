@@ -15,7 +15,7 @@ class DataSeeder {
         userRepository: UserRepository,
         profileRepository: ProfileRepository,
         countryRepository: CountryRepository,
-        provinceRepository: ProvinceRepository,
+        cityRepository: CityRepository,
         locationRepository: LocationRepository,
         companyRepository: CompanyRepository,
         internshipRepository: InternshipRepository
@@ -40,19 +40,14 @@ class DataSeeder {
 
                 val profile = profileRepository.save(Profile(user = user, verified = true))
                 val country = countryRepository.save(Country(name = "Costa Rica"))
-                val province = provinceRepository.save(Province(name = "Heredia"))
+                val city = cityRepository.save(City(name = "Heredia"))
 
                 val location = Location(
-                        profile = profile,
-                        province = province,
+                        city = city,
                         country = country,
                         address = "Barrio Tournón"
                 )
 
-//                // Refetch or re-attach the 'location' to ensure it is managed
-//                val managedLocation = locationRepository.findById(location.id!!).orElseThrow {
-//                    RuntimeException("Location not found")
-//                }
 
                 // Create the company with the managed location
                 val company = Company(
