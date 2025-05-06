@@ -21,12 +21,15 @@ class InternshipRepositoryTest  @Autowired constructor (
     val userRepository: UserRepository,
     val profileRepository: ProfileRepository,
     val countryRepository: CountryRepository,
-    val provinceRepository: ProvinceRepository,
+    val cityRepository: CityRepository,
     val locationRepository: LocationRepository,
     val companyRepository: CompanyRepository,
     val internshipRepository: InternshipRepository
 ): BaseIntegrationTest() {
 
+
+    @Autowired
+    private lateinit var contactRepository: ContactRepository
 
     @Test
     fun `crear internships y probar queries`() {
@@ -48,12 +51,11 @@ class InternshipRepositoryTest  @Autowired constructor (
         )
 
         val country = countryRepository.save(Country(name = "Costa Rica"))
-        val province = provinceRepository.save(Province(name = "San José"))
+        val province = cityRepository.save(City(name = "San José"))
 
         val location = locationRepository.save(
             Location(
-                profile = profile,
-                province = province,
+                city = province,
                 country = country,
                 address = "Calle 15, San Pedro"
             )
@@ -61,13 +63,18 @@ class InternshipRepositoryTest  @Autowired constructor (
 
         val company = companyRepository.save(
             Company(
-                user = user,
+                profile = profile,
                 name = "TechSoft",
-                description = "Empresa de software",
-                location = "San José",
-                contact = "contacto@techsoft.com"
+                description = "Empresa de software"
             )
         )
+
+        val contact = Contact(url = "https://carlos.com/contacto", company = company)
+
+        // Guardar el contacto
+        contactRepository.save(contact)
+        company.contacts.add(contact)
+        companyRepository.save(company)
 
         // Crear múltiples pasantías
         val internships = listOf(
@@ -110,7 +117,7 @@ class InternshipRepositoryTest  @Autowired constructor (
         val resultsByModality = internshipRepository.findByModalityIgnoreCase("remoto")
         println("Por modalidad: ${resultsByModality.map { it.title }}")
 
-        val resultsByProvince = internshipRepository.findByLocation_Province_NameContainingIgnoreCase("San José")
+        val resultsByProvince = internshipRepository.findByLocation_City_NameContainingIgnoreCase("San José")
         println("Por provincia: ${resultsByProvince.map { it.title }}")
 
         val resultsByDate = internshipRepository.findAllByOrderByPublicationDateDesc()
