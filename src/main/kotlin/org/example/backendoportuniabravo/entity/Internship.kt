@@ -55,16 +55,6 @@ data class Internship(
     @ManyToMany(mappedBy = "internships")
     var students: MutableSet<Student> = mutableSetOf(),
 
-    //No hace falta contact por que lo tiene la compañia, mejor un dto
-
-//    // Relación con áreas de negocio
-//    @ManyToMany
-//    @JoinTable(
-//        name = "company_business_area",
-//        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "company_id")],
-//        inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
-//    )
-//    var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
 
     // Campo calculado/transitorio para el frontend (no se persiste) creo que ni siquiera va aca, esto deberia dser otra tabla
     @Transient

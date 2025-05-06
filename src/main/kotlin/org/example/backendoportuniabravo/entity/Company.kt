@@ -11,7 +11,7 @@ data class Company(
     @Column(name = "id")
     var id: Long? = null,
 
-    @OneToOne
+    @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "profile_id", referencedColumnName = "id")
     var profile: Profile? = null,
 
@@ -21,7 +21,7 @@ data class Company(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "company_business_area",
         joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
@@ -29,16 +29,23 @@ data class Company(
     )
     var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
 
-    @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(
+        name = "tags",
+        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
+        inverseJoinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")]
+    )
+    var tags: MutableSet<Tag> = mutableSetOf(),
+
+    @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
     var contacts: MutableList<Contact> = mutableListOf(),
 
-    @OneToOne(cascade = [CascadeType.ALL])
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id", referencedColumnName = "id", nullable = true)
     @JsonManagedReference
     var location: Location? = null,
 
-    @ManyToMany(mappedBy = "companies", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
-    var tags: MutableSet<Tag> = mutableSetOf(),
+
 
     @OneToMany(mappedBy = "company", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     val internships: MutableList<Internship> = mutableListOf(),
@@ -65,7 +72,7 @@ data class BusinessArea(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(mappedBy = "businessAreas", cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "businessAreas", fetch = FetchType.LAZY)
     var companies: MutableSet<Company> = mutableSetOf()
 ) {
     override fun hashCode(): Int {
@@ -90,12 +97,7 @@ data class Tag(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(cascade = [CascadeType.PERSIST], fetch = FetchType.LAZY)
-    @JoinTable(
-        name = "tags",
-        joinColumns = [JoinColumn(name = "tag_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "company_id", referencedColumnName = "id")],
-    )
+    @ManyToMany(mappedBy = "tags", fetch = FetchType.LAZY)
     var companies: MutableSet<Company> = mutableSetOf()
 ) {
     override fun hashCode(): Int {

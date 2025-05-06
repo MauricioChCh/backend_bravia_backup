@@ -20,4 +20,6 @@ interface TagRepository : JpaRepository<Tag, Long>
 interface ContactRepository : JpaRepository<Contact, Long>
 
 @Repository
-interface CompanyRepository : JpaRepository<Company, Long>
+interface CompanyRepository : JpaRepository<Company, Long>{
+    fun deleteCompanyById(id: Long): Unit
+}

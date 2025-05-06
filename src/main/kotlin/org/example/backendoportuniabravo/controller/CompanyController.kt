@@ -51,11 +51,11 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
-    @PostMapping("{id}/location")
-    fun addCompanyLocation(@PathVariable id: Long, @RequestBody locationInput: LocationInput) : ResponseEntity<LocationResult>? {
-        val updated = service.addLocation(id, locationInput)
-        return ResponseEntity.status(HttpStatus.OK).body(updated)
-    }
+//    @PostMapping("{id}/location")
+//    fun addCompanyLocation(@PathVariable id: Long, @RequestBody locationInput: LocationInput) : ResponseEntity<LocationResult>? {
+//        val updated = service.addLocation(id, locationInput)
+//        return ResponseEntity.status(HttpStatus.OK).body(updated)
+//    } // TODO: Creo que no se ocupa
 
     @PatchMapping("{id}/location")
     fun updateCompanyLocation(@PathVariable id: Long, @RequestBody locationUpdate: LocationUpdate) : ResponseEntity<LocationResult>? {
@@ -71,5 +71,8 @@ class CompanyController (private val service: CompanyService) {
 
     @DeleteMapping("{id}")
     @ResponseBody
-    fun deleteCompany(@PathVariable id: Long) = service.deleteById(id)
+    fun deleteCompany(@PathVariable id: Long) {
+        service.deleteCompany(id)
+        ResponseEntity.status(HttpStatus.NO_CONTENT)
+    }
 }

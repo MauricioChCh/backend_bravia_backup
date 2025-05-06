@@ -12,11 +12,11 @@ data class Location (
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     var city: City,
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     var country: Country,
 
@@ -25,11 +25,11 @@ data class Location (
 
 
     //Cada internship tiene una localizacion
-    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JsonDeserialize(contentAs = Internship::class)
     val internships: MutableList<Internship>? = mutableListOf(),
 
-    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JsonBackReference
     var company: Company? = null
 
