@@ -12,11 +12,11 @@ data class Location (
     @Column(name = "id")
     var id: Long? = null,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "city_id", referencedColumnName = "id")
     var city: City,
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.PERSIST])
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "country_id", referencedColumnName = "id")
     var country: Country,
 

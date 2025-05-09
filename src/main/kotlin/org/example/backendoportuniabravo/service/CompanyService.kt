@@ -7,7 +7,8 @@ import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.Optional
+import java.util.*
+import kotlin.NoSuchElementException
 import kotlin.Throws
 
 interface CompanyService {
@@ -63,7 +64,7 @@ class CompanyServiceImpl(
             lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
             email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
             password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
-            createDate = java.util.Date(),
+            createDate = Date(),
             tokenExpired = false,
             enabled = true
         )

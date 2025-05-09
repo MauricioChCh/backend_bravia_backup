@@ -26,8 +26,7 @@ class DataSeeder {
 //            if (internshipRepository.count() == 0L) {
 //                println("📦 Inserting test data into Docker...")
 //
-//                val user = userRepository.save(
-//                    User(
+//                val user = User(
 //                        createDate = Date(),
 //                        firstName = "María",
 //                        lastName = "Gómez",
@@ -35,10 +34,15 @@ class DataSeeder {
 //                        password = "123456",
 //                        tokenExpired = false,
 //                        enabled = true
-//                    )
 //                )
 //
-//                val profile = profileRepository.save(Profile(user = user, verified = true))
+//                val profile = Profile(user = user, verified = true)
+//                user.profile = profile
+//                userRepository.save(user)
+//
+//                val managedProfile = profileRepository.findById(profile.id!!)
+//                    .orElseThrow { IllegalStateException("Profile not found!") }
+//
 //
 //
 //                val country = countryRepository.save(Country(name = "Costa Rica"))
@@ -54,7 +58,7 @@ class DataSeeder {
 //
 //                // Create the company with the managed location
 //                val company = Company(
-//                    profile = profile,  // Use profile instead of user
+//                    profile = managedProfile,  // Use profile instead of user
 //                    name = "DevTechDockeeer",
 //                    description = "Compañía de desarrollo",
 //                    location = savedLocation  // Pass managed location here
