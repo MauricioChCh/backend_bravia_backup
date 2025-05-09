@@ -47,6 +47,8 @@ interface CompanyMapper {
   @Mapping(target = "country.name", ignore = true)
   fun companyLocationUpdateToLocation(locationUpdate: LocationUpdate): Location
 
+  fun companyToCompanyImageResult(company: Company): CompanyImageResult
+
 
   fun companyNameUpdateToCompany(companyNameUpdate: CompanyNameUpdate): Company
   fun companyToCompanyNameResult(company: Company): CompanyNameResult

@@ -7,6 +7,7 @@ data class CompanyUserResponse(
     var profile: ProfileDetails? = null,
     var name: String? = null,
     var description: String? = null,
+    var imageUrl: String? = null,
     var businessAreas: List<BusinessAreaDetails>? = null,
     var tags: List<TagDetails>? = null,
     var location: LocationDetails? = null,
@@ -36,6 +37,10 @@ data class CompanyBusinessAreaResult(
 data class CompanyContactsResult(
     var contacts: List<ContactDetails>? = null,
 )
+data class CompanyImageResult(
+    var imageUrl: String? = null,
+) // TODO: No se si va a funcionar asi
+
 
 // details DTO
 data class TagDetails(
@@ -75,6 +80,9 @@ data class CompanyTagsUpdate(
 )
 data class CompanyBusinessAreaUpdate(
     var businessAreas: List<BusinessAreaInput>? = null,
+)
+data class CompanyImageUpdate(
+    var imageUrl: String? = null,
 )
 
 // input DTO

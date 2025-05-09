@@ -21,6 +21,9 @@ data class Company(
     @Column(name = "name", nullable = false)
     var name: String,
 
+    @Column(name = "image_url", nullable = true)
+    var imageUrl: String? = null,
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
         name = "company_business_area",

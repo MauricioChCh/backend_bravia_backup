@@ -69,6 +69,13 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
+    @PatchMapping("{id}/profileImage")
+    fun updateCompanyImage(@PathVariable id: Long, @RequestBody companyImage: CompanyImageUpdate) : ResponseEntity<CompanyImageResult>? {
+        val updated = service.updateProfileImage(id, companyImage)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
+
     @DeleteMapping("{id}")
     @ResponseBody
     fun deleteCompany(@PathVariable id: Long) {

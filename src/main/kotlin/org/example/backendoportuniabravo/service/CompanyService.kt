@@ -21,6 +21,7 @@ interface CompanyService {
     fun deleteContact(id: Long, contactId: Long): CompanyContactsResult?
     fun addLocation(id: Long, locationInput: LocationInput): LocationResult?
     fun updateLocation(id: Long, locationUpdate: LocationUpdate): LocationResult?
+    fun updateProfileImage(id: Long, image: CompanyImageUpdate): CompanyImageResult?
     fun deleteCompany(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
@@ -261,6 +262,18 @@ class CompanyServiceImpl(
         val savedCompany = companyRepository.save(company)
 
         return companyMapper.companyToLocationResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class)
+    override fun updateProfileImage(id: Long, image: CompanyImageUpdate): CompanyImageResult? {
+        val company = companyRepository.findById(id).orElseThrow() {
+            NoSuchElementException("Company with id $id not found")
+        }
+
+        company.imageUrl = image.imageUrl.toString()
+        val saved = companyRepository.save(company)
+        return companyMapper.companyToCompanyImageResult(saved)
     }
 
     @Transactional
