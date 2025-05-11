@@ -17,6 +17,6 @@ data class Admin(
 
     @OneToMany(mappedBy = "admin", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var reportsAction: MutableSet<ReportAction> = mutableSetOf(),
-    ){
-
-}
+    )/*{
+    //TODO:  add equals, hashCode and toString methods
+}*/

@@ -33,6 +33,7 @@ dependencies {
 	runtimeOnly("org.postgresql:postgresql")
 
 	testImplementation("org.testcontainers:postgresql:1.19.3")
+	testImplementation("org.testcontainers:junit-jupiter")
 
 	implementation ("org.mapstruct:mapstruct:1.6.3")
 //	annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.3")

@@ -23,6 +23,6 @@ data class Plan(
     @Column(name = "benefits", columnDefinition = "TEXT")
     var benefits: String,
 
-    ){
-
-}
+    )/*{
+    // TODO: add equals, hashCode and toString methods
+}*/

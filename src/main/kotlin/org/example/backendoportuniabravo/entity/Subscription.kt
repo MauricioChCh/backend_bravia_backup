@@ -21,6 +21,6 @@ data class Subscriptions(
 
     @Column(name = "status", nullable = false)
     var status: String
-){
-
-}
+)/*{
+ // TODO: add equals, hashCode and toString methods
+}*/

@@ -4,7 +4,7 @@ package org.example.backendoportuniabravo.entity
     import java.util.*
 
     @Entity
-    @Table(name = "app_user") // "user" is reserved in PostgreSQL
+    @Table(name = "app_user") // "user" is reserved in PostgresSQL
     data class User(
         @Id
         @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -13,7 +13,7 @@ package org.example.backendoportuniabravo.entity
 
         @Column(name = "create_date", nullable = true)
         @Temporal(TemporalType.TIMESTAMP)
-        var createDate: Date,
+        var createDate: Date? = Date(),
 
         @Column(name = "first_name", nullable = false)
         var firstName: String,
@@ -27,21 +27,21 @@ package org.example.backendoportuniabravo.entity
         @Column(name = "password", nullable = false)
         var password: String,
 
-        @Column(name = "token_expired", nullable = false)
-        var tokenExpired: Boolean,
+        @Column(name = "token_expired", nullable = true)
+        var tokenExpired: Boolean? = false,
 
         @Column(name = "enabled")
-        var enabled: Boolean,
+        var enabled: Boolean? = true,
 
         @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
         @JoinColumn(name = "profile_id")
         var profile: Profile? = null,
 
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        var reportsMade: MutableSet<UserReports> = mutableSetOf(),
+        var reportsMade: MutableSet<UserReports>? = mutableSetOf(),
 
         @OneToMany(mappedBy = "userReported", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
-        var reportsReceived: MutableSet<UserReports> = mutableSetOf(),
+        var reportsReceived: MutableSet<UserReports>? = mutableSetOf(),
 
         ) {
         override fun hashCode(): Int {

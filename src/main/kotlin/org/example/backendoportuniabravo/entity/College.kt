@@ -15,4 +15,4 @@ data class College(
 
     @ManyToMany(mappedBy = "colleges", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var students: MutableSet<Student> = mutableSetOf()
-)
+) //TODO:  add equals, hashCode and toString methods

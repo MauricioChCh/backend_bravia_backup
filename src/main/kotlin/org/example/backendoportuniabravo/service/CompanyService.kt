@@ -1,24 +1,29 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.*
-import org.example.backendoportuniabravo.entity.Company
-import org.example.backendoportuniabravo.entity.Profile
-import org.example.backendoportuniabravo.entity.User
+import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.stereotype.Repository
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
-import java.util.Optional
-import kotlin.jvm.Throws
+import java.util.*
+import kotlin.NoSuchElementException
+import kotlin.Throws
 
 interface CompanyService {
     fun create(companyUserInput: CompanyUserInput): CompanyUserResult?
 //    fun update(companyUserInput: CompanyUserUpdate): CompanyUserResponse?
     fun updateName(id: Long, companyName: CompanyNameUpdate): CompanyNameResult?
     fun updateDescription(id: Long, companyDescription: CompanyDescriptionUpdate): CompanyDescriptionResult?
-    fun deleteById(id: Long)
+    fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult?
+    fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult?
+    fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult?
+    fun deleteContact(id: Long, contactId: Long): CompanyContactsResult?
+    fun addLocation(id: Long, locationInput: LocationInput): LocationResult?
+    fun updateLocation(id: Long, locationUpdate: LocationUpdate): LocationResult?
+    fun updateProfileImage(id: Long, image: CompanyImageUpdate): CompanyImageResult?
+    fun deleteCompany(id: Long)
     fun findById(id: Long): CompanyUserResponse?
 }
 
@@ -38,8 +43,11 @@ class CompanyServiceImpl(
     private val tagRepository: TagRepository,
     @Autowired
     private val contactRepository: ContactRepository,
+    private val locationRepository: LocationRepository,
+    private val countryRepository: CountryRepository,
+    private val cityRepository: CityRepository
 
-) : CompanyService {
+    ) : CompanyService {
 
     override fun create(companyUserInput: CompanyUserInput): CompanyUserResult? {
         // Validate input
@@ -52,11 +60,11 @@ class CompanyServiceImpl(
 
         // Create and persist the User entity
         val user = User(
-            firstName = userInput.firstname ?: throw IllegalArgumentException("User name cannot be null"),
+            firstName = userInput.firstName ?: throw IllegalArgumentException("User name cannot be null"),
             lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
             email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
             password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
-            createDate = java.util.Date(),
+            createDate = Date(),
             tokenExpired = false,
             enabled = true
         )
@@ -116,15 +124,171 @@ class CompanyServiceImpl(
         return companyMapper.companyToCompanyDescriptionResult(saved)
     }
 
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateTags(id: Long, companyTags: CompanyTagsUpdate): CompanyTagsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
 
+        val tags = companyTags.tags?.map { tagInput ->
+            tagRepository.findById(tagInput.id!!)
+                .orElseThrow { NoSuchElementException("Tag with id ${tagInput.id} not found") }
+        } ?: throw IllegalArgumentException("Tags are required")
 
-    @Throws(NoSuchElementException::class)
-    override fun deleteById(id: Long) {
-        if(!companyRepository.findById(id).isEmpty) {
-            companyRepository.deleteById(id)
-        } else {
-            throw NoSuchElementException("Company with id $id not found")
+        // Limpiar relaciones existentes
+        company.tags.forEach { it.companies.remove(company) }
+        company.tags.clear()
+
+        // Actualizar relaciones bidireccionales
+        tags.forEach { tag ->
+            tag.companies.add(company)
         }
+        company.tags = tags.toMutableSet() as MutableSet<Tag>
+
+        // Guardar cambios
+        tagRepository.saveAll(tags) // Asegura que los cambios en los tags se persistan
+        val savedCompany = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyTagsResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateBusinessArea(id: Long, companyBusinessArea: CompanyBusinessAreaUpdate): CompanyBusinessAreaResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val businessAreas = companyBusinessArea.businessAreas?.map { businessAreaInput ->
+            businessAreaRepository.findById(businessAreaInput.id!!)
+                .orElseThrow { NoSuchElementException("Business area with id ${businessAreaInput.id} not found") }
+        } ?: throw IllegalArgumentException("Business areas are required")
+
+        company.businessAreas.forEach { it.companies.remove(company) }
+        company.businessAreas.clear()
+
+        businessAreas.forEach { businessArea ->
+            businessArea.companies.add(company)
+        }
+        company.businessAreas = businessAreas.toMutableSet()
+
+        // Guardar cambios
+        businessAreaRepository.saveAll(businessAreas) // Asegura que los cambios en los tags se persistan
+        val savedCompany = companyRepository.save(company)
+
+        return companyMapper.companyToCompanyBusinessAreaResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun addContact(id: Long, contactInput: ContactInput): CompanyContactsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val contact = companyMapper.companyContactInputToContact(contactInput)
+
+        contact.company = company
+        contactRepository.save(contact)
+
+        company.contacts.add(contact)
+        return companyMapper.companyToCompanyContactsResult(companyRepository.save(company))
+
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun deleteContact(id: Long, contactId: Long): CompanyContactsResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val contact = contactRepository.findById(contactId)
+            .orElseThrow { NoSuchElementException("Contact with id $contactId not found") }
+
+        company.contacts.remove(contact)
+        contactRepository.delete(contact)
+
+        return companyMapper.companyToCompanyContactsResult(companyRepository.save(company))
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class)
+    override fun addLocation(id: Long, locationInput: LocationInput): LocationResult? {
+        var location: Location? = null
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        if(company.location != null) { // TODO: Check if company just can have one location
+            throw IllegalArgumentException("Company already has a location")
+        }
+
+        val country = locationInput.country?.id?.let { countryRepository.findById(it) }
+            ?: throw IllegalArgumentException("Country is required")
+        val city = locationInput.city?.id?.let { cityRepository.findById(it) }
+            ?: throw IllegalArgumentException("Province is required")
+
+        if (!country.isEmpty || !city.isEmpty) {
+             location = Location(
+                address = locationInput.address ?: throw IllegalArgumentException("Address is required"),
+                country = country.get(),
+                city = city.get()
+            )
+        }
+
+        location?.company = company
+        company.location = location
+        val saved = companyRepository.save(company)
+
+        return companyMapper.companyToLocationResult(saved)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class, IllegalArgumentException::class)
+    override fun updateLocation(id: Long, locationUpdate: LocationUpdate): LocationResult? {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val country = locationUpdate.country?.id?.let { countryRepository.findById(it).orElseThrow { IllegalArgumentException("Country not found") } }
+        val city = locationUpdate.city?.id?.let { cityRepository.findById(it).orElseThrow { IllegalArgumentException("City not found") } }
+
+        val location = Location(
+            address = locationUpdate.address ?: throw IllegalArgumentException("Address is required"),
+            country = country!!,
+            city = city!!
+        )
+
+        // Save the new Location to ensure a unique ID
+        val savedLocation = locationRepository.save(location)
+
+        // Assign the new Location to the Company
+        company.location = savedLocation
+        val savedCompany = companyRepository.save(company)
+
+        return companyMapper.companyToLocationResult(savedCompany)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class)
+    override fun updateProfileImage(id: Long, image: CompanyImageUpdate): CompanyImageResult? {
+        val company = companyRepository.findById(id).orElseThrow() {
+            NoSuchElementException("Company with id $id not found")
+        }
+
+        company.imageUrl = image.imageUrl.toString()
+        val saved = companyRepository.save(company)
+        return companyMapper.companyToCompanyImageResult(saved)
+    }
+
+    @Transactional
+    @Throws(NoSuchElementException::class)
+    override fun deleteCompany(id: Long) {
+        val company = companyRepository.findById(id)
+            .orElseThrow { NoSuchElementException("Company with id $id not found") }
+
+        val profile = company.profile ?: throw NoSuchElementException("Profile not found")
+
+        val user = profile.user
+        user?.profile = null
+
+        profileRepository.delete(profile)
     }
 
     @Throws(NoSuchElementException::class)

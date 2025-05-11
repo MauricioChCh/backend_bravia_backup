@@ -16,4 +16,4 @@ data class Interest(
 
     @ManyToMany(mappedBy = "interests")
     var students: MutableSet<Student> = mutableSetOf()
-)
+)// TODO:  add equals, hashCode and toString methods

@@ -1,11 +1,11 @@
 package org.example.backendoportuniabravo.mapper
 
+import org.example.backendoportuniabravo.dto.CityDetails
 import org.example.backendoportuniabravo.dto.CountryDetails
 import org.example.backendoportuniabravo.dto.LocationDetails
-import org.example.backendoportuniabravo.dto.ProvinceDetails
+import org.example.backendoportuniabravo.entity.City
 import org.example.backendoportuniabravo.entity.Country
 import org.example.backendoportuniabravo.entity.Location
-import org.example.backendoportuniabravo.entity.Province
 import org.mapstruct.*
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -28,22 +28,22 @@ interface LocationMapper {
 }
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
-interface ProvinceMapper {
-    fun provinceToProvinceDetails(
-        province: Province
-    ) : ProvinceDetails
+interface CityMapper {
+    fun provinceToCityDetails(
+        city: City
+    ) : CityDetails
     
-    fun provinceListToProvinceDetailsList(
-        provinceList: List<Province>
-    ) : List<ProvinceDetails>
+    fun provinceListToCityDetailsList(
+        cityList: List<City>
+    ) : List<CityDetails>
     
     fun provinceDetailsToProvince(
-        provinceDetails: ProvinceDetails
-    ) : Province
+        cityDetails: CityDetails
+    ) : City
     
     fun provinceDetailsListToProvince(
-        provinceDetailsList: List<ProvinceDetails>
-    ) : List<Province>
+        cityDetailsList: List<CityDetails>
+    ) : List<City>
 }
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
@@ -59,7 +59,7 @@ interface CountryMapper {
     fun countryDetailsToCountry(
         countryDetails: CountryDetails
     ) : Country
-    
+
     fun countryDetailsListToCountry(
         countryDetailsList: List<CountryDetails>
     ) : List<Country>

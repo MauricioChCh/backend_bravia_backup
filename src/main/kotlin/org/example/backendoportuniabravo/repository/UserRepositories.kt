@@ -11,6 +11,7 @@ interface UserRepository : JpaRepository<User, Long> {
     fun findByIdAndEnabledTrue(id: Long): User?
     fun findByProfile(profile: Profile): User?
     fun existsByEmail(email: String): Boolean
+    fun deleteByProfile(profile: Profile)
 }
 
 @Repository

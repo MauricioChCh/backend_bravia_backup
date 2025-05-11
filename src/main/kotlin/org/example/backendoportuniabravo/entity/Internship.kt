@@ -11,15 +11,15 @@ data class Internship(
     @Column(name = "id")
     var id: Long? = null,
 
-    // Relación con el usuario que creó la pasantía
+    // Relation con el user que  la pasantía
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
-    val company: Company,
+    var company: Company,
 
     //Relacion con su localidad
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "location_id")
-    val location: Location,
+    var location: Location,
 
     @Column(name = "title", nullable = false)
     var title: String,
@@ -55,16 +55,6 @@ data class Internship(
     @ManyToMany(mappedBy = "internships")
     var students: MutableSet<Student> = mutableSetOf(),
 
-    //No hace falta contact por que lo tiene la compañia, mejor un dto
-
-//    // Relación con áreas de negocio
-//    @ManyToMany
-//    @JoinTable(
-//        name = "company_business_area",
-//        joinColumns = [JoinColumn(name = "company_id", referencedColumnName = "company_id")],
-//        inverseJoinColumns = [JoinColumn(name = "business_area_id", referencedColumnName = "id")]
-//    )
-//    var businessAreas: MutableSet<BusinessArea> = mutableSetOf(),
 
     // Campo calculado/transitorio para el frontend (no se persiste) creo que ni siquiera va aca, esto deberia dser otra tabla
     @Transient

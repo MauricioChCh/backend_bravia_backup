@@ -58,11 +58,11 @@ class StudentRepositoryTest(
         profile.student = student
         user.profile = profile
 
-        student.hobbies.add(Hobbie(name = "Reading", student = student))
+        student.hobbies.add(Hobby(name = "Reading", student = student))
         student.certifications.add(Certification(student = student, name = "Java Certification", date = Date(), organization = "Oracle"))
         student.experiences.add(Experience(student = student, name = "Java Experience", description = "Experience of Computer Science"))
         student.skills.add(Skill(student = student, name = "Java", description = "Skill of Computer Science"))
-        student.careers.add(Career(student = student, carrer = "Computer Science"))
+        student.careers.add(Career(student = student, career = "Computer Science"))
         student.cvUrls.add(CVUrl(student = student, url = "https://example.com/cv"))
         student.mockInterviews.add(MockInterview(student = student, date = Date(), result = "Pass", transcription = "Mock interview transcription"))
 
@@ -146,7 +146,7 @@ class StudentRepositoryTest(
         assertTrue(fetchedStudent.certifications.any { it.name == "Java Certification" })
         assertTrue(fetchedStudent.experiences.any { it.name == "Java Experience" })
         assertTrue(fetchedStudent.skills.any { it.name == "Java" })
-        assertTrue(fetchedStudent.careers.any { it.carrer == "Computer Science" })
+        assertTrue(fetchedStudent.careers.any { it.career == "Computer Science" })
         assertTrue(fetchedStudent.cvUrls.any { it.url == "https://example.com/cv" })
         assertTrue(fetchedStudent.mockInterviews.any { it.result == "Pass" })
 

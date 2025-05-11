@@ -1,6 +1,7 @@
 package org.example.backendoportuniabravo.entity
 
 import com.fasterxml.jackson.annotation.JsonBackReference
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize
 import jakarta.persistence.*
 
 @Entity
@@ -11,48 +12,65 @@ data class Location (
     @Column(name = "id")
     var id: Long? = null,
 
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
+    @JoinColumn(name = "city_id", referencedColumnName = "id")
+    var city: City,
 
-    @OneToOne
-    @JoinColumn(name = "profile_id", referencedColumnName = "id")
-    val profile: Profile,
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "province_id", referencedColumnName = "id")
-    val province: Province,
-
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = [CascadeType.MERGE])
     @JoinColumn(name = "country_id", referencedColumnName = "id")
-    val country: Country,
+    var country: Country,
 
-    @Column(name = "address", nullable = false)
+    @Column(name = "address")
     var address: String,
 
 
     //Cada internship tiene una localizacion
-    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY)
-    val internships: List<Internship> = listOf(),
+    @OneToMany(mappedBy = "location", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    @JsonDeserialize(contentAs = Internship::class)
+    val internships: MutableList<Internship>? = mutableListOf(),
 
-    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "location", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
     @JsonBackReference
-    val company: Company? = null
+    var company: Company? = null
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Location) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
 
 }
 
 
 @Entity
-@Table(name= "province")
-data class Province (
+@Table(name= "city")
+data class City (
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "name", nullable = false)
-    var name: String,
+    @Column(name = "name")
+    var name: String? = null,
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is City) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
 
 }
 
@@ -64,9 +82,20 @@ data class Country (
     @Column(name = "id")
     var id: Long? = null,
 
-    @Column(name = "name", nullable = false)
-    var name: String,
+    @Column(name = "name")
+    var name: String? = null
 
 ){
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Country) return false
+
+        return id != null && id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
 
 }
