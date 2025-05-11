@@ -1,7 +1,7 @@
 package org.example.backendoportuniabravo
 
-import org.example.backendoportuniabravo.entities.*
-import org.example.backendoportuniabravo.repositories.*
+import org.example.backendoportuniabravo.entity.*
+import org.example.backendoportuniabravo.repository.*
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -2,8 +2,8 @@ package org.example.backendoportuniabravo
 
 import jakarta.transaction.Transactional
 import junit.framework.TestCase.*
-import org.example.backendoportuniabravo.entities.*
-import org.example.backendoportuniabravo.repositories.*
+import org.example.backendoportuniabravo.entity.*
+import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.util.Date
