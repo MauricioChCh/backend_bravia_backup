@@ -9,6 +9,7 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 import java.time.LocalDateTime
 import java.util.NoSuchElementException
 
+//Estructura de los errores
 data class ApiSubError(
     val code: String? = "NO-CODE",
     val message: String? = "NO MESSAGE",
@@ -26,6 +27,8 @@ data class ApiError(
     }
 }
 
+
+//Programacion orientada a aspectos
 @ControllerAdvice
 class RestExceptionHandler : ResponseEntityExceptionHandler() {
 
@@ -49,6 +52,7 @@ class RestExceptionHandler : ResponseEntityExceptionHandler() {
         return buildResponseEntity(apiError)
     }
 
+    //Error genrico
     @ExceptionHandler(Exception::class)
     fun handleAll(
         ex: java.lang.Exception,
