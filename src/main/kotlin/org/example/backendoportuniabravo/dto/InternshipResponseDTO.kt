@@ -11,7 +11,7 @@ data class InternshipResponseDTO(
     val id: Long?,
     val title: String,
     val companyName: String,
-    val cityName: String,
+    val cityName: String? = null,
     val countryName: String,
     val modality: String,
     val schedule: String,
