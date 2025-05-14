@@ -60,7 +60,7 @@ class InternshipServiceImpl (
      */
     override fun update(id: Long, dto: InternshipRequestDTO): InternshipResponseDTO {
         val internship = internshipRepository.findById(id)
-            .orElseThrow { RuntimeException("Internship not found") }
+            .orElseThrow { NoSuchElementException("Internship not found") }
 
         // Aplica los cambios al objeto existente
         mapper.updateFromDto(dto, internship)
@@ -72,7 +72,7 @@ class InternshipServiceImpl (
      */
     override fun findById(id: Long): InternshipResponseDTO {
         val internship = internshipRepository.findById(id)
-            .orElseThrow { RuntimeException("Internship not found") }
+            .orElseThrow { NoSuchElementException("Internship not found") }
         return mapper.toDto(internship)
     }
 
@@ -112,7 +112,7 @@ class InternshipServiceImpl (
      */
     override fun patch(id: Long, dto: InternshipPatchDTO): InternshipResponseDTO {
         val internship = internshipRepository.findById(id)
-            .orElseThrow { RuntimeException("Internship not found") }
+            .orElseThrow { NoSuchElementException("Internship not found") }
 
         // Aplica cambios solo si el campo fue proporcionado
         dto.title?.let { internship.title = it }

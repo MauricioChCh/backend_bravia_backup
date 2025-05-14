@@ -40,6 +40,7 @@ class InternshipController(private val service: InternshipService) {
      * @param dto the full update data
      * @return the updated internship response
      */
+    @Throws(NoSuchElementException::class)
     @PutMapping("{id}")
     fun update(@PathVariable id: Long, @RequestBody dto: InternshipRequestDTO): ResponseEntity<InternshipResponseDTO> =
         ResponseEntity.ok(service.update(id, dto))
@@ -50,6 +51,7 @@ class InternshipController(private val service: InternshipService) {
      * @param dto the partial fields to update
      * @return the updated internship
      */
+    @Throws(NoSuchElementException::class)
     @PatchMapping("{id}")
     fun patchInternship(@PathVariable id: Long, @RequestBody dto: InternshipPatchDTO): ResponseEntity<InternshipResponseDTO> =
         ResponseEntity.ok(service.patch(id, dto))
@@ -68,6 +70,7 @@ class InternshipController(private val service: InternshipService) {
      * @param query the keyword to search for
      * @return a list of matching internships
      */
+    @Throws(NoSuchElementException::class)
     @GetMapping("/search")
     fun search(@RequestParam query: String): ResponseEntity<List<InternshipResponseDTO>> =
         ResponseEntity.ok(service.search(query))
