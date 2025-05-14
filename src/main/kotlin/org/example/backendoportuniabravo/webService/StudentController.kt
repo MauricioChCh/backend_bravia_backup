@@ -1,4 +1,4 @@
-package org.example.backendoportuniabravo.controller
+package org.example.backendoportuniabravo.webService
 
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO

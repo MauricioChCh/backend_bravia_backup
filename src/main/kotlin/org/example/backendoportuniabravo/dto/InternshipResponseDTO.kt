@@ -2,12 +2,16 @@ package org.example.backendoportuniabravo.dto
 
 import java.util.*
 
-// Output->  backend -> client
+/**
+ * DTO representing an internship returned to the client.
+ * Output: backend to client.
+ * Output->  backend -> client
+ */
 data class InternshipResponseDTO(
     val id: Long?,
     val title: String,
     val companyName: String,
-    val cityName: String,
+    val cityName: String? = null,
     val countryName: String,
     val modality: String,
     val schedule: String,
@@ -19,7 +23,10 @@ data class InternshipResponseDTO(
     val duration: String? = null,
     val salary: Double? = null,
 
-    // Campo calculated
+    /**
+     * Computed field combining city and country names.
+     */
     val locationFullName: String? = "$cityName, $countryName"
 )
+
 

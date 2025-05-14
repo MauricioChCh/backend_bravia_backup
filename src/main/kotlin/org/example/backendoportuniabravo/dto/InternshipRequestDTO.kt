@@ -3,7 +3,12 @@ package org.example.backendoportuniabravo.dto
 
 import java.util.*
 
-// Input -> client backend
+/**
+ * DTO for creating or fully updating internships.
+ * Input: sent from client to backend.
+ * Input -> client backend
+ */
+
 data class InternshipRequestDTO(
     val companyId: Long,
     val locationId: Long,
@@ -18,6 +23,11 @@ data class InternshipRequestDTO(
     val activities: String,
     val link: String
 )
+
+/**
+ * DTO for applying partial updates to internships.
+ * Input: sent from client to backend.
+ */
 data class InternshipPatchDTO(
     val title: String? = null,
     val imageUrl: String? = null,
