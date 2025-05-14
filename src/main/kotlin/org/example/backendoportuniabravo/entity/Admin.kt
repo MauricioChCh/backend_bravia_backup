@@ -17,6 +17,20 @@ data class Admin(
 
     @OneToMany(mappedBy = "admin", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     var reportsAction: MutableSet<ReportAction> = mutableSetOf(),
-    )/*{
-    //TODO:  add equals, hashCode and toString methods
-}*/
+) {
+
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Admin) return false
+        if (id == null || other.id == null) return false
+        return id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+    override fun toString(): String {
+        return "Admin(id=$id, profileId=${profile?.id}, reportsActionSize=${reportsAction.size})"
+    }
+}
