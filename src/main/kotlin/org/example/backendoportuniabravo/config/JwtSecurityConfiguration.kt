@@ -1,6 +1,5 @@
 package org.example.backendoportuniabravo.config
 
-import jakarta.annotation.Resource
 import org.example.backendoportuniabravo.Security.JwtAuthenticationFilter
 import org.example.backendoportuniabravo.Security.JwtAuthorizationFilter
 import org.springframework.beans.factory.annotation.Value
@@ -23,7 +22,8 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 //Cualquier perfil que no sea el desarrollador local va a tener segguridad
-@Profile("!dev")
+//@Profile("!dev")
+@Profile("!heroku")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
