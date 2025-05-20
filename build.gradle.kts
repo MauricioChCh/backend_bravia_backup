@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	application
 	kotlin("jvm") version "1.9.25"
@@ -13,9 +15,10 @@ version = "1.0"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 }
+
 
 repositories {
 	mavenCentral()
@@ -62,6 +65,13 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-kapt {
-	correctErrorTypes = true
+tasks.withType<KotlinCompile> {
+	kotlinOptions {
+		jvmTarget = "21"
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+	}
+}
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	launchScript()
 }
