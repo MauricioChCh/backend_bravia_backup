@@ -132,3 +132,19 @@
 ////        }
 ////    }
 //
+
+                cityRepository.save(City(name = "San José"))
+                cityRepository.save(City(name = "Cartago"))
+                cityRepository.save(City(name = "Heredia"))
+                cityRepository.save(City(name = "Bogotá"))
+                cityRepository.save(City(name = "Cali"))
+                cityRepository.save(City(name = "Buenos Aires"))
+
+                println("✅ Test countries and cities inserted")
+            } else {
+                println("⚠️ Data for countries and cities already exists. No data was inserted.")
+            }
+
+        }
+    }
+}
