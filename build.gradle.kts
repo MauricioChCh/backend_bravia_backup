@@ -1,4 +1,7 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
+	application
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
 	id("org.springframework.boot") version "3.4.4"
@@ -8,13 +11,14 @@ plugins {
 }
 
 group = "org.example"
-version = "0.0.1-SNAPSHOT"
+version = "1.0"
 
 java {
 	toolchain {
-		languageVersion = JavaLanguageVersion.of(17)
+		languageVersion.set(JavaLanguageVersion.of(21))
 	}
 }
+
 
 repositories {
 	mavenCentral()
@@ -35,13 +39,13 @@ dependencies {
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.postgresql:postgresql:42.7.3")
 
 	testImplementation("org.testcontainers:postgresql:1.19.3")
 	testImplementation("org.testcontainers:junit-jupiter")
 
 	implementation ("org.mapstruct:mapstruct:1.6.3")
-//	annotationProcessor ("org.mapstruct:mapstruct-processor:1.6.3")
+//	annotationProcessor ("org.mapstruct:mapstruct-processorimplementation("org.postgresql:postgresql:42.7.3")  // ¡Versión reciente!:1.6.3")
 	kapt("org.mapstruct:mapstruct-processor:1.6.3")
 }
 
@@ -61,6 +65,13 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-kapt {
-	correctErrorTypes = true
+tasks.withType<KotlinCompile> {
+	kotlinOptions {
+		jvmTarget = "21"
+		freeCompilerArgs = listOf("-Xjsr305=strict")
+	}
+}
+
+tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
+	launchScript()
 }

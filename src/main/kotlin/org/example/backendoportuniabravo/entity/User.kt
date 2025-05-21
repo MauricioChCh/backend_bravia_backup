@@ -33,8 +33,9 @@ package org.example.backendoportuniabravo.entity
         @Column(name = "enabled")
         var enabled: Boolean? = true,
 
-        @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
-        @JoinColumn(name = "profile_id")
+//        @OneToOne(cascade = [CascadeType.ALL], orphanRemoval = true, fetch = FetchType.LAZY)
+//        @JoinColumn(name = "profile_id")
+        @OneToOne(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
         var profile: Profile? = null,
 
         @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
@@ -54,4 +55,9 @@ package org.example.backendoportuniabravo.entity
             if (id == null || other.id == null) return false
             return id == other.id
         }
+        fun addProfile(profile: Profile) {
+            this.profile = profile
+            profile.user = this
+        }
+
     }
