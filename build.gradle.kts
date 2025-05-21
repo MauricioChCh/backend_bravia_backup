@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
 	application
 	kotlin("jvm") version "1.9.25"
@@ -72,8 +74,4 @@ tasks.withType<KotlinCompile> {
 		jvmTarget = "21"
 		freeCompilerArgs = listOf("-Xjsr305=strict")
 	}
-}
-
-tasks.withType<org.springframework.boot.gradle.tasks.bundling.BootJar> {
-	launchScript()
 }
