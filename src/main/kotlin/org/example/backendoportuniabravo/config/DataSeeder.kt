@@ -3,13 +3,90 @@ package org.example.backendoportuniabravo.config
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.*
+
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
 
 @Configuration
 class DataSeeder {
+        @Bean
+        fun insertLocations(
+            countryRepository: CountryRepository,
+            cityRepository: CityRepository,
+            locationRepository: LocationRepository
+        ): CommandLineRunner {
+            return CommandLineRunner {
+                println("📦 Inserting Location Data...")
+
+                val country = countryRepository.findByName("Costa Rica")
+                    ?: countryRepository.save(Country(name = "Costa Rica"))
+
+                //Verifica si la ciudad ya existe, si no existe la crea por medio e una lista asociativa
+                val cities = listOf("Heredia", "San José", "Cartago", "Alajuela", "Limón").associateWith {
+                    cityRepository.findByName(it) ?: cityRepository.save(City(name = it))
+                }
+
+                // Variable de tipo lista que contiene una lista de tuplas triples,
+                // donde cada tupla contiene el nombre de la ciudad, la dirección y la ciudad para la facilidad de busqueda de location y la creacion o modificacion de ciudades por defecto
+                val expectedLocations = listOf(
+                    Triple("Heredia", "Barrio Tournón", cities["Heredia"]),
+                    Triple("San José", "Avenida Central", cities["San José"]),
+                    Triple("Cartago", "Ruinas de Cartago", cities["Cartago"]),
+                    Triple("Alajuela", "Parque Central", cities["Alajuela"]),
+                    Triple("Limón", "Puerto Limón", cities["Limón"])
+                )
+
+                //Me traigo toda la lista de ubicaciones, especificamente solo las adress
+                val existingAddresses = locationRepository.findAll().map { it.address }
+
+                // Filtro la lista de tuplas para quedarme solo con las adress que no existen en la base de datos y luego por cada una de estas verifica si la ciudad no es nula y la agrega
+                expectedLocations.filter { it.second !in existingAddresses }
+                    .forEach { (cityName, address, city) ->
+                        city?.let {
+                            locationRepository.save(Location(city = it, country = country, address = address))
+                        }
+                    }
+
+                println("✅ Location data ensured")
+            }
+        }
+
+//    @Bean
+//    fun insertLocations(
+//        countryRepository: CountryRepository,
+//        cityRepository: CityRepository,
+//        locationRepository: LocationRepository
+//    ): CommandLineRunner {
+//        return CommandLineRunner {
+////            if (countryRepository.findAll().isEmpty() || !countryRepository.existsByName("Costa Rica")) {
+//                println("📦 Inserting Location Data...")
+//
+//                val country = countryRepository.findByName("Costa Rica") ?: countryRepository.save(Country(name = "Costa Rica"))
+//
+//                val city1 = cityRepository.findByName("Heredia") ?: cityRepository.save(City(name = "Heredia"))
+//                val city2 = cityRepository.findByName("San José") ?: cityRepository.save(City(name = "San José"))
+//                val city3 = cityRepository.findByName("Cartago") ?: cityRepository.save(City(name = "Cartago"))
+//                val city4 = cityRepository.findByName("Alajuela") ?: cityRepository.save(City(name = "Alajuela"))
+//                val city5 = cityRepository.findByName("Limón") ?: cityRepository.save(City(name = "Limón"))
+//
+//                if (locationRepository.findAll().isEmpty()) {
+//                    locationRepository.save(Location(city = city1, country = country, address = "Barrio Tournón"))
+//                    locationRepository.save(Location(city = city2, country = country, address = "Avenida Central"))
+//                    locationRepository.save(Location(city = city3, country = country, address = "Ruinas de Cartago"))
+//                    locationRepository.save(Location(city = city4, country = country, address = "Parque Central"))
+//                    locationRepository.save(Location(city = city5, country = country, address = "Puerto Limón"))
+//                    println("✅ Test locations inserted")
+//                } else {
+//                    println("⚠️ Locations already exist. No data was inserted.")
+//                }
+////            } else {
+////                println("⚠️ Country or cities already exist. No data was inserted.")
+////            }
+//        }
+//    }
+
+
 //    @Bean
 //    fun insertSampleInternships(
 //        userRepository: UserRepository,
