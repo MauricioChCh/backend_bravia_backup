@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.repository
 
+import org.example.backendoportuniabravo.entity.Privilege
 import org.example.backendoportuniabravo.entity.Profile
 import org.example.backendoportuniabravo.entity.Role
 import org.example.backendoportuniabravo.entity.User
@@ -21,6 +22,11 @@ interface UserRepository : JpaRepository<User, Long> {
 interface ProfileRepository : JpaRepository<Profile, Long>
 
 @Repository
-interface RoleRepository : JpaRepository<org.example.backendoportuniabravo.entity.Role, Long> {
+interface RoleRepository : JpaRepository<Role, Long> {
     fun findByName(@Param("name") name: String): Optional<Role>
+}
+
+@Repository
+interface PrivilegeRepository : JpaRepository<Privilege, Long> {
+    fun findByName(@Param("name") name: String): Optional<Privilege>
 }
