@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.config
 import jakarta.annotation.Resource
 import org.example.backendoportuniabravo.Security.JwtAuthenticationFilter
 import org.example.backendoportuniabravo.Security.JwtAuthorizationFilter
+import org.example.backendoportuniabravo.service.AppUserDetailsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -29,16 +30,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @EnableMethodSecurity
 class JwtSecurityConfiguration {
 
-    @Value("\${url.unsecure}")
-    val URL_UNSECURE: String? = null
-
-    @Value("\${url.user.signup}")
-    val URL_SIGNUP: String? = null
+    @Value("\${url.access}")
+    val URL_ACCESS: String? = null
 
 
-//     Propio de Spring, es para inyectar el servicio de usuario
-//    @Resource
-//    private val userDetailsService: AppUserDetailsService? = null
+    @Resource
+    private val userDetailsService: AppUserDetailsService? = null
 
     @Bean
     @Throws(java.lang.Exception::class)
@@ -54,7 +51,7 @@ class JwtSecurityConfiguration {
     @Bean
     fun authenticationProvider(): DaoAuthenticationProvider? {
         val authProvider = DaoAuthenticationProvider()
-//        authProvider.setUserDetailsService(userDetailsService)
+        authProvider.setUserDetailsService(userDetailsService)
         authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }
@@ -67,8 +64,8 @@ class JwtSecurityConfiguration {
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/$URL_UNSECURE/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, URL_SIGNUP).permitAll()
+                    .requestMatchers("/$URL_ACCESS/**").permitAll()
+//                    .requestMatchers(HttpMethod.POST, URL_SIGNUP).permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }

@@ -8,6 +8,7 @@ import io.jsonwebtoken.security.*
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.example.backendoportuniabravo.dto.UserLoginInput
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.AuthenticationServiceException
@@ -23,19 +24,14 @@ import java.util.*
 
 object SecurityConstants {
     // JWT token defaults val TOKEN_PREFIX = "Bearer "
-    //Tipo de token
     const val TOKEN_TYPE = "JWT"
-    //Quien emite el cliente
     const val TOKEN_ISSUER = "secure-api"
-    //Para que cliente es valido
     const val TOKEN_AUDIENCE = "secure-app"
     const val TOKEN_LIFETIME: Long = 864000000// Duracion 10 dias
     const val TOKEN_PREFIX = "Bearer "
     const val APPLICATION_JSON = "application/json"
     const val UTF_8 = "UTF-8"
-    //Seria bueno hacer esto bien con hashes
-    const val TOKEN_SECRET: String =
-        "======================BRAVIAAAA----------CAMBIARSss"
+    const val TOKEN_SECRET: String = "zvCpgoHOHiY7qs8uXrwhwWK0lUbhHHk11"
 }
 
 /**
@@ -43,37 +39,37 @@ object SecurityConstants {
  */
 class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : UsernamePasswordAuthenticationFilter() {
 
-//    private val authManager: AuthenticationManager
-//
-//    init {
-//        setFilterProcessesUrl("/v1/users/login")
-//        authManager = authenticationManager
-//    }
+    private val authManager: AuthenticationManager
 
-//    @Throws(AuthenticationException::class)
-//    override fun attemptAuthentication(
-//        request: HttpServletRequest,
-//        response: HttpServletResponse,
-//    ): Authentication {
-//
-//        if (request.method != "POST") {
-//            throw AuthenticationServiceException("Authentication method not supported: $request.method")
-//        }
-//
-//        return try {
-//            val userLoginInput: UserLoginInput = ObjectMapper()
-//                .readValue(request.inputStream, UserLoginInput::class.java)
-//            authManager.authenticate(
-//                UsernamePasswordAuthenticationToken(
-//                    userLoginInput.username,
-//                    userLoginInput.password,
-//                    ArrayList()
-//                )
-//            )
-//        } catch (exception: IOException) {
-//            throw RuntimeException(exception)
-//        }
-//    }
+    init {
+        setFilterProcessesUrl("\${url.login}") // Todo: prodria esto afectar
+        authManager = authenticationManager
+    }
+
+    @Throws(AuthenticationException::class)
+    override fun attemptAuthentication(
+        request: HttpServletRequest,
+        response: HttpServletResponse,
+    ): Authentication {
+
+        if (request.method != "POST") {
+            throw AuthenticationServiceException("Authentication method not supported: $request.method")
+        }
+
+        return try {
+            val userLoginInput: UserLoginInput = ObjectMapper()
+                .readValue(request.inputStream, UserLoginInput::class.java)
+            authManager.authenticate(
+                UsernamePasswordAuthenticationToken(
+                    userLoginInput.email,
+                    userLoginInput.password,
+                    ArrayList()
+                )
+            )
+        } catch (exception: IOException) {
+            throw RuntimeException(exception)
+        }
+    }
 
     override fun successfulAuthentication(
         request: HttpServletRequest, response: HttpServletResponse,

@@ -20,11 +20,8 @@ class OpenSecurityConfiguration{
             }.cors{
                 it.disable()
             }.authorizeHttpRequests {
-            it.anyRequest().permitAll()
+                it.anyRequest().permitAll()
             }
-//            .authorizeHttpRequests {
-//                it.anyRequest().authenticated()
-//            }
 
         return http.build()
     }
