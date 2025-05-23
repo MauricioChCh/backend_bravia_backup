@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@RequestMapping("\${url.access}")
+@RequestMapping("/api/v1/users")
 class AccessController(
     private val companyService: CompanyService
 ) {
