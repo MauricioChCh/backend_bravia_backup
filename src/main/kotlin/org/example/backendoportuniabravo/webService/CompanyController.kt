@@ -15,11 +15,7 @@ class CompanyController (private val service: CompanyService) {
     @ResponseBody
     fun getCompanyById(@PathVariable id : Long) = service.findById(id)
 
-    @PostMapping
-    fun createCompany(@RequestBody company: CompanyUserInput) : ResponseEntity<CompanyUserResult>? {
-        val saved = service.create(company)
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved)
-    }
+
 
     @PatchMapping("{id}/name")
     fun updateCompanyName(@PathVariable id: Long, @RequestBody companyName: CompanyNameUpdate) : ResponseEntity<CompanyNameResult>? {
