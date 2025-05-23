@@ -15,7 +15,9 @@ data class Profile(
     @Column(name = "verified", nullable = false)
     var verified: Boolean,
 
-    @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER, cascade = [CascadeType.MERGE, CascadeType.PERSIST])
+//    @OneToOne(mappedBy = "profile", fetch = FetchType.EAGER, cascade = [CascadeType.MERGE, CascadeType.PERSIST])
+    @OneToOne
+    @JoinColumn(name = "user_id")
     var user: User? = null,
 
     @OneToOne(mappedBy = "profile", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
