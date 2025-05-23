@@ -5,10 +5,12 @@ import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
 import kotlin.NoSuchElementException
+//import org.example.backendoportuniabravo.config.JwtSecurityConfiguration.passwordEncoder
 
 @Service
 class CompanyServiceImpl(
@@ -28,7 +30,9 @@ class CompanyServiceImpl(
     private val contactRepository: ContactRepository,
     private val locationRepository: LocationRepository,
     private val countryRepository: CountryRepository,
-    private val cityRepository: CityRepository
+    private val cityRepository: CityRepository,
+    private val passwordEncoder: BCryptPasswordEncoder,
+    private val roleRepository: RoleRepository
 
 ) : CompanyService {
 
@@ -46,15 +50,22 @@ class CompanyServiceImpl(
             throw IllegalArgumentException("User with email '${userInput.email}' already exists")
         }
 
+        userInput.password ?:
+            throw IllegalArgumentException("User password cannot be null")
+
+        val role = roleRepository.findByName("ROLE_COMPANY")
+            .orElseThrow { NoSuchElementException("Role not found") }
+
         // Create and persist the User entity
         val user = User(
             firstName = userInput.firstName ?: throw IllegalArgumentException("User name cannot be null"),
             lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
             email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
-            password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
+            password = passwordEncoder.encode(userInput.password),
             createDate = Date(),
             tokenExpired = false,
-            enabled = true
+            enabled = true,
+            roleList = mutableSetOf(role)
         )
 
 
