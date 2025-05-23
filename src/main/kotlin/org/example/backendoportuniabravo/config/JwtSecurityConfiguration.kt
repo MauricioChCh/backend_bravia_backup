@@ -24,17 +24,15 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 //Cualquier perfil que no sea el desarrollador local va a tener segguridad
-@Profile("!dev")
+@Profile("!local")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
 class JwtSecurityConfiguration (
-    private val userDetailsService: AppUserDetailsService
+    private val userDetailsService: AppUserDetailsService,
+    @Value("\${url.signup}") val urlSignup: String,
+    @Value("\${url.login}") val urlLogin: String
 ){
-
-//    @Resource
-//    private val userDetailsService: AppUserDetailsService? = null
-
     @Bean
     @Throws(java.lang.Exception::class)
     fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager? {
@@ -62,7 +60,8 @@ class JwtSecurityConfiguration (
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers(HttpMethod.POST, "/api/v1/users/signup/company").permitAll()
+                    .requestMatchers(HttpMethod.POST, "$urlSignup/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, urlLogin).permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }

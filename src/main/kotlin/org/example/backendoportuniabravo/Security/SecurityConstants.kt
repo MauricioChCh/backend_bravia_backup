@@ -31,7 +31,7 @@ object SecurityConstants {
     const val TOKEN_PREFIX = "Bearer "
     const val APPLICATION_JSON = "application/json"
     const val UTF_8 = "UTF-8"
-    const val TOKEN_SECRET: String = "zvCpgoHOHiY7qs8uXrwhwWK0lUbhHHk11"
+    val TOKEN_SECRET: String = "tWnGkqMz6Dz3bZ0NqNWQ1e6e+LnBG4gcztV8R/jekG5N1CUPVwIFSkC8pOBGipgEwsNMGFkfa9R0MT+3c6mwWQ=="
 }
 
 /**
