@@ -28,14 +28,12 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class JwtSecurityConfiguration {
+class JwtSecurityConfiguration (
+    private val userDetailsService: AppUserDetailsService
+){
 
-    @Value("\${url.access}")
-    val URL_ACCESS: String? = null
-
-
-    @Resource
-    private val userDetailsService: AppUserDetailsService? = null
+//    @Resource
+//    private val userDetailsService: AppUserDetailsService? = null
 
     @Bean
     @Throws(java.lang.Exception::class)
@@ -64,8 +62,7 @@ class JwtSecurityConfiguration {
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/$URL_ACCESS/**").permitAll()
-//                    .requestMatchers(HttpMethod.POST, URL_SIGNUP).permitAll()
+                    .requestMatchers(HttpMethod.POST, "/api/v1/users/signup/company").permitAll()
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
@@ -92,18 +89,18 @@ class JwtSecurityConfiguration {
 
 class AppCustomDsl : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
     override fun configure(http: HttpSecurity?) {
-        super.configure(builder)
-        val authenticationManager = http?.getSharedObject(
-            AuthenticationManager::class.java
-        )
+        super.configure(http)
 
-        http?.addFilter(JwtAuthenticationFilter(authenticationManager!!))
-        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!))
+        val authenticationManager = http?.getSharedObject(AuthenticationManager::class.java)
+        if (authenticationManager != null) {
+            http.addFilter(JwtAuthenticationFilter(authenticationManager))
+            http.addFilter(JwtAuthorizationFilter(authenticationManager))
+        }
     }
+
     companion object {
         fun customDsl(): AppCustomDsl {
             return AppCustomDsl()
         }
     }
-
 }

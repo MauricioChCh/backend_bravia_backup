@@ -42,7 +42,7 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
     private val authManager: AuthenticationManager
 
     init {
-        setFilterProcessesUrl("\${url.login}") // Todo: prodria esto afectar
+        setFilterProcessesUrl("/api/v1/users/login")
         authManager = authenticationManager
     }
 
