@@ -22,8 +22,8 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 //Cualquier perfil que no sea el desarrollador local va a tener segguridad
+@Profile("!heroku")
 //@Profile("!dev")
-@Profile("!dev")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
