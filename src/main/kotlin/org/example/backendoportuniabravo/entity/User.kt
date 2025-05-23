@@ -66,13 +66,12 @@ data class User(
         if (id == null || other.id == null) return false
         return id == other.id
     }
-}
-        fun addProfile(profile: Profile) {
-            this.profile = profile
-            profile.user = this
-        }
-
+    fun addProfile(profile: Profile) {
+        this.profile = profile
+        profile.user = this
     }
+}
+
 
 
 @Entity
