@@ -1,0 +1,79 @@
+#0 building with "default" instance using docker driver
+
+#1 [app internal] load build definition from Dockerfile
+#1 transferring dockerfile: 333B done
+#1 DONE 0.0s
+
+#2 [app internal] load metadata for docker.io/library/openjdk:17-jdk-slim
+#2 DONE 0.4s
+
+#3 [app internal] load .dockerignore
+#3 transferring context: 2B done
+#3 DONE 0.0s
+
+#4 [app 1/3] FROM docker.io/library/openjdk:17-jdk-slim@sha256:aaa3b3cb27e3e520b8f116863d0580c438ed55ecfa0bc126b41f68c3f62f9774
+#4 DONE 0.0s
+
+#5 [app internal] load build context
+#5 transferring context: 212B 0.0s done
+#5 DONE 0.0s
+
+#6 [app 2/3] WORKDIR /app
+#6 CACHED
+
+#7 [app 3/3] COPY build/libs/*.jar app.jar
+#7 CACHED
+
+#8 [app] exporting to image
+#8 exporting layers done
+#8 writing image sha256:5c832da7c6826c485736d14c091197cd93d99dcbfe1eea7e6024689d42ba9856 done
+#8 naming to docker.io/library/backend-oportunia-bravo-app done
+#8 DONE 0.0s
+
+#9 [app] resolving provenance for metadata file
+#9 DONE 0.0s
+Attaching to application, database
+database     | 
+database     | PostgreSQL Database directory appears to contain a database; Skipping initialization
+database     | 
+application  | 
+application  |   .   ____          _            __ _ _
+application  |  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+application  | ( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+application  |  \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+application  |   '  |____| .__|_| |_|_| |_\__, | / / / /
+application  |  =========|_|==============|___/=/_/_/_/
+application  | 
+application  |  :: Spring Boot ::                (v3.4.4)
+application  | 
+application  | 2025-04-26T05:39:17.792Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.e.b.BackendOportuniaBravoApplicationKt : Starting BackendOportuniaBravoApplicationKt v0.0.1-SNAPSHOT using Java 17.0.2 with PID 1 (/app/app.jar started by root in /app)
+application  | 2025-04-26T05:39:17.798Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.e.b.BackendOportuniaBravoApplicationKt : The following 1 profile is active: "docker"
+application  | 2025-04-26T05:39:19.700Z  INFO 1 --- [backend-oportunia-bravo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+application  | 2025-04-26T05:39:20.002Z  INFO 1 --- [backend-oportunia-bravo] [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 278 ms. Found 20 JPA repository interfaces.
+application  | 2025-04-26T05:39:21.236Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+application  | 2025-04-26T05:39:21.276Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+application  | 2025-04-26T05:39:21.277Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.39]
+application  | 2025-04-26T05:39:21.345Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+application  | 2025-04-26T05:39:21.351Z  INFO 1 --- [backend-oportunia-bravo] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3336 ms
+application  | 2025-04-26T05:39:21.737Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+application  | 2025-04-26T05:39:21.880Z  INFO 1 --- [backend-oportunia-bravo] [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.11.Final
+application  | 2025-04-26T05:39:21.958Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+application  | 2025-04-26T05:39:22.625Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+application  | 2025-04-26T05:39:22.688Z  INFO 1 --- [backend-oportunia-bravo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+application  | 2025-04-26T05:39:23.009Z  INFO 1 --- [backend-oportunia-bravo] [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@4c5da4f9
+application  | 2025-04-26T05:39:23.012Z  INFO 1 --- [backend-oportunia-bravo] [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+application  | 2025-04-26T05:39:23.071Z  WARN 1 --- [backend-oportunia-bravo] [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+application  | 2025-04-26T05:39:23.123Z  INFO 1 --- [backend-oportunia-bravo] [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+application  | 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+application  | 	Database driver: undefined/unknown
+application  | 	Database version: 17.4
+application  | 	Autocommit mode: undefined/unknown
+application  | 	Isolation level: undefined/unknown
+application  | 	Minimum pool size: undefined/unknown
+application  | 	Maximum pool size: undefined/unknown
+application  | 2025-04-26T05:39:25.397Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+application  | 2025-04-26T05:39:27.132Z  INFO 1 --- [backend-oportunia-bravo] [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+application  | 2025-04-26T05:39:27.220Z  WARN 1 --- [backend-oportunia-bravo] [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+application  | 2025-04-26T05:39:29.524Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
+application  | 2025-04-26T05:39:30.815Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
+application  | 2025-04-26T05:39:30.833Z  INFO 1 --- [backend-oportunia-bravo] [           main] o.e.b.BackendOportuniaBravoApplicationKt : Started BackendOportuniaBravoApplicationKt in 14.124 seconds (process running for 15.11)

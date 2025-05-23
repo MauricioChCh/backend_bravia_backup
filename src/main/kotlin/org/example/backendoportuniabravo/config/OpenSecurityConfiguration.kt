@@ -8,6 +8,8 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.web.SecurityFilterChain
 
 @Profile("local")
+//@Profile("heroku")
+//@Profile("dev")
 @Configuration
 @EnableWebSecurity
 class OpenSecurityConfiguration{

@@ -7,6 +7,7 @@ import org.example.backendoportuniabravo.entity.User
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.repository.query.Param
 import org.springframework.stereotype.Repository
+import java.util.Optional
 import java.util.*
 
 @Repository
@@ -16,10 +17,17 @@ interface UserRepository : JpaRepository<User, Long> {
 //    fun findByProfile(profile: Profile): User? // TODO: Probablemente eliminar
     fun existsByEmail(email: String): Boolean
 //    fun deleteByProfile(profile: Profile) // TODO: Probablemente eliminar
+    fun deleteByProfile(profile: Profile)
+    fun findByProfileId(profileId: Long?): User?
+    fun existsByProfileId(profileId: Long): Boolean
+    fun findByEmailIgnoreCase(email: String): Optional<User>
 }
 
 @Repository
-interface ProfileRepository : JpaRepository<Profile, Long>
+interface ProfileRepository : JpaRepository<Profile, Long>{
+    fun save(profile: Profile): Profile
+
+}
 
 @Repository
 interface RoleRepository : JpaRepository<Role, Long> {

@@ -3,7 +3,7 @@ package org.example.backendoportuniabravo.config
 import org.springframework.boot.CommandLineRunner
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import java.util.*
+
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
@@ -11,10 +11,86 @@ import org.springframework.transaction.annotation.Transactional
 
 @Configuration
 class DataSeeder {
+        @Bean
+        fun insertLocations(
+            countryRepository: CountryRepository,
+            cityRepository: CityRepository,
+            locationRepository: LocationRepository
+        ): CommandLineRunner {
+            return CommandLineRunner {
+                println("📦 Inserting Location Data...")
+
+                val country = countryRepository.findByName("Costa Rica")
+                    ?: countryRepository.save(Country(name = "Costa Rica"))
+
+                //Verifica si la ciudad ya existe, si no existe la crea por medio e una lista asociativa
+                val cities = listOf("Heredia", "San José", "Cartago", "Alajuela", "Limón").associateWith {
+                    cityRepository.findByName(it) ?: cityRepository.save(City(name = it))
+                }
+
+                // Variable de tipo lista que contiene una lista de tuplas triples,
+                // donde cada tupla contiene el nombre de la ciudad, la dirección y la ciudad para la facilidad de busqueda de location y la creacion o modificacion de ciudades por defecto
+                val expectedLocations = listOf(
+                    Triple("Heredia", "Barrio Tournón", cities["Heredia"]),
+                    Triple("San José", "Avenida Central", cities["San José"]),
+                    Triple("Cartago", "Ruinas de Cartago", cities["Cartago"]),
+                    Triple("Alajuela", "Parque Central", cities["Alajuela"]),
+                    Triple("Limón", "Puerto Limón", cities["Limón"])
+                )
+
+                //Me traigo toda la lista de ubicaciones, especificamente solo las adress
+                val existingAddresses = locationRepository.findAll().map { it.address }
+
+                // Filtro la lista de tuplas para quedarme solo con las adress que no existen en la base de datos y luego por cada una de estas verifica si la ciudad no es nula y la agrega
+                expectedLocations.filter { it.second !in existingAddresses }
+                    .forEach { (cityName, address, city) ->
+                        city?.let {
+                            locationRepository.save(Location(city = it, country = country, address = address))
+                        }
+                    }
+
+                println("✅ Location data ensured")
+            }
+        }
+
+//    @Bean
+//    fun insertLocations(
+//        countryRepository: CountryRepository,
+//        cityRepository: CityRepository,
+//        locationRepository: LocationRepository
+//    ): CommandLineRunner {
+//        return CommandLineRunner {
+////            if (countryRepository.findAll().isEmpty() || !countryRepository.existsByName("Costa Rica")) {
+//                println("📦 Inserting Location Data...")
+//
+//                val country = countryRepository.findByName("Costa Rica") ?: countryRepository.save(Country(name = "Costa Rica"))
+//
+//                val city1 = cityRepository.findByName("Heredia") ?: cityRepository.save(City(name = "Heredia"))
+//                val city2 = cityRepository.findByName("San José") ?: cityRepository.save(City(name = "San José"))
+//                val city3 = cityRepository.findByName("Cartago") ?: cityRepository.save(City(name = "Cartago"))
+//                val city4 = cityRepository.findByName("Alajuela") ?: cityRepository.save(City(name = "Alajuela"))
+//                val city5 = cityRepository.findByName("Limón") ?: cityRepository.save(City(name = "Limón"))
+//
+//                if (locationRepository.findAll().isEmpty()) {
+//                    locationRepository.save(Location(city = city1, country = country, address = "Barrio Tournón"))
+//                    locationRepository.save(Location(city = city2, country = country, address = "Avenida Central"))
+//                    locationRepository.save(Location(city = city3, country = country, address = "Ruinas de Cartago"))
+//                    locationRepository.save(Location(city = city4, country = country, address = "Parque Central"))
+//                    locationRepository.save(Location(city = city5, country = country, address = "Puerto Limón"))
+//                    println("✅ Test locations inserted")
+//                } else {
+//                    println("⚠️ Locations already exist. No data was inserted.")
+//                }
+////            } else {
+////                println("⚠️ Country or cities already exist. No data was inserted.")
+////            }
+//        }
+//    }
+
+
 //    @Bean
 //    fun insertSampleInternships(
 //        userRepository: UserRepository,
-//        profileRepository: ProfileRepository,
 //        countryRepository: CountryRepository,
 //        cityRepository: CityRepository,
 //        locationRepository: LocationRepository,
@@ -22,65 +98,46 @@ class DataSeeder {
 //        internshipRepository: InternshipRepository
 //    ): CommandLineRunner {
 //        return CommandLineRunner {
-//
-//            // Only insert if the table is empty
 //            if (internshipRepository.count() == 0L) {
-//                println("📦 Inserting test data into Docker...")
-//
+//                println("📦 Inserting test data...")
+//                // Crear el usuario
 //                val user = User(
-//                        createDate = Date(),
-//                        firstName = "María",
-//                        lastName = "Gómez",
-//                        email = "maria@email.com",
-//                        password = "123456",
-//                        tokenExpired = false,
-//                        enabled = true
-//                )
+//                    createDate = Date(),
+//                    firstName = "María",
+//                    lastName = "Gómez",
+//                    email = "maria@email.com",
+//                    password = "123456",
+//                    tokenExpired = false,
+//                    enabled = true
+//                ).apply {
+//                    addProfile(Profile(verified = true))
+//                }
+//                val savedUser = userRepository.save(user)
 //
-//                val profile = Profile(user = user, verified = true)
-//                user.profile = profile
-//                userRepository.save(user)
+//                // 2. Obtener el perfil gestionado
+//                val managedProfile = savedUser.profile!!
+//                println("✅ User and Profile created")
 //
-//                val managedProfile = profileRepository.findById(profile.id!!)
-//                    .orElseThrow { IllegalStateException("Profile not found!") }
-//
-//
-//
+//                // 3. Crear ubicación
 //                val country = countryRepository.save(Country(name = "Costa Rica"))
 //                val city = cityRepository.save(City(name = "Heredia"))
+//                val location = locationRepository.save(
+//                    Location(city = city, country = country, address = "Barrio Tournón")
+//                )
+//                println("✅ Location created")
 //
-//                val savedLocation = locationRepository.save(
-//                        Location(
-//                            city = city,
-//                            country = country,
-//                            address = "Barrio Tournón"
+//                // 4. Crear compañía
+//                val company = companyRepository.save(
+//                    Company(
+//                        profile = managedProfile,
+//                        name = "DevTech",
+//                        description = "Desarrollo de software",
+//                        location = location
 //                    )
 //                )
+//                println("✅ Company created")
 //
-//                // Create the company with the managed location
-//                val company = Company(
-//                    profile = managedProfile,  // Use profile instead of user
-//                    name = "DevTechDockeeer",
-//                    description = "Compañía de desarrollo",
-//                    location = savedLocation  // Pass managed location here
-//                )
-//
-//                // Save the company first
-//                val savedCompany = companyRepository.save(company)
-//
-//                // Add contact to the saved company
-//                val contact = Contact(
-//                    url = "https://devtech.com/contacto",  // Contact URL
-//                    company = savedCompany
-//                )
-//
-//                // Use the contactRepository or company object directly to handle the relationship
-//                savedCompany.contacts.add(contact)
-//
-//                // Save company again with its updated contacts
-//                companyRepository.save(savedCompany)
-//
-//                // Create internship using the managed location and saved company
+//                // Crear pasantía
 //                val internship = Internship(
 //                    title = "Fullstack Developer Docker",
 //                    imageUrl = null,
@@ -92,18 +149,19 @@ class DataSeeder {
 //                    requirements = "Kotlin, Angular",
 //                    activities = "Desarrollar frontend y backend",
 //                    link = "https://devtech.com/oportunidad",
-//                    location = savedLocation,  // Use managed location
-//                    company = savedCompany  // Use saved (managed) company instance
+//                    company = company,
+//                    location = location,
 //                )
 //
 //                internshipRepository.save(internship)
-//
 //                println("✅ Test internship inserted")
 //            } else {
 //                println("⚠️ Data already exists. No data was inserted.")
 //            }
 //        }
 //    }
+
+
 
     @Bean
     fun insertSampleForCompany(businessAreaRepository: BusinessAreaRepository, tagRepository: TagRepository,
