@@ -1,6 +1,5 @@
 package org.example.backendoportuniabravo.config
 
-import jakarta.annotation.Resource
 import org.example.backendoportuniabravo.Security.JwtAuthenticationFilter
 import org.example.backendoportuniabravo.Security.JwtAuthorizationFilter
 import org.example.backendoportuniabravo.service.AppUserDetailsService

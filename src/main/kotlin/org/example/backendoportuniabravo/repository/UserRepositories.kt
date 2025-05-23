@@ -12,10 +12,10 @@ import java.util.*
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
     fun findByEmail(email: String): User?
-    fun findByIdAndEnabledTrue(id: Long): User?
-    fun findByProfile(profile: Profile): User?
+//    fun findByIdAndEnabledTrue(id: Long): User? // TODO: Probablemente eliminar
+//    fun findByProfile(profile: Profile): User? // TODO: Probablemente eliminar
     fun existsByEmail(email: String): Boolean
-    fun deleteByProfile(profile: Profile)
+//    fun deleteByProfile(profile: Profile) // TODO: Probablemente eliminar
 }
 
 @Repository
@@ -27,6 +27,4 @@ interface RoleRepository : JpaRepository<Role, Long> {
 }
 
 @Repository
-interface PrivilegeRepository : JpaRepository<Privilege, Long> {
-    fun findByName(@Param("name") name: String): Optional<Privilege>
-}
+interface PrivilegeRepository : JpaRepository<Privilege, Long>
