@@ -4,5 +4,6 @@ data class StudentResponseDTO(
     val id: Long?,
 //    val fullName: String,
     val description: String,
-    val academicCenter: String
+    val academicCenter: String,
+    val userInput: UserResult
 )

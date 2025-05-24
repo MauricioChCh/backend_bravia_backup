@@ -25,12 +25,20 @@ class StudentMapperImpl : StudentMapper {
     private lateinit var internshipRepository: InternshipRepository
 
     override fun toDto(student: Student): StudentResponseDTO {
-        // Implementa la conversión de Student a StudentResponseDTO
+        val user = student.profile?.user
+
+        val userResult = UserResult(
+            id = user?.id,
+            email = user?.email,
+            firstName = user?.firstName,
+            lastName = user?.lastName
+        )
+
         return StudentResponseDTO(
             id = student.id,
             description = student.description,
             academicCenter = student.academicCenter,
-            // Mapea otros campos según sea necesario
+            userInput = userResult
         )
     }
 
