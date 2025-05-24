@@ -13,11 +13,11 @@ interface AIService {
 
 @Service
 class GeminiAIService(
-    @Value("\${gemini.api.key}") private val apiKey: String
+    @Value("\${gemini.api.key}") private val apiKey: String,
+    @Value("\${gemini.api.url}") private val apiUrl: String
 ) : AIService {
-
     private val webClient = WebClient.builder()
-        .baseUrl("https://generativelanguage.googleapis.com/v1beta")
+        .baseUrl(apiUrl)
         .defaultHeader("Content-Type", MediaType.APPLICATION_JSON_VALUE)
         .build()
 
