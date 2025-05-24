@@ -7,7 +7,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.web.SecurityFilterChain
 
-@Profile("dev")
+@Profile("local")
+//@Profile("heroku")
 //@Profile("dev")
 @Configuration
 @EnableWebSecurity
@@ -21,11 +22,8 @@ class OpenSecurityConfiguration{
             }.cors{
                 it.disable()
             }.authorizeHttpRequests {
-            it.anyRequest().permitAll()
+                it.anyRequest().permitAll()
             }
-//            .authorizeHttpRequests {
-//                it.anyRequest().authenticated()
-//            }
 
         return http.build()
     }
