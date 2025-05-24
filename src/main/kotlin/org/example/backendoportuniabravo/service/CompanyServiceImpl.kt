@@ -65,7 +65,7 @@ class CompanyServiceImpl(
             createDate = Date(),
             tokenExpired = false,
             enabled = true,
-            roleList = mutableSetOf(role)
+            roleList = mutableSetOf(role),
         )
 
 

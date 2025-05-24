@@ -14,11 +14,7 @@ class StudentController(
     private val service: StudentService
 ) {
 
-    @PostMapping
-    fun create(@RequestBody dto: StudentCreateRequestDTO): ResponseEntity<StudentResponseDTO> {
-        val response = service.create(dto)
-        return ResponseEntity.status(HttpStatus.CREATED).body(response)
-    }
+
 
     @GetMapping("{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<StudentResponseDTO> {

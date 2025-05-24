@@ -8,6 +8,7 @@ import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 import java.util.*
@@ -24,7 +25,10 @@ class StudentServiceImpl(
     private val collegeRepository: CollegeRepository,
     @Autowired
     private val userRepository: UserRepository,
-) : StudentService {
+    private val roleRepository: RoleRepository,
+    private val passwordEncoder: BCryptPasswordEncoder,
+
+    ) : StudentService {
 
     @Transactional
     override fun create(dto: StudentCreateRequestDTO): StudentResponseDTO {
@@ -34,14 +38,23 @@ class StudentServiceImpl(
             throw IllegalArgumentException("User with email '${userInput.email}' already exists")
         }
 
+        userInput.password ?:
+        throw IllegalArgumentException("User password cannot be null")
+
+        val role = roleRepository.findByName("ROLE_STUDENT")
+            .orElseThrow { NoSuchElementException("Role not found") }
+
+
+
         val user = User(
             firstName = userInput.firstName ?: throw IllegalArgumentException("User name cannot be null"),
             lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
             email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
-            password = userInput.password ?: throw IllegalArgumentException("User password cannot be null"),
+            password = passwordEncoder.encode(userInput.password),
             createDate = Date(),
             tokenExpired = false,
-            enabled = true
+            enabled = true,
+            roleList = mutableSetOf(role),
         )
 
         val profile = Profile(user = user, verified = false)
