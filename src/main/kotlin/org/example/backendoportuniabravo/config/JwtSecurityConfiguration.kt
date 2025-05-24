@@ -2,6 +2,7 @@ package org.example.backendoportuniabravo.config
 
 import org.example.backendoportuniabravo.Security.JwtAuthenticationFilter
 import org.example.backendoportuniabravo.Security.JwtAuthorizationFilter
+import org.example.backendoportuniabravo.service.AppUserDetailsService
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -22,24 +23,20 @@ import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 
 //Cualquier perfil que no sea el desarrollador local va a tener segguridad
-//@Profile("!dev")
-@Profile("!heroku")
+@Profile("!local")
+//@Profile("!heroku")
+//////@Profile("!dev")
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-class JwtSecurityConfiguration {
-
-    @Value("\${url.unsecure}")
-    val URL_UNSECURE: String? = null
-
-    @Value("\${url.user.signup}")
-    val URL_SIGNUP: String? = null
-
-
-//     Propio de Spring, es para inyectar el servicio de usuario
-//    @Resource
-//    private val userDetailsService: AppUserDetailsService? = null
-
+class JwtSecurityConfiguration (
+    private val userDetailsService: AppUserDetailsService,
+    @Value("\${url.signup}") val urlSignup: String,
+    @Value("\${url.login}") val urlLogin: String,
+    @Value("\${url.company}") val urlCompanies: String,
+    @Value("\${url.student}") val urlStudents: String,
+    @Value("\${url.admin}") val urlAdmin: String,
+){
     @Bean
     @Throws(java.lang.Exception::class)
     fun authenticationManager(authConfig: AuthenticationConfiguration): AuthenticationManager? {
@@ -54,7 +51,7 @@ class JwtSecurityConfiguration {
     @Bean
     fun authenticationProvider(): DaoAuthenticationProvider? {
         val authProvider = DaoAuthenticationProvider()
-//        authProvider.setUserDetailsService(userDetailsService)
+        authProvider.setUserDetailsService(userDetailsService)
         authProvider.setPasswordEncoder(passwordEncoder())
         return authProvider
     }
@@ -67,8 +64,13 @@ class JwtSecurityConfiguration {
             .cors { it.configurationSource(corsConfigurationSource()) }
             .authorizeHttpRequests {
                 it
-                    .requestMatchers("/$URL_UNSECURE/**").permitAll()
-                    .requestMatchers(HttpMethod.POST, URL_SIGNUP).permitAll()
+                    .requestMatchers(HttpMethod.POST, "$urlSignup/**").permitAll()
+                    .requestMatchers(HttpMethod.POST, urlLogin).permitAll()
+
+//                    .requestMatchers("$urlCompanies/**").hasRole("COMPANY")
+//                    .requestMatchers("$urlStudents/**").hasRole("STUDENT")
+//                    .requestMatchers("$urlAdmin/**").hasRole("ADMIN")
+
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
@@ -95,18 +97,18 @@ class JwtSecurityConfiguration {
 
 class AppCustomDsl : AbstractHttpConfigurer<AppCustomDsl?, HttpSecurity?>() {
     override fun configure(http: HttpSecurity?) {
-        super.configure(builder)
-        val authenticationManager = http?.getSharedObject(
-            AuthenticationManager::class.java
-        )
+        super.configure(http)
 
-        http?.addFilter(JwtAuthenticationFilter(authenticationManager!!))
-        http?.addFilter(JwtAuthorizationFilter(authenticationManager!!))
+        val authenticationManager = http?.getSharedObject(AuthenticationManager::class.java)
+        if (authenticationManager != null) {
+            http.addFilter(JwtAuthenticationFilter(authenticationManager))
+            http.addFilter(JwtAuthorizationFilter(authenticationManager))
+        }
     }
+
     companion object {
         fun customDsl(): AppCustomDsl {
             return AppCustomDsl()
         }
     }
-
 }

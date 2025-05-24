@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
+import org.springframework.transaction.annotation.Transactional
 
 @Configuration
 class DataSeeder {
@@ -51,6 +52,50 @@ class DataSeeder {
                 println("✅ Location data ensured")
             }
         }
+
+    @Bean
+    fun insertStudentMetadata(
+        languageRepository: LanguageRepository,
+        degreeRepository: DegreeRepository,
+        collegeRepository: CollegeRepository,
+        interestRepository: InterestRepository
+    ): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting Student Metadata...")
+
+            val defaultLanguages = listOf("Español", "Inglés", "Francés", "Alemán", "Portugués")
+            val defaultDegrees = listOf("Bachillerato", "Licenciatura", "Maestría", "Doctorado")
+            val defaultColleges = listOf("UCR", "TEC", "UNA", "ULATINA", "UNED")
+            val defaultInterests = listOf("Inteligencia Artificial", "Ciberseguridad", "Desarrollo Web", "Videojuegos", "Ciencia de Datos")
+
+            defaultLanguages.forEach { name ->
+                if (!languageRepository.existsByName(name)) {
+                    languageRepository.save(Language(name = name))
+                }
+            }
+
+            defaultDegrees.forEach { name ->
+                if (!degreeRepository.existsByName(name)) {
+                    degreeRepository.save(Degree(name = name))
+                }
+            }
+
+            defaultColleges.forEach { name ->
+                if (!collegeRepository.existsByName(name)) {
+                    collegeRepository.save(College(name = name))
+                }
+            }
+
+            defaultInterests.forEach { name ->
+                if (!interestRepository.existsByName(name)) {
+                    interestRepository.save(Interest(name = name))
+                }
+            }
+
+            println("✅ Student metadata inserted")
+        }
+    }
+
 
 //    @Bean
 //    fun insertLocations(
@@ -209,6 +254,37 @@ class DataSeeder {
         }
     }
 
+    @Bean
+    @Transactional
+    fun insertRolesAndPrivileges(roleRepository: RoleRepository, privilegeRepository: PrivilegeRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting roles and privileges with relationships...")
 
-//
+            // Solo ejecuta la inserción si las tablas están vacías
+            if (roleRepository.findAll().isEmpty() && privilegeRepository.findAll().isEmpty()) {
+                // Crear y guardar los privilegios
+                val privilegeRead = privilegeRepository.save(Privilege(name = "READ_PRIVILEGE"))
+                val privilegeWrite = privilegeRepository.save(Privilege(name = "WRITE_PRIVILEGE"))
+                val privilegeDelete = privilegeRepository.save(Privilege(name = "DELETE_PRIVILEGE"))
+                val privilegeUpdate = privilegeRepository.save(Privilege(name = "UPDATE_PRIVILEGE"))
+
+                // Crear y guardar los roles con sus privilegios relacionados
+                val roleAdmin = Role(name = "ROLE_ADMIN").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeDelete, privilegeUpdate)
+                }
+                val roleStudent = Role(name = "ROLE_STUDENT").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeUpdate)
+                }
+                val roleCompany = Role(name = "ROLE_COMPANY").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeUpdate)
+                }
+
+                roleRepository.saveAll(listOf(roleAdmin, roleStudent, roleCompany))
+                println("✅ Roles and privileges inserted successfully")
+            } else {
+                println("⚠️ Roles and privileges already exist. No data was inserted.")
+            }
+        }
+    }
+
 }

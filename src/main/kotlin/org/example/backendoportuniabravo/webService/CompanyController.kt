@@ -15,11 +15,7 @@ class CompanyController (private val service: CompanyService) {
     @ResponseBody
     fun getCompanyById(@PathVariable id : Long) = service.findById(id)
 
-    @PostMapping
-    fun createCompany(@RequestBody company: CompanyUserInput) : ResponseEntity<CompanyUserResult>? {
-        val saved = service.create(company)
-        return ResponseEntity.status(HttpStatus.CREATED).body(saved)
-    }
+
 
     @PatchMapping("{id}/name")
     fun updateCompanyName(@PathVariable id: Long, @RequestBody companyName: CompanyNameUpdate) : ResponseEntity<CompanyNameResult>? {
@@ -50,12 +46,6 @@ class CompanyController (private val service: CompanyService) {
         val updated = service.addContact(id, contactInput)
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
-
-//    @PostMapping("{id}/location")
-//    fun addCompanyLocation(@PathVariable id: Long, @RequestBody locationInput: LocationInput) : ResponseEntity<LocationResult>? {
-//        val updated = service.addLocation(id, locationInput)
-//        return ResponseEntity.status(HttpStatus.OK).body(updated)
-//    } // TODO: Creo que no se ocupa
 
     @PatchMapping("{id}/location")
     fun updateCompanyLocation(@PathVariable id: Long, @RequestBody locationUpdate: LocationUpdate) : ResponseEntity<LocationResult>? {

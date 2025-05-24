@@ -45,21 +45,25 @@ interface MockInterviewRepository : JpaRepository<MockInterview, Long> {
 @Repository
 interface DegreeRepository : JpaRepository<Degree, Long> {
     fun findByStudentsContaining (student: MutableSet<Student>): List<Degree>?
+    fun existsByName(name: String): Boolean
 }
 
 @Repository
 interface LanguageRepository : JpaRepository<Language, Long> {
     fun findByStudentsContaining(student: MutableSet<Student>): List<Language>
+    fun existsByName(name: String): Boolean
 }
 
 @Repository
 interface CollegeRepository : JpaRepository<College, Long> {
     fun findByStudentsContaining(student: Student): List<College>?
+    fun existsByName(name: String): Boolean
 }
 
 @Repository
 interface InterestRepository : JpaRepository<Interest, Long> {
     fun findByStudentsContaining(student: MutableSet<Student>): List<Interest>?
+    fun existsByName(name: String): Boolean
 }
 
 

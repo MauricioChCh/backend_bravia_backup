@@ -1,13 +1,17 @@
 package org.example.backendoportuniabravo.service
 
+import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.crossstore.ChangeSetPersister
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
+import java.util.*
 
 @Service
 class StudentServiceImpl(
@@ -19,12 +23,45 @@ class StudentServiceImpl(
     private val interestRepository: InterestRepository,
     private val internshipRepository: InternshipRepository,
     private val collegeRepository: CollegeRepository,
-) : StudentService {
+    @Autowired
+    private val userRepository: UserRepository,
+    private val roleRepository: RoleRepository,
+    private val passwordEncoder: BCryptPasswordEncoder,
+
+    ) : StudentService {
 
     @Transactional
-    override  fun create(dto: StudentRequestDTO): StudentResponseDTO {
-        val profile = profileRepository.findById(dto.profileId)
-            .orElseThrow { ChangeSetPersister.NotFoundException() }
+    override fun create(dto: StudentCreateRequestDTO): StudentResponseDTO {
+        val userInput = dto.user ?: throw IllegalArgumentException("User input is required")
+
+        if (userRepository.existsByEmail(userInput.email!!)) {
+            throw IllegalArgumentException("User with email '${userInput.email}' already exists")
+        }
+
+        userInput.password ?:
+        throw IllegalArgumentException("User password cannot be null")
+
+        val role = roleRepository.findByName("ROLE_STUDENT")
+            .orElseThrow { NoSuchElementException("Role not found") }
+
+
+
+        val user = User(
+            firstName = userInput.firstName ?: throw IllegalArgumentException("User name cannot be null"),
+            lastName = userInput.lastName ?: throw IllegalArgumentException("User last name cannot be null"),
+            email = userInput.email ?: throw IllegalArgumentException("User email cannot be null"),
+            password = passwordEncoder.encode(userInput.password),
+            createDate = Date(),
+            tokenExpired = false,
+            enabled = true,
+            roleList = mutableSetOf(role),
+        )
+
+        val profile = Profile(user = user, verified = false)
+        user.profile = profile
+
+        userRepository.save(user) // guarda en cascada también el profile si está mapeado con cascade
+        profileRepository.save(profile)
 
         val student = Student(
             profile = profile,
@@ -32,17 +69,28 @@ class StudentServiceImpl(
             academicCenter = dto.academicCenter
         )
 
-        dto.hobbies.forEach { name -> student.hobbies.add(Hobby(name = name, student = student)) }
+        dto.hobbies.forEach { name ->
+            student.hobbies.add(Hobby(name = name, student = student))
+        }
 
         dto.certifications.forEach {
             student.certifications.add(
-                Certification(name = it.name, date = it.date, organization = it.organization, student = student)
+                Certification(
+                    name = it.name,
+                    date = it.date,
+                    organization = it.organization,
+                    student = student
+                )
             )
         }
 
         dto.experiences.forEach {
             student.experiences.add(
-                Experience(name = it.name, description = it.description, student = student)
+                Experience(
+                    name = it.name,
+                    description = it.description,
+                    student = student
+                )
             )
         }
 
@@ -66,6 +114,7 @@ class StudentServiceImpl(
 
         return mapper.toDto(studentRepository.save(student))
     }
+
 
 
     override fun findById(id: Long): StudentResponseDTO {

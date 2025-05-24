@@ -38,3 +38,8 @@ data class ProfileDetails(
     var user: UserDetails? = null,
     var verified: Boolean? = null,
 )
+
+data class UserLoginInput(
+    var email: String? = null,
+    var password: String? = null,
+)
