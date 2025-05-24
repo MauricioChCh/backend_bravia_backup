@@ -7,6 +7,7 @@ import java.util.*
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
+//import org.springframework.security.crypto.password.PasswordEncoder
 
 @Configuration
 class DataSeeder {
@@ -161,45 +162,43 @@ class DataSeeder {
 
         if (adminRepository.count() == 0L) {
             println("📦 Inserting admin test data…")
-// Creamos el perfil
-            val profile = Profile(verified = true)
 
-// Creamos el usuario y lo asignamos al perfil
+            val profile = Profile(verified = true)
+            val profile2 = Profile(verified = true)
+
             val user = User(
                 createDate = Date(),
                 firstName = "Gabriel",
                 lastName = "Vega",
-                email = "gabriel.admin@example.com",
-                password = "pwd1",
+                email = "admin1.admin1@example.com",
+                password = "Password123!" ,
                 tokenExpired = false,
                 enabled = true,
-                profile = profile // <-- relación bidireccional
+                profile = profile
             )
 
-// Creamos el admin y también lo asignamos al perfil
-            val admin = Admin(profile = profile)
+            val user2 = User(
+                createDate = Date(),
+                firstName = "Mauricio",
+                lastName = "Chaves",
+                email = "admin2.admin2@example.com",
+                password = "Password123!",
+                tokenExpired = false,
+                enabled = true,
+                profile = profile2
+            )
 
-// Ahora completamos el perfil con las referencias a user y admin
+            val admin = Admin(profile = profile)
+            val admin2 = Admin(profile = profile2)
+
             profile.user = user
             profile.admin = admin
 
-// Guardamos solo el User (CascadeType.ALL se encarga del resto)
+            profile2.user = user2
+            profile2.admin = admin2
+
             userRepository.save(user)
 
-            val profile2 = Profile(verified = true)
-
-// Creamos el usuario y lo asignamos al perfil
-            val user2 = User(
-                createDate = Date(),
-                firstName = "Gabriel",
-                lastName = "Vega",
-                email = "gabriel.admin@example.com",
-                password = "pwd1",
-                tokenExpired = false,
-                enabled = true,
-                profile = profile2 // <-- relación bidireccional
-            )
-            profile2.user = user2
             userRepository.save(user2)
 
             println("✅ Admin test data inserted")
