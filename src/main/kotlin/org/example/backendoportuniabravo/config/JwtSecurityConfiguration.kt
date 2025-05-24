@@ -67,9 +67,9 @@ class JwtSecurityConfiguration (
                     .requestMatchers(HttpMethod.POST, "$urlSignup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, urlLogin).permitAll()
 
-                    .requestMatchers("$urlCompanies/**").hasRole("COMPANY")
-                    .requestMatchers("$urlStudents/**").hasRole("STUDENT")
-                    .requestMatchers("$urlAdmin/**").hasRole("ADMIN")
+//                    .requestMatchers("$urlCompanies/**").hasRole("COMPANY")
+//                    .requestMatchers("$urlStudents/**").hasRole("STUDENT")
+//                    .requestMatchers("$urlAdmin/**").hasRole("ADMIN")
 
                     .anyRequest().authenticated()
             }
