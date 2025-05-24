@@ -16,6 +16,7 @@ interface AdminMapper{
     fun adminListToAdminResponseDTOList(adminList: List<Admin>): List<AdminResponseDTO>
     fun adminResponseDTOListToAdminList(dtoList: List<AdminResponseDTO>): List<Admin>
     @Mapping(target = "id", source = "admin.id")
+    @Mapping(target = "profileId", source = "admin.profile.id")
     @Mapping(target = "fullName",
         expression = "java(user != null ? user.getFirstName() + \" \" + user.getLastName() : \"Nombre no disponible\")")
     fun adminToAdminResponseDTOWithFullName(admin: Admin, user: User?): AdminResponseDTO
