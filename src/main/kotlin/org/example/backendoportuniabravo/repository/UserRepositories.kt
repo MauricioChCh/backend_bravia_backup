@@ -35,4 +35,6 @@ interface RoleRepository : JpaRepository<Role, Long> {
 }
 
 @Repository
-interface PrivilegeRepository : JpaRepository<Privilege, Long>
+interface PrivilegeRepository : JpaRepository<Privilege, Long>{
+    fun findByName(@Param("name") name: String): Optional<Privilege>
+}
