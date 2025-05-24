@@ -11,6 +11,10 @@ interface InternshipMapper {
     @Mapping(source = "company.name", target = "companyName")
     @Mapping(source = "location.city.name", target = "cityName")
     @Mapping(source = "location.country.name", target = "countryName")
+    @Mapping(
+        target = "locationFullName",
+        expression = "java(internship.getLocation().getCity().getName() + \", \" + internship.getLocation().getCountry().getName())"
+    )
     fun toDto(internship: Internship): InternshipResponseDTO
 
     fun toDtoList(list: List<Internship>): List<InternshipResponseDTO>
