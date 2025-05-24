@@ -7,7 +7,9 @@ import org.springframework.context.annotation.Configuration
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.transaction.annotation.Transactional
+import java.util.Date
 
 @Configuration
 class DataSeeder {
@@ -284,6 +286,71 @@ class DataSeeder {
             } else {
                 println("⚠️ Roles and privileges already exist. No data was inserted.")
             }
+        }
+    }
+
+    @Bean
+    fun insertSampleAdmins(
+        userRepository: UserRepository,
+        profileRepository: ProfileRepository,
+        adminRepository: AdminRepository,
+        roleRepository: RoleRepository, passwordEncoder: BCryptPasswordEncoder,
+    ): CommandLineRunner = CommandLineRunner {
+
+        if (adminRepository.count() == 0L) {
+            println("📦 Inserting admin test data…")
+
+            val profile = Profile(verified = true)
+            val profile2 = Profile(verified = true)
+
+            val user = User(
+                createDate = Date(),
+                firstName = "Gabriel",
+                lastName = "Vega",
+                email = "admin1.admin1@example.com",
+                password = passwordEncoder.encode("Password123!"),
+                tokenExpired = false,
+                enabled = true,
+                profile = profile,
+                roleList = mutableSetOf(
+                    roleRepository.findByName("ROLE_ADMIN")
+                        .orElseThrow { NoSuchElementException("Role not found") }
+                )
+
+            )
+
+            val user2 = User(
+                createDate = Date(),
+                firstName = "Mauricio",
+                lastName = "Chaves",
+                email = "admin2.admin2@example.com",
+                password = passwordEncoder.encode("Password123!"),
+                tokenExpired = false,
+                enabled = true,
+                profile = profile2,
+                roleList = mutableSetOf(
+                    roleRepository.findByName("ROLE_ADMIN")
+                        .orElseThrow { NoSuchElementException("Role not found") }
+                )
+
+            )
+
+            val admin = Admin(profile = profile)
+            val admin2 = Admin(profile = profile2)
+
+            profile.user = user
+            profile.admin = admin
+
+            profile2.user = user2
+            profile2.admin = admin2
+
+            userRepository.save(user)
+
+            userRepository.save(user2)
+
+            println("✅ Admin test data inserted")
+        } else {
+            println("⚠️ Admin data already exists. No data was inserted.")
         }
     }
 
