@@ -58,4 +58,7 @@ data class SkillDTO(
     val description: String
 )
 
+data class HobbyDTO(val id: Long?, val name: String?)
+data class CareerDTO(val id: Long?, val career: String?)
+
 

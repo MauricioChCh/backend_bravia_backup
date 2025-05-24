@@ -13,7 +13,7 @@ class AIController(
     private val aiService: AIService
 ) {
 
-    @PostMapping("/generate")
+    @PostMapping("/generate/{id}")
     suspend fun generate(@RequestBody body: Map<String, String>): ResponseEntity<String> {
         val prompt = body["prompt"] ?: return ResponseEntity.badRequest().body("Falta el campo 'prompt'")
         val response = aiService.generateResponse(prompt)

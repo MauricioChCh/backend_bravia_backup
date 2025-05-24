@@ -130,4 +130,55 @@ class StudentMapperImpl : StudentMapper {
 
         // Actualizar otras propiedades según sea necesario
     }
+
+    override fun toCurriculumDto(student: Student): StudentCurriculumResponseDTO {
+        val user = student.profile?.user
+
+        val userResult = UserResult(
+            id = user?.id,
+            email = user?.email,
+            firstName = user?.firstName,
+            lastName = user?.lastName
+        )
+
+        return StudentCurriculumResponseDTO(
+            id = student.id ?: 0L,
+            userInput = userResult,
+            description = student.description,
+            academicCenter = student.academicCenter,
+            hobbies = mapHobbies(student.hobbies).toMutableList(),
+            certifications = mapCertifications(student.certifications).toMutableList(),
+            experiences = mapExperiences(student.experiences).toMutableList(),
+            skills = mapSkills(student.skills).toMutableList(),
+            careers = mapCareers(student.careers).toMutableList()
+        )
+    }
+
+    override fun mapHobbies(hobbies: List<Hobby>): List<HobbyDTO> {
+        return hobbies.map { HobbyDTO(it.id, it.name) }
+    }
+
+    override fun mapCertifications(certifications: List<Certification>): List<CertificationDTO> {
+        return certifications.map {
+            CertificationDTO( it.name, it.date, it.organization)
+        }
+    }
+
+    override fun mapExperiences(experiences: List<Experience>): List<ExperienceDTO> {
+        return experiences.map {
+            ExperienceDTO(it.name, it.description)
+        }
+    }
+
+    override fun mapSkills(skills: List<Skill>): List<SkillDTO> {
+        return skills.map {
+            SkillDTO(it.name, it.description)
+        }
+    }
+
+    override fun mapCareers(careers: List<Career>): List<CareerDTO> {
+        return careers.map {
+            CareerDTO(it.id, it.career)
+        }
+    }
 }

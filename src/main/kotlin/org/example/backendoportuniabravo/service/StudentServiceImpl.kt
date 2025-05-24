@@ -1,6 +1,7 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
+import org.example.backendoportuniabravo.dto.StudentCurriculumResponseDTO
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.entity.*
@@ -141,6 +142,13 @@ class StudentServiceImpl(
 
         mapper.updateFromDto(dto, student)
         return mapper.toDto(studentRepository.save(student))
+    }
+
+    override fun returnStudentCurriculum(id: Long): StudentCurriculumResponseDTO {
+        val student = studentRepository.findById(id)
+            .orElseThrow { RuntimeException("Student not found") }
+
+        return mapper.toCurriculumDto(student)
     }
 
 }
