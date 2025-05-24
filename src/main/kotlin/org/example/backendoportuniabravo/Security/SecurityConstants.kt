@@ -84,6 +84,7 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
             .setIssuer(SecurityConstants.TOKEN_ISSUER)
             .setAudience(SecurityConstants.TOKEN_AUDIENCE)
             .setSubject((authentication.principal as org.springframework.security.core.userdetails.User).username)
+            .claim("roles", authentication.authorities)
             .setExpiration(Date(System.currentTimeMillis() + SecurityConstants.TOKEN_LIFETIME))
             .compact()
 

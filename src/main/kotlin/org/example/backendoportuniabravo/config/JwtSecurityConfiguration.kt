@@ -32,7 +32,10 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 class JwtSecurityConfiguration (
     private val userDetailsService: AppUserDetailsService,
     @Value("\${url.signup}") val urlSignup: String,
-    @Value("\${url.login}") val urlLogin: String
+    @Value("\${url.login}") val urlLogin: String,
+    @Value("\${url.company}") val urlCompanies: String,
+    @Value("\${url.student}") val urlStudents: String,
+    @Value("\${url.admin}") val urlAdmin: String,
 ){
     @Bean
     @Throws(java.lang.Exception::class)
@@ -63,6 +66,11 @@ class JwtSecurityConfiguration (
                 it
                     .requestMatchers(HttpMethod.POST, "$urlSignup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, urlLogin).permitAll()
+
+                    .requestMatchers("$urlCompanies/**").hasRole("COMPANY")
+                    .requestMatchers("$urlStudents/**").hasRole("STUDENT")
+                    .requestMatchers("$urlAdmin/**").hasRole("ADMIN")
+
                     .anyRequest().authenticated()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
