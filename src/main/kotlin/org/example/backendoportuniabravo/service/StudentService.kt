@@ -1,10 +1,11 @@
 package org.example.backendoportuniabravo.service
 
+import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
 import org.example.backendoportuniabravo.dto.StudentRequestDTO
 import org.example.backendoportuniabravo.dto.StudentResponseDTO
 
 interface StudentService {
-    fun create(dto: StudentRequestDTO): StudentResponseDTO
+    fun create(dto: StudentCreateRequestDTO): StudentResponseDTO
     fun findById(id: Long): StudentResponseDTO
     fun findAll(): List<StudentResponseDTO>
     fun delete(id: Long)

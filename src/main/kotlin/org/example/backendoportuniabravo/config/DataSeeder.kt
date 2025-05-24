@@ -52,6 +52,50 @@ class DataSeeder {
             }
         }
 
+    @Bean
+    fun insertStudentMetadata(
+        languageRepository: LanguageRepository,
+        degreeRepository: DegreeRepository,
+        collegeRepository: CollegeRepository,
+        interestRepository: InterestRepository
+    ): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting Student Metadata...")
+
+            val defaultLanguages = listOf("Español", "Inglés", "Francés", "Alemán", "Portugués")
+            val defaultDegrees = listOf("Bachillerato", "Licenciatura", "Maestría", "Doctorado")
+            val defaultColleges = listOf("UCR", "TEC", "UNA", "ULATINA", "UNED")
+            val defaultInterests = listOf("Inteligencia Artificial", "Ciberseguridad", "Desarrollo Web", "Videojuegos", "Ciencia de Datos")
+
+            defaultLanguages.forEach { name ->
+                if (!languageRepository.existsByName(name)) {
+                    languageRepository.save(Language(name = name))
+                }
+            }
+
+            defaultDegrees.forEach { name ->
+                if (!degreeRepository.existsByName(name)) {
+                    degreeRepository.save(Degree(name = name))
+                }
+            }
+
+            defaultColleges.forEach { name ->
+                if (!collegeRepository.existsByName(name)) {
+                    collegeRepository.save(College(name = name))
+                }
+            }
+
+            defaultInterests.forEach { name ->
+                if (!interestRepository.existsByName(name)) {
+                    interestRepository.save(Interest(name = name))
+                }
+            }
+
+            println("✅ Student metadata inserted")
+        }
+    }
+
+
 //    @Bean
 //    fun insertLocations(
 //        countryRepository: CountryRepository,
