@@ -7,13 +7,49 @@ import org.springframework.context.annotation.Configuration
 
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.repository.*
+import org.springframework.core.annotation.Order
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.transaction.annotation.Transactional
 import java.util.Date
 
 @Configuration
 class DataSeeder {
+    @Bean
+    @Order(1)
+    @Transactional
+    fun insertRolesAndPrivileges(roleRepository: RoleRepository, privilegeRepository: PrivilegeRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting roles and privileges with relationships...")
+
+            // Solo ejecuta la inserción si las tablas están vacías
+            if (roleRepository.findAll().isEmpty() && privilegeRepository.findAll().isEmpty()) {
+                // Crear y guardar los privilegios
+                val privilegeRead = privilegeRepository.save(Privilege(name = "READ_PRIVILEGE"))
+                val privilegeWrite = privilegeRepository.save(Privilege(name = "WRITE_PRIVILEGE"))
+                val privilegeDelete = privilegeRepository.save(Privilege(name = "DELETE_PRIVILEGE"))
+                val privilegeUpdate = privilegeRepository.save(Privilege(name = "UPDATE_PRIVILEGE"))
+
+                // Crear y guardar los roles con sus privilegios relacionados
+                val roleAdmin = Role(name = "ROLE_ADMIN").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeDelete, privilegeUpdate)
+                }
+                val roleStudent = Role(name = "ROLE_STUDENT").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeUpdate)
+                }
+                val roleCompany = Role(name = "ROLE_COMPANY").apply {
+                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeUpdate)
+                }
+
+                roleRepository.saveAll(listOf(roleAdmin, roleStudent, roleCompany))
+                println("✅ Roles and privileges inserted successfully")
+            } else {
+                println("⚠️ Roles and privileges already exist. No data was inserted.")
+            }
+        }
+    }
+
         @Bean
+        @Order(2)
         fun insertLocations(
             countryRepository: CountryRepository,
             cityRepository: CityRepository,
@@ -56,6 +92,7 @@ class DataSeeder {
         }
 
     @Bean
+    @Order(3)
     fun insertStudentMetadata(
         languageRepository: LanguageRepository,
         degreeRepository: DegreeRepository,
@@ -100,6 +137,7 @@ class DataSeeder {
 
 
     @Bean
+    @Order(4)
     fun insertSampleForCompany(businessAreaRepository: BusinessAreaRepository, tagRepository: TagRepository,
                                countryRepository: CountryRepository, cityRepository: CityRepository
     ): CommandLineRunner {
@@ -146,40 +184,10 @@ class DataSeeder {
         }
     }
 
-    @Bean
-    @Transactional
-    fun insertRolesAndPrivileges(roleRepository: RoleRepository, privilegeRepository: PrivilegeRepository): CommandLineRunner {
-        return CommandLineRunner {
-            println("📦 Inserting roles and privileges with relationships...")
 
-            // Solo ejecuta la inserción si las tablas están vacías
-            if (roleRepository.findAll().isEmpty() && privilegeRepository.findAll().isEmpty()) {
-                // Crear y guardar los privilegios
-                val privilegeRead = privilegeRepository.save(Privilege(name = "READ_PRIVILEGE"))
-                val privilegeWrite = privilegeRepository.save(Privilege(name = "WRITE_PRIVILEGE"))
-                val privilegeDelete = privilegeRepository.save(Privilege(name = "DELETE_PRIVILEGE"))
-                val privilegeUpdate = privilegeRepository.save(Privilege(name = "UPDATE_PRIVILEGE"))
-
-                // Crear y guardar los roles con sus privilegios relacionados
-                val roleAdmin = Role(name = "ROLE_ADMIN").apply {
-                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeDelete, privilegeUpdate)
-                }
-                val roleStudent = Role(name = "ROLE_STUDENT").apply {
-                    privilegeList = mutableSetOf(privilegeRead, privilegeUpdate)
-                }
-                val roleCompany = Role(name = "ROLE_COMPANY").apply {
-                    privilegeList = mutableSetOf(privilegeRead, privilegeWrite, privilegeUpdate)
-                }
-
-                roleRepository.saveAll(listOf(roleAdmin, roleStudent, roleCompany))
-                println("✅ Roles and privileges inserted successfully")
-            } else {
-                println("⚠️ Roles and privileges already exist. No data was inserted.")
-            }
-        }
-    }
 
     @Bean
+    @Order(5)
     fun insertSampleAdmins(
         userRepository: UserRepository,
         profileRepository: ProfileRepository,
@@ -244,7 +252,9 @@ class DataSeeder {
         }
     }
 
+
     @Bean
+    @Order(6)
     fun insertUserReportsData(
         userRepository: UserRepository,
         profileRepository: ProfileRepository,
@@ -303,5 +313,6 @@ class DataSeeder {
             println("⚠️ User report data already exists. No data was inserted.")
         }
     }
+
 
 }

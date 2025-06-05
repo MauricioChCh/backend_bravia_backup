@@ -17,7 +17,7 @@ interface UserRepository : JpaRepository<User, Long> {
 //    fun findByProfile(profile: Profile): User? // TODO: Probablemente eliminar
     fun existsByEmail(email: String): Boolean
 //    fun deleteByProfile(profile: Profile) // TODO: Probablemente eliminar
-    fun deleteByProfile(profile: Profile)
+    fun deleteByProfile(profile: Profile?)
     fun findByProfileId(profileId: Long?): User?
     fun existsByProfileId(profileId: Long): Boolean
     fun findByEmailIgnoreCase(email: String): Optional<User>

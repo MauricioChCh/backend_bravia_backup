@@ -12,13 +12,13 @@ import org.mapstruct.Mapping
 interface UserReportMapper {
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "reporter", source = "reporter")
+    @Mapping(target = "user", source = "reporter")
     @Mapping(target = "userReported", source = "userReported")
     @Mapping(target = "description", source = "dto.description")
     fun toEntity(dto: UserReportRequestDTO, reporter: User, userReported: User): UserReports
 
     @Mapping(target = "reporterId", source = "user.id")
-    @Mapping(target = "reporterName", expression = "java(report.getReporter().getFirstName() + \" \" + report.getReporter().getLastName())")
+    @Mapping(target = "reporterName", expression = "java(report.getUser().getFirstName() + \" \" + report.getUser().getLastName())")
     @Mapping(target = "reportedUserId", source = "userReported.id")
     @Mapping(target = "reportedUserName", expression = "java(report.getUserReported().getFirstName() + \" \" + report.getUserReported().getLastName())")
     fun toResponseDTO(report: UserReports): UserReportResponseDTO
