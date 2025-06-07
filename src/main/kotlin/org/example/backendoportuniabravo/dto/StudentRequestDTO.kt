@@ -1,5 +1,9 @@
 package org.example.backendoportuniabravo.dto
 
+import org.example.backendoportuniabravo.entity.College
+import org.example.backendoportuniabravo.entity.Degree
+import org.example.backendoportuniabravo.entity.Interest
+import org.example.backendoportuniabravo.entity.Language
 import java.util.*
 //data class StudentRequestDTO(
 //    val profileId: Long,
@@ -61,4 +65,37 @@ data class SkillDTO(
 data class HobbyDTO(val id: Long?, val name: String?)
 data class CareerDTO(val id: Long?, val career: String?)
 
+// Data classes para el seeding
+data class StudentSeedData(
+    val firstName: String,
+    val lastName: String,
+    val email: String,
+    val description: String,
+    val academicCenter: String,
+    val hobbies: List<String>,
+    val certifications: List<CertificationSeedData>,
+    val experiences: List<ExperienceSeedData>,
+    val skills: List<SkillSeedData>,
+    val careers: List<String>,
+    val cvUrls: List<String>,
+    val languageNames: List<String>,  // Cambiado de Set<Language> a List<String>
+    val degreeNames: List<String>,    // Cambiado de Set<Degree> a List<String>
+    val collegeNames: List<String>,   // Cambiado de Set<College> a List<String>
+    val interestNames: List<String>   // Cambiado de Set<Interest> a List<String>
+)
 
+data class CertificationSeedData(
+    val name: String,
+    val date: String,
+    val organization: String
+)
+
+data class ExperienceSeedData(
+    val name: String,
+    val description: String
+)
+
+data class SkillSeedData(
+    val name: String,
+    val description: String
+)

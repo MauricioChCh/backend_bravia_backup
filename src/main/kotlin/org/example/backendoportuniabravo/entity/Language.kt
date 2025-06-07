@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -13,6 +14,19 @@ data class Language(
     @Column(name = "name", nullable = false)
     var name: String,
 
-    @ManyToMany(mappedBy = "languages", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "languages", fetch = FetchType.LAZY)
+    @JsonIgnore // También evita bucles infinitos en JSON
     var students: MutableSet<Student> = mutableSetOf()
-)
+) {
+    override fun toString(): String {
+        return "Language(id=$id, name='$name')"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Language && this.id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+}

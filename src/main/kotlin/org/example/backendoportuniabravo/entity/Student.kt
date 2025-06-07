@@ -46,8 +46,8 @@ data class Student(
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
         name = "students_languages",
-        joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
-        inverseJoinColumns = [JoinColumn(name = "language_id", referencedColumnName = "id")]
+        joinColumns = [JoinColumn(name = "student_id")],
+        inverseJoinColumns = [JoinColumn(name = "language_id")]
     )
     var languages: MutableSet<Language> = mutableSetOf(),
 

@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.entity
 
+import com.fasterxml.jackson.annotation.JsonIgnore
 import jakarta.persistence.*
 
 @Entity
@@ -14,5 +15,18 @@ data class Degree(
     var name: String,
 
     @ManyToMany(mappedBy = "degrees", cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
+    @JsonIgnore
     var students: MutableSet<Student> = mutableSetOf()
-) //TODO:  add equals, hashCode and toString methods
+) {
+    override fun toString(): String {
+        return "Degree(id=$id, name='$name')"
+    }
+
+    override fun equals(other: Any?): Boolean {
+        return other is Degree && this.id == other.id
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+}
