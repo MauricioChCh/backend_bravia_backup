@@ -177,4 +177,69 @@ class DataSeeder {
         }
     }
 
+    @Bean
+    fun insertColleges(collegeRepository: CollegeRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting colleges...")
+
+            // Solo inserta si la tabla está vacía
+            if (collegeRepository.findAll().isEmpty()) {
+                val colleges = listOf(
+                    College(name = "Universidad de Costa Rica"),
+                    College(name = "Instituto Tecnológico de Costa Rica"),
+                    College(name = "Universidad Nacional"),
+                    College(name = "Universidad Latina"),
+                    College(name = "Universidad Estatal a Distancia")
+                )
+                collegeRepository.saveAll(colleges)
+                println("✅ Colleges inserted successfully")
+            } else {
+                println("⚠️ Colleges already exist. No data was inserted.")
+            }
+        }
+    }
+
+    @Bean
+    fun insertInterests(interestRepository: InterestRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting interests...")
+
+            // Solo inserta si la tabla está vacía
+            if (interestRepository.findAll().isEmpty()) {
+                val interests = listOf(
+                    Interest(name = "Inteligencia Artificial"),
+                    Interest(name = "Ciberseguridad"),
+                    Interest(name = "Desarrollo Web"),
+                    Interest(name = "Videojuegos"),
+                    Interest(name = "Ciencia de Datos")
+                )
+                interestRepository.saveAll(interests)
+                println("✅ Interests inserted successfully")
+            } else {
+                println("⚠️ Interests already exist. No data was inserted.")
+            }
+        }
+    }
+
+    @Bean
+    fun insertDegrees(degreeRepository: DegreeRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting degrees...")
+
+            // Solo inserta si la tabla está vacía
+            if (degreeRepository.findAll().isEmpty()) {
+                val degrees = listOf(
+                    Degree(name = "Diplomado"),
+                    Degree(name = "Bachillerato"),
+                    Degree(name = "Licenciatura"),
+                    Degree(name = "Maestría"),
+                    Degree(name = "Doctorado")
+                )
+                degreeRepository.saveAll(degrees)
+                println("✅ Degrees inserted successfully")
+            } else {
+                println("⚠️ Degrees already exist. No data was inserted.")
+            }
+        }
+    }
 }
