@@ -77,4 +77,11 @@ class CompanyController (private val service: CompanyService) {
         val updated = service.getLocations(id)
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
+
+    @GetMapping("{id}/internships")
+    fun getCompanyInternships(@PathVariable id: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getInternships(id)
+        return ResponseEntity.status(HttpStatus.OK).body(internships)
+    }
+
 }

@@ -119,5 +119,12 @@ interface CompanyService {
      * @throws NoSuchElementException if no companies are found.
      */
     fun getLocations(id: Long): List<LocationDetails>
+
+    /**
+     * Finds all internships associated with a company.
+     * @return A list of all internships for the company.
+     * @throws NoSuchElementException if no internships are found.
+     */
+    fun getInternships(id: Long): List<InternshipResponseDTO>
 }
 

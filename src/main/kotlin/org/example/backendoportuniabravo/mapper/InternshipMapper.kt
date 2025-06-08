@@ -13,7 +13,7 @@ interface InternshipMapper {
     @Mapping(source = "location.country.name", target = "countryName")
     fun toDto(internship: Internship): InternshipResponseDTO
 
-    fun toDtoList(list: List<Internship>): List<InternshipResponseDTO>
+   // fun toDtoList(list: List<Internship>): List<InternshipResponseDTO>
 
     @Mapping(target = "id", ignore = true)
     fun toEntity(dto: InternshipRequestDTO): Internship
@@ -22,6 +22,9 @@ interface InternshipMapper {
     fun updateFromDto(dto: InternshipRequestDTO, @MappingTarget entity: Internship)
 
 
-
+    @Mapping(source = "company.name", target = "companyName")
+    @Mapping(source = "location.city.name", target = "cityName")
+    @Mapping(source = "location.country.name", target = "countryName")
+    fun internshipToInternshipResponseDTO(internship: Internship): InternshipResponseDTO
 
 }
