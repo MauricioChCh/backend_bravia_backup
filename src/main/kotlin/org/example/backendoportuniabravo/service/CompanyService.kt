@@ -112,5 +112,12 @@ interface CompanyService {
      * @return A list of all companies.
      */
     fun findById(id: Long): CompanyUserResponse?
+
+    /**
+     * Finds all company locations.
+     * @return A list of all company locations.
+     * @throws NoSuchElementException if no companies are found.
+     */
+    fun getLocations(id: Long): List<LocationDetails>
 }
 

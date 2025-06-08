@@ -57,8 +57,11 @@ interface CompanyMapper {
   fun companyToCompanyDescriptionResult(company: Company): CompanyDescriptionResult
 
 
-
+  @Mapping(target = "firstName", source = "company.profile.user.firstName")
+  @Mapping(target = "lastName", source = "company.profile.user.lastName")
+  @Mapping(target = "email", source = "company.profile.user.email")
   fun companyToCompanyUserResponse(company: Company): CompanyUserResponse
+
   fun companyUserUpdateToCompany(companyUserUpdate: CompanyUserUpdate): Company
 }
 

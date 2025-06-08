@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
+import org.example.backendoportuniabravo.mapper.LocationMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
@@ -18,6 +19,8 @@ class CompanyServiceImpl(
     private val companyRepository: CompanyRepository,
     @Autowired
     private val companyMapper: CompanyMapper,
+    @Autowired
+    private val locationMapper: LocationMapper,
     @Autowired
     private val userRepository: UserRepository,
     @Autowired
@@ -364,5 +367,15 @@ class CompanyServiceImpl(
         return companyMapper.companyToCompanyUserResponse(
             company.get()
         )
+    }
+
+
+    override fun getLocations(id: Long): List<LocationDetails> {
+        val company: Optional<Company> = companyRepository.findById(id)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $id not found")
+        }
+        val locations = company.get().location?.let { listOf(it) } ?: emptyList()
+        return locations.map { locationMapper.locationToLocationDetails(it) }
     }
 }

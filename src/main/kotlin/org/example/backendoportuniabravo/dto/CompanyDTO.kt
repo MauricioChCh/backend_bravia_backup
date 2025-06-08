@@ -1,10 +1,11 @@
 package org.example.backendoportuniabravo.dto
 
+import java.util.*
+
 
 // response DTO
 data class CompanyUserResponse(
     var id: Long? = null,
-    var profile: ProfileDetails? = null,
     var name: String? = null,
     var description: String? = null,
     var imageUrl: String? = null,
@@ -12,6 +13,10 @@ data class CompanyUserResponse(
     var tags: List<TagDetails>? = null,
     var location: LocationDetails? = null,
     var contacts: List<ContactDetails>? = null,
+    var firstName: String? = null,
+    var lastName: String? = null,
+    var email: String? = null,
+    var verified: Boolean? = false,
 )
 
 // result DTO
