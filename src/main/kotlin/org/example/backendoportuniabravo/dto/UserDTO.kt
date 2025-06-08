@@ -40,6 +40,6 @@ data class ProfileDetails(
 )
 
 data class UserLoginInput(
-    var email: String? = null,
+    var username: String? = null,
     var password: String? = null,
 )

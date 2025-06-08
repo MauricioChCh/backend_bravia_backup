@@ -61,7 +61,7 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
                 .readValue(request.inputStream, UserLoginInput::class.java)
             authManager.authenticate(
                 UsernamePasswordAuthenticationToken(
-                    userLoginInput.email,
+                    userLoginInput.username,
                     userLoginInput.password,
                     ArrayList()
                 )
