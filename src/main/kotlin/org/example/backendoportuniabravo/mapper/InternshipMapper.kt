@@ -25,6 +25,7 @@ interface InternshipMapper {
     @Mapping(source = "company.name", target = "companyName")
     @Mapping(source = "location.city.name", target = "cityName")
     @Mapping(source = "location.country.name", target = "countryName")
+    @Mapping(source = "bookmarked", target = "isBookmarked", defaultValue = "false")
     fun internshipToInternshipResponseDTO(internship: Internship): InternshipResponseDTO
 
 }

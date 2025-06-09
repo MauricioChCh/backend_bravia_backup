@@ -6,6 +6,7 @@ import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.mapper.InternshipMapper
 import org.example.backendoportuniabravo.mapper.LocationMapper
 import org.example.backendoportuniabravo.repository.*
+import org.example.backendoportuniabravo.repository.MarkedInternshipRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -39,6 +40,7 @@ class CompanyServiceImpl(
     private val cityRepository: CityRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
     private val roleRepository: RoleRepository,
+    private val markedInternshipRepository: MarkedInternshipRepository,
 ) : CompanyService {
 
     /**
@@ -397,7 +399,22 @@ class CompanyServiceImpl(
         if (company.isEmpty) {
             throw NoSuchElementException("Company with id $id not found")
         }
-        val internships = company.get().internships
+        val internships = isInternshipMark(id, company.get().internships)
+
         return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
+    }
+
+    /**
+     * Marks internships as bookmarked for a user.
+     * @param userId The ID of the user.
+     * @param internships The list of internships to check for bookmarks.
+     * @return A list of internships with their bookmarked status updated.
+     */
+    private fun isInternshipMark(userId: Long, internships: List<Internship>) : List<Internship> {
+        val markedInternship = markedInternshipRepository.findByUserId(userId)
+        internships.forEach() { internship ->
+            internship.bookmarked = markedInternship.any { it.internship.id == internship.id }
+        }
+        return internships
     }
 }

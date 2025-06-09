@@ -22,7 +22,7 @@ data class InternshipResponseDTO(
     val imageUrl: String? = null,
     val duration: String? = null,
     val salary: Double? = null,
-
+    val isBookmarked: Boolean = false,
     /**
      * Computed field combining city and country names.
      */
