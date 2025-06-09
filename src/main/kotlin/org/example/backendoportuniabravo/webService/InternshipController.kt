@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.webService
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
+import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.service.InternshipService
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
@@ -83,4 +84,13 @@ class InternshipController(private val service: InternshipService) {
     @GetMapping("/recommended/{studentId}")
     fun getRecommended(@PathVariable studentId: Long): ResponseEntity<List<InternshipResponseDTO>> =
         ResponseEntity.ok(service.getRecommendedForStudent(studentId))
+
+    @PatchMapping("{internshipId}/users/{userId}/bookmark") // TODO: This endpoint should be accessible only by company and student roles
+    fun bookMarkInternship(
+        @PathVariable internshipId: Long,
+        @PathVariable userId: Long,
+        @RequestBody marked: Boolean,
+    ) {
+        service.bookmarkInternship(internshipId, userId, marked)
+    }
 }

@@ -8,4 +8,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MarkedInternshipRepository : JpaRepository<MarkedInternship, Long> {
     fun findByUserId(userId: Long): List<MarkedInternship>
+    fun findByInternshipIdAndUserId(internshipId: Long, userId: Long): MarkedInternship?
 }

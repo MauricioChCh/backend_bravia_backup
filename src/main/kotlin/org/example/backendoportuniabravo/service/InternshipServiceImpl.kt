@@ -4,11 +4,11 @@ import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
 import org.example.backendoportuniabravo.entity.Internship
+import org.example.backendoportuniabravo.entity.MarkedInternship
+import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.InternshipMapper
-import org.example.backendoportuniabravo.repository.CompanyRepository
-import org.example.backendoportuniabravo.repository.InternshipRepository
-import org.example.backendoportuniabravo.repository.LocationRepository
-import org.example.backendoportuniabravo.repository.StudentRepository
+import org.example.backendoportuniabravo.repository.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
 @Service
@@ -17,7 +17,8 @@ class InternshipServiceImpl (
     private val internshipRepository: InternshipRepository,
     private val companyRepository: CompanyRepository,
     private val locationRepository: LocationRepository,
-    private val mapper: InternshipMapper
+    private val mapper: InternshipMapper,
+    private val markedInternshipRepository: MarkedInternshipRepository
 ) : InternshipService {
 
     /**
@@ -140,4 +141,46 @@ class InternshipServiceImpl (
 
         return mapper.toDto(internshipRepository.save(internship))
     }
+
+    override fun bookmarkInternship(internshipId: Long, userId: Long, marked: Boolean) {
+        val internship = internshipRepository.findById(internshipId)
+            .orElseThrow { NoSuchElementException("Internship not found") }
+
+        val student = studentRepository.findById(userId)
+        val company = companyRepository.findById(userId)
+
+        if (student.isEmpty && company.isEmpty) {
+            throw RuntimeException("User not found")
+        }
+
+        val user: User? = student.orElse(null)?.profile?.user ?: company.orElse(null)?.profile?.user
+
+        if (user == null) {
+            throw RuntimeException("User not found")
+        } // TODO: se puede quitar
+
+        val existingMarkedInternship = markedInternshipRepository.findByInternshipIdAndUserId(internshipId, userId)
+
+        if (marked) {
+            if (existingMarkedInternship == null) {
+                val markedInternship = MarkedInternship(
+                    internship = internship,
+                    user = user,
+                )
+                user.markedInternships.add(markedInternship)
+                internship.markedInternship.add(markedInternship)
+
+                markedInternshipRepository.save(markedInternship)
+            }
+        } else {
+            if (existingMarkedInternship != null) {
+                user.markedInternships.remove(existingMarkedInternship)
+                internship.markedInternship.remove(existingMarkedInternship)
+
+                markedInternshipRepository.delete(existingMarkedInternship)
+            }
+        }
+    }
+
+
 }
