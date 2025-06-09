@@ -52,7 +52,7 @@ class DataSeeder {
 
 
         @Bean
-        @Order(2) // Ejecutar PRIMERO
+        @Order(2)
         @Transactional
         fun insertLocations(
             countryRepository: CountryRepository,
@@ -580,3 +580,67 @@ class DataSeeder {
 //                    collegeNames = listOf("UNA"),
 //                    interestNames = listOf("Ciencia de Datos", "Inteligencia Artificial")
 //                ),
+
+    @Bean
+    @Order(7)
+    fun insertUserReportsData(
+        userRepository: UserRepository,
+        profileRepository: ProfileRepository,
+        roleRepository: RoleRepository,
+        userReportRepository: UserReportRepository,
+        passwordEncoder: BCryptPasswordEncoder
+    ): CommandLineRunner = CommandLineRunner {
+        if (userReportRepository.count() == 0L) {
+            println("📦 Inserting user reports test data…")
+
+            val profileReporter = Profile(verified = true)
+            val profileReported = Profile(verified = true)
+
+            val roleStudent = roleRepository.findByName("ROLE_STUDENT")
+                .orElseThrow { NoSuchElementException("Role ROLE_STUDENT not found") }
+
+            val reporter = User(
+                createDate = Date(),
+                firstName = "Luis",
+                lastName = "Cordero",
+                email = "reporter@example.com",
+                password = passwordEncoder.encode("Password123!"),
+                tokenExpired = false,
+                enabled = true,
+                profile = profileReporter,
+                roleList = mutableSetOf(roleStudent)
+            )
+
+            val reported = User(
+                createDate = Date(),
+                firstName = "Carlos",
+                lastName = "Ramírez",
+                email = "reported@example.com",
+                password = passwordEncoder.encode("Password123!"),
+                tokenExpired = false,
+                enabled = true,
+                profile = profileReported,
+                roleList = mutableSetOf(roleStudent)
+            )
+
+            profileReporter.user = reporter
+            profileReported.user = reported
+
+            userRepository.saveAll(listOf(reporter, reported))
+
+            val report = UserReports(
+                user = reporter,
+                userReported = reported,
+                description = "Este usuario compartió información falsa en su perfil."
+            )
+
+            userReportRepository.save(report)
+
+            println("✅ User report test data inserted")
+        } else {
+            println("⚠️ User report data already exists. No data was inserted.")
+        }
+    }
+
+
+}
