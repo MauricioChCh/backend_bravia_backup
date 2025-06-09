@@ -65,11 +65,23 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
-
     @DeleteMapping("{id}")
     @ResponseBody
     fun deleteCompany(@PathVariable id: Long) {
         service.deleteCompany(id)
         ResponseEntity.status(HttpStatus.NO_CONTENT)
     }
+
+    @GetMapping("{id}/locations")
+    fun getCompanyLocations(@PathVariable id: Long) : ResponseEntity<List<LocationDetails>>? {
+        val updated = service.getLocations(id)
+        return ResponseEntity.status(HttpStatus.OK).body(updated)
+    }
+
+    @GetMapping("{id}/internships")
+    fun getCompanyInternships(@PathVariable id: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getInternships(id)
+        return ResponseEntity.status(HttpStatus.OK).body(internships)
+    }
+
 }

@@ -3,7 +3,10 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
+import org.example.backendoportuniabravo.mapper.InternshipMapper
+import org.example.backendoportuniabravo.mapper.LocationMapper
 import org.example.backendoportuniabravo.repository.*
+import org.example.backendoportuniabravo.repository.MarkedInternshipRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
@@ -19,6 +22,10 @@ class CompanyServiceImpl(
     @Autowired
     private val companyMapper: CompanyMapper,
     @Autowired
+    private val locationMapper: LocationMapper,
+    @Autowired
+    private val internshipMapper: InternshipMapper,
+    @Autowired
     private val userRepository: UserRepository,
     @Autowired
     private val profileRepository: ProfileRepository,
@@ -32,8 +39,8 @@ class CompanyServiceImpl(
     private val countryRepository: CountryRepository,
     private val cityRepository: CityRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
-    private val roleRepository: RoleRepository
-
+    private val roleRepository: RoleRepository,
+    private val markedInternshipRepository: MarkedInternshipRepository,
 ) : CompanyService {
 
     /**
@@ -364,5 +371,50 @@ class CompanyServiceImpl(
         return companyMapper.companyToCompanyUserResponse(
             company.get()
         )
+    }
+
+    /**
+     * Retrieves all company locations.
+     * @return A list of all locations associate with company.
+     * @throws NoSuchElementException if no companies are found.
+     */
+    @Throws(NoSuchElementException::class)
+    override fun getLocations(id: Long): List<LocationDetails> {
+        val company: Optional<Company> = companyRepository.findById(id)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $id not found")
+        }
+        val locations = company.get().location?.let { listOf(it) } ?: emptyList()
+        return locations.map { locationMapper.locationToLocationDetails(it) }
+    }
+
+    /**
+     * Retrieves all internships associated with a company.
+     * @return A list of all internships for the company.
+     * @throws NoSuchElementException if no internships are found.
+     */
+    @Throws(NoSuchElementException::class)
+    override fun getInternships(id: Long): List<InternshipResponseDTO> {
+        val company: Optional<Company> = companyRepository.findById(id)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $id not found")
+        }
+        val internships = isInternshipMark(id, company.get().internships)
+
+        return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
+    }
+
+    /**
+     * Marks internships as bookmarked for a user.
+     * @param userId The ID of the user.
+     * @param internships The list of internships to check for bookmarks.
+     * @return A list of internships with their bookmarked status updated.
+     */
+    private fun isInternshipMark(userId: Long, internships: List<Internship>) : List<Internship> {
+        val markedInternship = markedInternshipRepository.findByUserId(userId)
+        internships.forEach() { internship ->
+            internship.bookmarked = markedInternship.any { it.internship.id == internship.id }
+        }
+        return internships
     }
 }

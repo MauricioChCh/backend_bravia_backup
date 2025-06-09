@@ -55,10 +55,12 @@ data class Internship(
     @ManyToMany(mappedBy = "internships")
     var students: MutableSet<Student> = mutableSetOf(),
 
+    @OneToMany(mappedBy = "internship", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var markedInternship: MutableSet<MarkedInternship> = mutableSetOf(),
 
     // Campo calculado/transitorio para el frontend (no se persiste) creo que ni siquiera va aca, esto deberia dser otra tabla
     @Transient
-    var isBookmarked: Boolean = false
+    var bookmarked: Boolean = false
 ) {
 //
 //    @Transient

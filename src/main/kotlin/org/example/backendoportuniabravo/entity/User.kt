@@ -55,6 +55,11 @@ data class User(
     )
     var roleList: MutableSet<Role> = mutableSetOf(),
 
+    @OneToMany(mappedBy = "user", cascade = [CascadeType.ALL], orphanRemoval = true)
+    var markedInternships: MutableSet<MarkedInternship> = mutableSetOf(),
+
+
+
     ) {
     override fun hashCode(): Int {
         return id?.hashCode() ?: 0

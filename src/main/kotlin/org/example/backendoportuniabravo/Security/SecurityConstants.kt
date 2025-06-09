@@ -17,6 +17,7 @@ import org.springframework.security.authentication.AuthenticationServiceExceptio
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.AuthenticationException
+import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.context.SecurityContextHolder
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter
@@ -88,7 +89,7 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
             .setIssuer(SecurityConstants.TOKEN_ISSUER)
             .setAudience(SecurityConstants.TOKEN_AUDIENCE)
             .setSubject((authentication.principal as org.springframework.security.core.userdetails.User).username)
-            .claim("roles", authentication.authorities)
+            .claim("roles", authentication.authorities.map { it.authority })
             .setExpiration(Date(System.currentTimeMillis() + SecurityConstants.TOKEN_LIFETIME))
             .compact()
 
@@ -126,21 +127,26 @@ class JwtAuthorizationFilter(authenticationManager: AuthenticationManager) :
 
     @Throws(IOException::class)
     override fun doFilterInternal(
-        request: HttpServletRequest, response: HttpServletResponse,
+        request: HttpServletRequest,
+        response: HttpServletResponse,
         filterChain: FilterChain,
     ) {
 
         var authorizationToken = request.getHeader(HttpHeaders.AUTHORIZATION)
 
         if (authorizationToken != null && authorizationToken.startsWith(SecurityConstants.TOKEN_PREFIX)) {
-            authorizationToken = authorizationToken.replaceFirst(SecurityConstants.TOKEN_PREFIX.toRegex(), "")
-            val username: String =
-                Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(authorizationToken).body.subject
+            val token = authorizationToken.replaceFirst(SecurityConstants.TOKEN_PREFIX.toRegex(), "")
+            val parsedClaims = Jwts.parserBuilder().setSigningKey(key()).build().parseClaimsJws(token).body
+
+            val username = parsedClaims.subject
+            val roles = parsedClaims["roles"] as List<*>
+            val authorities = roles.map { SimpleGrantedAuthority(it.toString()) }
 
             LoggedUser.logIn(username)
 
-            SecurityContextHolder.getContext().authentication =
-                UsernamePasswordAuthenticationToken(username, null, emptyList())
+            val auth = UsernamePasswordAuthenticationToken(username, null, authorities)
+            SecurityContextHolder.getContext().authentication = auth
+
         }
 
         filterChain.doFilter(request, response)
