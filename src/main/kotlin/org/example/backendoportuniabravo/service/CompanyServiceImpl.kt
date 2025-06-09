@@ -399,7 +399,7 @@ class CompanyServiceImpl(
         if (company.isEmpty) {
             throw NoSuchElementException("Company with id $id not found")
         }
-        val internships = isInternshipMark(id, company.get().internships)
+        val internships = isInternshipMark(company.get().profile?.user?.id!!, company.get().internships)
 
         return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
     }
