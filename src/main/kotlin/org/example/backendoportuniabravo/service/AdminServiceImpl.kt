@@ -1,10 +1,15 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
+import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
 import org.example.backendoportuniabravo.entity.Admin
+import org.example.backendoportuniabravo.entity.ReportAction
 import org.example.backendoportuniabravo.mapper.AdminMapper
+import org.example.backendoportuniabravo.mapper.ReportActionMapper
 import org.example.backendoportuniabravo.repository.AdminRepository
 import org.example.backendoportuniabravo.repository.ProfileRepository
+import org.example.backendoportuniabravo.repository.ReportActionRepository
+import org.example.backendoportuniabravo.repository.UserReportRepository
 import org.example.backendoportuniabravo.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
@@ -86,3 +91,54 @@ class AdminServiceImpl(
         }
     }
 }
+
+@Service
+class ReportActionServiceImpl(
+    private val reportActionRepository: ReportActionRepository,
+    private val mapper: ReportActionMapper,
+    private val adminRepository: AdminRepository,
+    private val userReportRepository: UserReportRepository,
+) : ReportActionService {
+
+    override fun getAllActions(): List<ReportAction> =
+        reportActionRepository.findAll()
+
+    override fun getActionById(id: Long): ReportAction? =
+        reportActionRepository.findById(id).orElse(null)
+
+    override fun getActionsByAdminId(adminId: Long): List<ReportAction> =
+        reportActionRepository.findByAdminId(adminId)
+
+    override fun existsByAdminId(adminId: Long): Boolean =
+        reportActionRepository.existsByAdminId(adminId)
+
+    override fun getActionByUserReportId(userReportId: Long): ReportAction? =
+        reportActionRepository.findByUserReportId(userReportId)
+
+    override fun existsByUserReportId(userReportId: Long): Boolean =
+        reportActionRepository.existsByUserReportId(userReportId)
+
+    override fun searchByActionText(action: String): List<ReportAction> =
+        reportActionRepository.findByActionContainingIgnoreCase(action)
+
+    @Transactional
+    override fun createAction(action: ReportActionRequestDTO): ReportAction {
+        val admin = adminRepository.findById(action.adminId)
+            .orElseThrow { RuntimeException("Admin no encontrado con id: ${action.adminId}") }
+
+        val userReport = userReportRepository.findById(action.userReportId)
+            .orElseThrow { RuntimeException("UserReport no encontrado con id: ${action.userReportId}") }
+
+        val reportAction = mapper.toEntity(action, admin, userReport)
+
+        return reportActionRepository.save(reportAction)
+    }
+
+    @Transactional
+    override fun deleteAction(id: Long) {
+        if (reportActionRepository.existsById(id)) {
+            reportActionRepository.deleteById(id)
+        }
+    }
+}
+
