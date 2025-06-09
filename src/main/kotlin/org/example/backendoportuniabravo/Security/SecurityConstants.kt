@@ -8,6 +8,8 @@ import io.jsonwebtoken.security.*
 import jakarta.servlet.FilterChain
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
+import org.example.backendoportuniabravo.dto.AuthResponseDto
+import org.example.backendoportuniabravo.dto.AuthorityDto
 import org.example.backendoportuniabravo.dto.UserLoginInput
 import org.springframework.http.HttpHeaders
 import org.springframework.security.authentication.AuthenticationManager
@@ -78,6 +80,8 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
 
         val objectMapper = ObjectMapper()
 
+        val user = authentication.principal as org.springframework.security.core.userdetails.User
+
         val token = Jwts.builder()
             .signWith(key(), SignatureAlgorithm.HS512)
             .setHeaderParam("typ", SecurityConstants.TOKEN_TYPE)
@@ -88,12 +92,22 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
             .setExpiration(Date(System.currentTimeMillis() + SecurityConstants.TOKEN_LIFETIME))
             .compact()
 
+        //asi no se deberia enviar el token, ya eso sirve
+        val responseDto = AuthResponseDto(
+            token = token,
+            userId = user.username, // o un ID real si lo tienes
+            username = user.username,
+            authorities = user.authorities.map { AuthorityDto(it.authority) }
+        )
+
         response.addHeader(HttpHeaders.AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
         val out = response.writer
         response.contentType = SecurityConstants.APPLICATION_JSON
         response.characterEncoding = SecurityConstants.UTF_8
-        out.print(objectMapper.writeValueAsString(authentication.principal))
+//        out.print(objectMapper.writeValueAsString(authentication.principal))
+        out.print(objectMapper.writeValueAsString(responseDto))
         out.flush()
+
     }
 }
 
