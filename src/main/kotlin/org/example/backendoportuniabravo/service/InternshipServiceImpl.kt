@@ -159,7 +159,7 @@ class InternshipServiceImpl (
             throw RuntimeException("User not found")
         } // TODO: se puede quitar
 
-        val existingMarkedInternship = markedInternshipRepository.findByInternshipIdAndUserId(internshipId, userId)
+        val existingMarkedInternship = markedInternshipRepository.findByInternshipIdAndUserId(internshipId, user.id!!)
 
         if (marked) {
             if (existingMarkedInternship == null) {
