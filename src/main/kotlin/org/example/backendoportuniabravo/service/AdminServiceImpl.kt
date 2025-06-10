@@ -3,15 +3,18 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
 import org.example.backendoportuniabravo.dto.CompanyUserResponse
 import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
+import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.entity.Admin
 import org.example.backendoportuniabravo.entity.ReportAction
 import org.example.backendoportuniabravo.mapper.AdminMapper
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.mapper.ReportActionMapper
+import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.AdminRepository
 import org.example.backendoportuniabravo.repository.CompanyRepository
 import org.example.backendoportuniabravo.repository.ProfileRepository
 import org.example.backendoportuniabravo.repository.ReportActionRepository
+import org.example.backendoportuniabravo.repository.StudentRepository
 import org.example.backendoportuniabravo.repository.UserReportRepository
 import org.example.backendoportuniabravo.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -31,10 +34,14 @@ class AdminServiceImpl(
     @Autowired
     private val companyRepository: CompanyRepository,
     @Autowired
-    private val companyMapper: CompanyMapper
+    private val companyMapper: CompanyMapper,
+    @Autowired
+    private val studentRepository: StudentRepository,
+    @Autowired
+    private val studentMapper: StudentMapper,
 
 
-): AdminService {
+    ): AdminService {
     override fun getAdmins(): List<AdminResponseDTO>? {
         return try {
             val adminList = adminRepository.findAll()
@@ -107,7 +114,20 @@ class AdminServiceImpl(
             }
         } catch (e: Exception) {
             e.printStackTrace()
-            throw RuntimeException("Error al obtener la lista de administradores", e)
+            throw RuntimeException("Error al obtener la lista de companias", e)
+        }
+    }
+
+    override fun getAllStudents(): List<StudentResponseDTO> {
+        return try {
+            val studentList = studentRepository.findAll()
+
+            studentList.map {
+                    student -> studentMapper.toDto(student)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la lista de estudiantes", e)
         }
     }
 

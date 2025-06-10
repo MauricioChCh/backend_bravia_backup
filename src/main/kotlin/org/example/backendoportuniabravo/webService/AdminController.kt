@@ -5,6 +5,7 @@ import org.example.backendoportuniabravo.dto.AdminResponseDTO
 import org.example.backendoportuniabravo.dto.CompanyUserResponse
 import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
 import org.example.backendoportuniabravo.dto.ReportActionResponseDTO
+import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.mapper.ReportActionMapper
 import org.example.backendoportuniabravo.service.AdminService
 import org.example.backendoportuniabravo.service.CompanyService
@@ -33,6 +34,12 @@ class AdminController(
     fun getAllCompanies(): ResponseEntity<List<CompanyUserResponse>> {
         val companies = adminService.getAllCompanies()
         return ResponseEntity.ok(companies)
+    }
+
+    @GetMapping("/students")
+    fun getAllStudents(): ResponseEntity<List<StudentResponseDTO>> {
+        val students = adminService.getAllStudents()
+        return ResponseEntity.ok(students)
     }
 
     /**
