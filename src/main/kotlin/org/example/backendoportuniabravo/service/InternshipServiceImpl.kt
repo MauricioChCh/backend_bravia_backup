@@ -3,6 +3,7 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
+import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Internship
 import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.entity.User
@@ -10,6 +11,8 @@ import org.example.backendoportuniabravo.mapper.InternshipMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
+import kotlin.NoSuchElementException
 
 @Service
 class InternshipServiceImpl (
@@ -182,5 +185,40 @@ class InternshipServiceImpl (
         }
     }
 
+    override fun getBookmarkedInternships(userId: Long): List<InternshipResponseDTO>? {
+        val company: Optional<Company> = companyRepository.findById(userId)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $userId not found")
+        }
+        val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
+        val bookmarkedInternships = internships.filter { it.bookmarked }
+
+        return if (bookmarkedInternships.isNotEmpty()) {
+            bookmarkedInternships.map { mapper.internshipToInternshipResponseDTO(it) }
+        } else {
+            null // Return null if no bookmarked internships are found
+        }
+    }
+
+    /**
+     * Marks internships as bookmarked for a user.
+     * @param userId The ID of the user.
+     * @param internships The list of internships to check for bookmarks.
+     * @return A list of internships with their bookmarked status updated.
+     */
+    private fun isInternshipsMark(userId: Long, internships: List<Internship>?): List<Internship> {
+        val markedInternships = markedInternshipRepository.findByUserId(userId)
+
+        // If the internships list is not null or empty, update the bookmarked status
+        if (!internships.isNullOrEmpty()) {
+            internships.forEach { internship ->
+                internship.bookmarked = markedInternships.any { it.internship.id == internship.id }
+            }
+            return internships
+        }
+
+        // If internships is null or empty, return an empty list
+        return emptyList()
+    }
 
 }

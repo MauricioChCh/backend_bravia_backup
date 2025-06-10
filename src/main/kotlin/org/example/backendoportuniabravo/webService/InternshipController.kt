@@ -93,4 +93,10 @@ class InternshipController(private val service: InternshipService) {
     ) {
         service.bookmarkInternship(internshipId, userId, marked)
     }
+
+    @GetMapping("/users/{userId}/bookmarked")
+    fun getBookmarkedInternships(@PathVariable userId: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getBookmarkedInternships(userId)
+        return ResponseEntity.status(HttpStatus.OK).body(internships)
+    }
 }

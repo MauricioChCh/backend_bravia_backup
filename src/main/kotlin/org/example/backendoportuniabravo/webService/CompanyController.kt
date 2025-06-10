@@ -84,4 +84,13 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }
 
+    @GetMapping("{companyId}/internships/{internshipId}")
+    fun getCompanyInternship(@PathVariable companyId: Long, @PathVariable internshipId: Long) : ResponseEntity<InternshipResponseDTO> {
+        val internship = service.getInternship(companyId, internshipId)
+        return ResponseEntity.status(HttpStatus.OK).body(internship)
+    }
+
+
+
+
 }
