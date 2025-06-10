@@ -9,6 +9,7 @@ import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.InternshipMapper
 import org.example.backendoportuniabravo.repository.*
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.NoSuchElementException
