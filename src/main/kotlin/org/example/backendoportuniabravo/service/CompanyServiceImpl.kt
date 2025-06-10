@@ -167,7 +167,7 @@ class CompanyServiceImpl(
         tags.forEach { tag ->
             tag.companies.add(company)
         }
-        company.tags = tags.toMutableSet() as MutableSet<Tag>
+        company.tags = tags.toMutableSet()
 
         // Guardar cambios
         tagRepository.saveAll(tags) // Asegura que los cambios en los tags se persistan
@@ -399,10 +399,23 @@ class CompanyServiceImpl(
         if (company.isEmpty) {
             throw NoSuchElementException("Company with id $id not found")
         }
-        val internships = isInternshipMark(id, company.get().internships)
+        val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
 
         return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
     }
+
+    override fun getInternship(userId: Long, internshipId: Long): InternshipResponseDTO? {
+        val company: Optional<Company> = companyRepository.findById(userId)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $userId not found")
+        }
+        val internship = isInternshipMark(company.get().profile?.user?.id!!, company.get().internships.find { it.id == internshipId }!! )
+
+
+        return internshipMapper.internshipToInternshipResponseDTO(internship!!)
+    }
+
+
 
     /**
      * Marks internships as bookmarked for a user.
@@ -410,11 +423,29 @@ class CompanyServiceImpl(
      * @param internships The list of internships to check for bookmarks.
      * @return A list of internships with their bookmarked status updated.
      */
-    private fun isInternshipMark(userId: Long, internships: List<Internship>) : List<Internship> {
-        val markedInternship = markedInternshipRepository.findByUserId(userId)
-        internships.forEach() { internship ->
-            internship.bookmarked = markedInternship.any { it.internship.id == internship.id }
+    private fun isInternshipsMark(userId: Long, internships: List<Internship>?): List<Internship> {
+        val markedInternships = markedInternshipRepository.findByUserId(userId)
+
+        // If the internships list is not null or empty, update the bookmarked status
+        if (!internships.isNullOrEmpty()) {
+            internships.forEach { internship ->
+                internship.bookmarked = markedInternships.any { it.internship.id == internship.id }
+            }
+            return internships
         }
-        return internships
+
+        // If internships is null or empty, return an empty list
+        return emptyList()
     }
+
+    private fun isInternshipMark(userId: Long, internship: Internship ): Internship? {
+        val markedInternships = markedInternshipRepository.findByUserId(userId)
+
+        // Check if the internship is bookmarked
+        internship.bookmarked = markedInternships.any { it.internship.id == internship.id }
+
+        return internship
+    }
+
+
 }

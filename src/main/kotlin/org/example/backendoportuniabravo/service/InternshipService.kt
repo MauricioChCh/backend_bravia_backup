@@ -58,4 +58,20 @@ interface InternshipService {
      * @return the updated internship
      */
     fun patch(id: Long, dto: InternshipPatchDTO): InternshipResponseDTO
+
+    /**
+     * Bookmarks an internship for a user.
+     * @param internshipId the ID of the internship to bookmark
+     * @param userId the ID of the student bookmarking the internship
+     * @param marked true to bookmark, false to unbookmark
+     * @return the updated internship response DTO
+     */
+    fun bookmarkInternship(internshipId: Long, userId: Long, marked: Boolean)
+
+    /**
+     * Retrieves all internships bookmarked by a user.
+     * @param userId The ID of the user.
+     * @return A list of bookmarked internships, or null if none are found.
+     */
+    fun getBookmarkedInternships(userId: Long): List<InternshipResponseDTO>?
 }
