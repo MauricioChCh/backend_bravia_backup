@@ -3,13 +3,15 @@ package org.example.backendoportuniabravo.service
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
+import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Internship
 import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.InternshipMapper
 import org.example.backendoportuniabravo.repository.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
+import java.util.*
+import kotlin.NoSuchElementException
 
 @Service
 class InternshipServiceImpl (
@@ -17,7 +19,7 @@ class InternshipServiceImpl (
     private val internshipRepository: InternshipRepository,
     private val companyRepository: CompanyRepository,
     private val locationRepository: LocationRepository,
-    private val mapper: InternshipMapper,
+    private val internshipMapper: InternshipMapper,
     private val markedInternshipRepository: MarkedInternshipRepository
 ) : InternshipService {
 
@@ -47,14 +49,14 @@ class InternshipServiceImpl (
         )
 
         val saved = internshipRepository.save(internship)
-        return mapper.toDto(saved)
+        return internshipMapper.toDto(saved)
     }
 
     /**
      * Retorna todas las pasantías registradas en el sistema.
      */
     override fun getAll(): List<InternshipResponseDTO> =
-        internshipRepository.findAll().map { mapper.toDto(it) }
+        internshipRepository.findAll().map { internshipMapper.toDto(it) }
 
     /**
      * Actualiza todos los campos de una pasantía existente.
@@ -64,8 +66,8 @@ class InternshipServiceImpl (
             .orElseThrow { NoSuchElementException("Internship not found") }
 
         // Aplica los cambios al objeto existente
-        mapper.updateFromDto(dto, internship)
-        return mapper.toDto(internshipRepository.save(internship))
+        internshipMapper.updateFromDto(dto, internship)
+        return internshipMapper.toDto(internshipRepository.save(internship))
     }
 
     /**
@@ -74,7 +76,7 @@ class InternshipServiceImpl (
     override fun findById(id: Long): InternshipResponseDTO {
         val internship = internshipRepository.findById(id)
             .orElseThrow { NoSuchElementException("Internship not found") }
-        return mapper.toDto(internship)
+        return internshipMapper.toDto(internship)
     }
 
     /**
@@ -83,11 +85,11 @@ class InternshipServiceImpl (
     override fun search(query: String): List<InternshipResponseDTO> {
         return internshipRepository
             .searchByTitleOrRequirements(query.lowercase())
-            .map(mapper::toDto)
+            .map(internshipMapper::toDto)
     }
 
     /**
-     * Retorna pasantías recomendadas a un estudiante, en base a sus intereses. //sigue en beta
+     * Retorna pasantías recomendadas a un estudiante, con base en sus intereses. //sigue en beta
      */
     override fun getRecommendedForStudent(studentId: Long): List<InternshipResponseDTO> {
         val student = studentRepository.findById(studentId)
@@ -105,7 +107,7 @@ class InternshipServiceImpl (
             .sortedByDescending { it.publicationDate } // También se puede usar salario u otro criterio
             .take(30)
 
-        return matchingInternships.map(mapper::toDto)
+        return matchingInternships.map(internshipMapper::toDto)
     }
 
     /**
@@ -139,7 +141,7 @@ class InternshipServiceImpl (
             internship.location = location
         }
 
-        return mapper.toDto(internshipRepository.save(internship))
+        return internshipMapper.toDto(internshipRepository.save(internship))
     }
 
     override fun bookmarkInternship(internshipId: Long, userId: Long, marked: Boolean) {
@@ -182,5 +184,40 @@ class InternshipServiceImpl (
         }
     }
 
+    override fun getBookmarkedInternships(userId: Long): List<InternshipResponseDTO>? {
+        val company: Optional<Company> = companyRepository.findById(userId)
+        if (company.isEmpty) {
+            throw NoSuchElementException("Company with id $userId not found")
+        }
+        val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
+        val bookmarkedInternships = internships.filter { it.bookmarked }
+
+        return if (bookmarkedInternships.isNotEmpty()) {
+            bookmarkedInternships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
+        } else {
+            null // Return null if no bookmarked internships are found
+        }
+    }
+
+    /**
+     * Marks internships as bookmarked for a user.
+     * @param userId The ID of the user.
+     * @param internships The list of internships to check for bookmarks.
+     * @return A list of internships with their bookmarked status updated.
+     */
+    private fun isInternshipsMark(userId: Long, internships: List<Internship>?): List<Internship> {
+        val markedInternships = markedInternshipRepository.findByUserId(userId)
+
+        // If the internships list is not null or empty, update the bookmarked status
+        if (!internships.isNullOrEmpty()) {
+            internships.forEach { internship ->
+                internship.bookmarked = markedInternships.any { it.internship.id == internship.id }
+            }
+            return internships
+        }
+
+        // If internships is null or empty, return an empty list
+        return emptyList()
+    }
 
 }
