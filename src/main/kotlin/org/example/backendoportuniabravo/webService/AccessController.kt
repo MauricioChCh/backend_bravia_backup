@@ -47,4 +47,10 @@ class AccessController(
         val degrees = accessService.getDegrees()
         return ResponseEntity.ok(degrees)
     }
+
+    @GetMapping("/signup/interests")
+    fun getInterests(): ResponseEntity<List<InterestDetails>> {
+        val interests = accessService.getInterests()
+        return ResponseEntity.ok(interests)
+    }
 }
