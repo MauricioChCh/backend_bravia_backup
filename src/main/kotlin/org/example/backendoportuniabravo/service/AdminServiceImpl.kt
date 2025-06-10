@@ -1,12 +1,15 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
+import org.example.backendoportuniabravo.dto.CompanyUserResponse
 import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
 import org.example.backendoportuniabravo.entity.Admin
 import org.example.backendoportuniabravo.entity.ReportAction
 import org.example.backendoportuniabravo.mapper.AdminMapper
+import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.mapper.ReportActionMapper
 import org.example.backendoportuniabravo.repository.AdminRepository
+import org.example.backendoportuniabravo.repository.CompanyRepository
 import org.example.backendoportuniabravo.repository.ProfileRepository
 import org.example.backendoportuniabravo.repository.ReportActionRepository
 import org.example.backendoportuniabravo.repository.UserReportRepository
@@ -24,14 +27,18 @@ class AdminServiceImpl(
     @Autowired
     private val profileRepository: ProfileRepository,
     @Autowired
-    private val userRepository: UserRepository // Asegúrate de tener el repositorio del User
+    private val userRepository: UserRepository, // Asegúrate de tener el repositorio del User
+    @Autowired
+    private val companyRepository: CompanyRepository,
+    @Autowired
+    private val companyMapper: CompanyMapper
+
 
 ): AdminService {
     override fun getAdmins(): List<AdminResponseDTO>? {
         return try {
             val adminList = adminRepository.findAll()
-            //println("Admins: $adminList") // Debug
-            //adminMapper.adminListToAdminResponseDTOList(adminList)
+
             adminList.map {
                 val user = userRepository.findByProfileId(it.profile?.id) // Asumiendo que el repositorio tiene un método así
                 adminMapper.adminToAdminResponseDTOWithFullName(it, user) // Pasamos el User al Mapper
@@ -90,6 +97,20 @@ class AdminServiceImpl(
             false
         }
     }
+
+    override fun getAllCompanies(): List<CompanyUserResponse> {
+        return try {
+            val companyList = companyRepository.findAll()
+
+            companyList.map {
+                    company -> companyMapper.companyToCompanyUserResponse(company)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la lista de administradores", e)
+        }
+    }
+
 }
 
 @Service

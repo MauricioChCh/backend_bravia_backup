@@ -9,6 +9,8 @@ interface AdminService{
     fun getAdminById(id: Long) : AdminResponseDTO?
     fun addAdmin(id: Long) : Long?
     fun deleteAdmin(profileId: Long) : Boolean
+    fun getAllCompanies(): List<CompanyUserResponse>
+
 
 }
 
