@@ -13,6 +13,7 @@ data class InternshipRequestDTO(
     val companyId: Long,
     val locationId: Long,
     val title: String,
+    val description: String,
     val imageUrl: String?,
     val publicationDate: Date,
     val duration: String,

@@ -10,6 +10,7 @@ import java.util.*
 data class InternshipResponseDTO(
     val id: Long?,
     val title: String,
+    val description: String? = null,
     val companyName: String,
     val cityName: String? = null,
     val countryName: String,

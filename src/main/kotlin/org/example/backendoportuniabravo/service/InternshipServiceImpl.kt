@@ -37,6 +37,7 @@ class InternshipServiceImpl (
 
         val internship = Internship(
             title = dto.title,
+            description = dto.description,
             imageUrl = dto.imageUrl,
             publicationDate = dto.publicationDate,
             duration = dto.duration,
