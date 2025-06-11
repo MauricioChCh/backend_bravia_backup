@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("\${url.companies}")
 class CompanyController (private val service: CompanyService) {
 
-    @GetMapping("{id}")
+    @GetMapping("{username}")
     @ResponseBody
-    fun getCompanyById(@PathVariable id : Long) = service.findById(id)
+    fun getCompanyById(@PathVariable username : String) = service.findById(username)
 
 
 
@@ -72,21 +72,21 @@ class CompanyController (private val service: CompanyService) {
         ResponseEntity.status(HttpStatus.NO_CONTENT)
     }
 
-    @GetMapping("{id}/locations")
-    fun getCompanyLocations(@PathVariable id: Long) : ResponseEntity<List<LocationDetails>>? {
-        val updated = service.getLocations(id)
+    @GetMapping("{username}/locations")
+    fun getCompanyLocations(@PathVariable username: String) : ResponseEntity<List<LocationDetails>>? {
+        val updated = service.getLocations(username)
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
-    @GetMapping("{id}/internships")
-    fun getCompanyInternships(@PathVariable id: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
-        val internships = service.getInternships(id)
+    @GetMapping("{username}/internships")
+    fun getCompanyInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getInternships(username)
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }
 
-    @GetMapping("{companyId}/internships/{internshipId}")
-    fun getCompanyInternship(@PathVariable companyId: Long, @PathVariable internshipId: Long) : ResponseEntity<InternshipResponseDTO> {
-        val internship = service.getInternship(companyId, internshipId)
+    @GetMapping("{username}/internships/{internshipId}")
+    fun getCompanyInternship(@PathVariable username: String, @PathVariable internshipId: Long) : ResponseEntity<InternshipResponseDTO> {
+        val internship = service.getInternship(username, internshipId)
         return ResponseEntity.status(HttpStatus.OK).body(internship)
     }
 

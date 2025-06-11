@@ -85,18 +85,18 @@ class InternshipController(private val service: InternshipService) {
     fun getRecommended(@PathVariable studentId: Long): ResponseEntity<List<InternshipResponseDTO>> =
         ResponseEntity.ok(service.getRecommendedForStudent(studentId))
 
-    @PatchMapping("{internshipId}/users/{userId}/bookmark") // TODO: This endpoint should be accessible only by company and student roles
+    @PatchMapping("{internshipId}/users/{username}/bookmark") // TODO: This endpoint should be accessible only by company and student roles
     fun bookMarkInternship(
         @PathVariable internshipId: Long,
-        @PathVariable userId: Long,
+        @PathVariable username: String,
         @RequestBody marked: Boolean,
     ) {
-        service.bookmarkInternship(internshipId, userId, marked)
+        service.bookmarkInternship(internshipId, username, marked)
     }
 
-    @GetMapping("/users/{userId}/bookmarked")
-    fun getBookmarkedInternships(@PathVariable userId: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
-        val internships = service.getBookmarkedInternships(userId)
+    @GetMapping("/users/{username}/bookmarked")
+    fun getBookmarkedInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getBookmarkedInternships(username)
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }
 }

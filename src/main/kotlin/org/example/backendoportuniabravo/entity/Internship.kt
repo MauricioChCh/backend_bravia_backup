@@ -24,6 +24,10 @@ data class Internship(
     @Column(name = "title", nullable = false)
     var title: String,
 
+    @Column(name = "description")
+    var description: String? = null,
+
+
     @Column(name = "imageurl")
     var imageUrl: String? = null,
 

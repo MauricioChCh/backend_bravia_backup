@@ -111,21 +111,21 @@ interface CompanyService {
      * @throws NoSuchElementException if no companies are found.
      * @return A list of all companies.
      */
-    fun findById(id: Long): CompanyUserResponse?
+    fun findById(username: String): CompanyUserResponse?
 
     /**
      * Finds all company locations.
      * @return A list of all company locations.
      * @throws NoSuchElementException if no companies are found.
      */
-    fun getLocations(id: Long): List<LocationDetails>
+    fun getLocations(username: String): List<LocationDetails>
 
     /**
      * Finds all internships associated with a company.
      * @return A list of all internships for the company.
      * @throws NoSuchElementException if no internships are found.
      */
-    fun getInternships(id: Long): List<InternshipResponseDTO>
+    fun getInternships(username: String): List<InternshipResponseDTO>
 
 
     /**
@@ -134,7 +134,7 @@ interface CompanyService {
      * @param internshipId The ID of the internship.
      * @return The internship response DTO if found, null otherwise.
      */
-    fun getInternship(userId: Long, internshipId: Long): InternshipResponseDTO?
+    fun getInternship(username: String, internshipId: Long): InternshipResponseDTO?
 
 
 }

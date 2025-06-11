@@ -21,7 +21,8 @@ class InternshipServiceImpl (
     private val companyRepository: CompanyRepository,
     private val locationRepository: LocationRepository,
     private val internshipMapper: InternshipMapper,
-    private val markedInternshipRepository: MarkedInternshipRepository
+    private val markedInternshipRepository: MarkedInternshipRepository,
+    private val userRepository: UserRepository,
 ) : InternshipService {
 
     /**
@@ -36,6 +37,7 @@ class InternshipServiceImpl (
 
         val internship = Internship(
             title = dto.title,
+            description = dto.description,
             imageUrl = dto.imageUrl,
             publicationDate = dto.publicationDate,
             duration = dto.duration,
@@ -145,22 +147,13 @@ class InternshipServiceImpl (
         return internshipMapper.toDto(internshipRepository.save(internship))
     }
 
-    override fun bookmarkInternship(internshipId: Long, userId: Long, marked: Boolean) {
+    override fun bookmarkInternship(internshipId: Long, username: String, marked: Boolean) {
         val internship = internshipRepository.findById(internshipId)
             .orElseThrow { NoSuchElementException("Internship not found") }
 
-        val student = studentRepository.findById(userId)
-        val company = companyRepository.findById(userId)
 
-        if (student.isEmpty && company.isEmpty) {
-            throw RuntimeException("User not found")
-        }
+        val user : User = userRepository.findByEmail(username)
 
-        val user: User? = student.orElse(null)?.profile?.user ?: company.orElse(null)?.profile?.user
-
-        if (user == null) {
-            throw RuntimeException("User not found")
-        } // TODO: se puede quitar
 
         val existingMarkedInternship = markedInternshipRepository.findByInternshipIdAndUserId(internshipId, user.id!!)
 
@@ -185,10 +178,12 @@ class InternshipServiceImpl (
         }
     }
 
-    override fun getBookmarkedInternships(userId: Long): List<InternshipResponseDTO>? {
-        val company: Optional<Company> = companyRepository.findById(userId)
+    override fun getBookmarkedInternships(username: String): List<InternshipResponseDTO>? {
+        val relatedId = getRelatedId(username, userRepository)
+
+        val company: Optional<Company> = companyRepository.findById(relatedId)
         if (company.isEmpty) {
-            throw NoSuchElementException("Company with id $userId not found")
+            throw NoSuchElementException("Company with username $username not found")
         }
         val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
         val bookmarkedInternships = internships.filter { it.bookmarked }

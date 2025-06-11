@@ -363,7 +363,10 @@ class CompanyServiceImpl(
      * @throws NoSuchElementException if the company is not found.
      */
     @Throws(NoSuchElementException::class)
-    override fun findById(id: Long): CompanyUserResponse? {
+    override fun findById(username: String): CompanyUserResponse? {
+
+        val id = getRelatedId(username, userRepository)
+
         val company: Optional<Company> = companyRepository.findById(id)
         if (company.isEmpty) {
             throw NoSuchElementException("Company with id $id not found")
@@ -379,7 +382,10 @@ class CompanyServiceImpl(
      * @throws NoSuchElementException if no companies are found.
      */
     @Throws(NoSuchElementException::class)
-    override fun getLocations(id: Long): List<LocationDetails> {
+    override fun getLocations(username: String): List<LocationDetails> {
+
+        val id = getRelatedId(username, userRepository)
+
         val company: Optional<Company> = companyRepository.findById(id)
         if (company.isEmpty) {
             throw NoSuchElementException("Company with id $id not found")
@@ -394,20 +400,25 @@ class CompanyServiceImpl(
      * @throws NoSuchElementException if no internships are found.
      */
     @Throws(NoSuchElementException::class)
-    override fun getInternships(id: Long): List<InternshipResponseDTO> {
-        val company: Optional<Company> = companyRepository.findById(id)
+    override fun getInternships(username: String): List<InternshipResponseDTO> {
+        val relatedId = getRelatedId(username, userRepository)
+
+        val company: Optional<Company> = companyRepository.findById(relatedId)
+
         if (company.isEmpty) {
-            throw NoSuchElementException("Company with id $id not found")
+            throw NoSuchElementException("Company with username $username not found")
         }
         val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
 
         return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
     }
 
-    override fun getInternship(userId: Long, internshipId: Long): InternshipResponseDTO? {
-        val company: Optional<Company> = companyRepository.findById(userId)
+    override fun getInternship(username: String, internshipId: Long): InternshipResponseDTO? {
+        val relatedId = getRelatedId(username, userRepository)
+
+        val company: Optional<Company> = companyRepository.findById(relatedId)
         if (company.isEmpty) {
-            throw NoSuchElementException("Company with id $userId not found")
+            throw NoSuchElementException("Company with id $relatedId not found")
         }
         val internship = isInternshipMark(company.get().profile?.user?.id!!, company.get().internships.find { it.id == internshipId }!! )
 
@@ -449,3 +460,24 @@ class CompanyServiceImpl(
 
 
 }
+
+
+/**
+ * Retrieves the related ID (either student or company) for a given username.
+ * @param username The email of the user.
+ * @param userRepository The UserRepository to access user data.
+ * @return The related ID (student or company).
+ * @throws NoSuchElementException if the user is not found or has no related profile.
+ */
+@Transactional
+fun getRelatedId(username: String, userRepository: UserRepository): Long {
+    val user: User = userRepository.findByEmail(username)
+
+    val relatedId = when {
+        user.profile?.student != null -> user.profile?.student?.id
+        user.profile?.company != null -> user.profile?.company?.id
+        else -> throw NoSuchElementException("User with email $username not found")
+    }
+    return relatedId!!
+}
+
