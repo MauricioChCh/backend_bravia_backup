@@ -12,7 +12,7 @@ import java.util.*
 
 @Repository
 interface UserRepository : JpaRepository<User, Long> {
-    fun findByEmail(email: String): User?
+    fun findByEmail(email: String): User
 //    fun findByIdAndEnabledTrue(id: Long): User? // TODO: Probablemente eliminar
 //    fun findByProfile(profile: Profile): User? // TODO: Probablemente eliminar
     fun existsByEmail(email: String): Boolean

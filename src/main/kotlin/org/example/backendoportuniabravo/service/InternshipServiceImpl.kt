@@ -150,20 +150,9 @@ class InternshipServiceImpl (
         val internship = internshipRepository.findById(internshipId)
             .orElseThrow { NoSuchElementException("Internship not found") }
 
-        val relatedId = getRelatedId(username, userRepository)
 
-        val student = studentRepository.findById(relatedId)
-        val company = companyRepository.findById(relatedId)
+        val user : User = userRepository.findByEmail(username)
 
-        if (student.isEmpty && company.isEmpty) {
-            throw RuntimeException("User not found")
-        }
-
-        val user: User? = student.orElse(null)?.profile?.user ?: company.orElse(null)?.profile?.user
-
-        if (user == null) {
-            throw RuntimeException("User not found")
-        } // TODO: se puede quitar
 
         val existingMarkedInternship = markedInternshipRepository.findByInternshipIdAndUserId(internshipId, user.id!!)
 

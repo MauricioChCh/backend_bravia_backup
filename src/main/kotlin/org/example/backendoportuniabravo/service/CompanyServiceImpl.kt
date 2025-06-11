@@ -461,13 +461,23 @@ class CompanyServiceImpl(
 
 }
 
+
+/**
+ * Retrieves the related ID (either student or company) for a given username.
+ * @param username The email of the user.
+ * @param userRepository The UserRepository to access user data.
+ * @return The related ID (student or company).
+ * @throws NoSuchElementException if the user is not found or has no related profile.
+ */
+@Transactional
 fun getRelatedId(username: String, userRepository: UserRepository): Long {
-    val user: User? = userRepository.findByEmail(username)
+    val user: User = userRepository.findByEmail(username)
 
     val relatedId = when {
-        user?.profile?.student != null -> user.profile?.student?.id
-        user?.profile?.company != null -> user.profile?.company?.id
+        user.profile?.student != null -> user.profile?.student?.id
+        user.profile?.company != null -> user.profile?.company?.id
         else -> throw NoSuchElementException("User with email $username not found")
     }
     return relatedId!!
 }
+
