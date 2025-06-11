@@ -41,9 +41,6 @@ data class Internship(
     @Column(name = "salary")
     var salary: Double? = null,
 
-    @Column(name = "modality")
-    var modality: String,
-
     @Column(name = "schedule")
     var schedule: String,
 
@@ -58,6 +55,10 @@ data class Internship(
 
     @ManyToMany(mappedBy = "internships")
     var students: MutableSet<Student> = mutableSetOf(),
+
+    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @JoinColumn(name = "modality_id", referencedColumnName = "id")
+    var modality: Modality? = null,
 
     @OneToMany(mappedBy = "internship", cascade = [CascadeType.ALL], orphanRemoval = true)
     var markedInternship: MutableSet<MarkedInternship> = mutableSetOf(),
@@ -85,4 +86,33 @@ data class Internship(
     override fun toString(): String {
         return "Internship(id=$id, title='$title', company='$company', location='$location')"
     }
+}
+
+
+@Entity
+@Table(name = "modality")
+data class Modality(
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    var id: Long? = null,
+
+    @Column(name = "name", nullable = false, unique = true)
+    var name: String,
+
+    @OneToOne(mappedBy = "modality", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
+    var internship: Internship? = null
+) {
+    override fun equals(other: Any?): Boolean {
+        if (this === other) return true
+        if (other !is Modality) return false
+        if (id != other.id) return false
+        return name == other.name
+    }
+
+    override fun hashCode(): Int {
+        return id?.hashCode() ?: 0
+    }
+
+
 }

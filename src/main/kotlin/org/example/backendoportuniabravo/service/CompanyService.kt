@@ -137,5 +137,7 @@ interface CompanyService {
     fun getInternship(username: String, internshipId: Long): InternshipResponseDTO?
 
 
+    fun getAllModalities(): List<ModalityResponse>
+
 }
 

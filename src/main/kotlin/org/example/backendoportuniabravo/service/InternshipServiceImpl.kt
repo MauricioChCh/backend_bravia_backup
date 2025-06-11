@@ -8,14 +8,14 @@ import org.example.backendoportuniabravo.entity.Internship
 import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.entity.User
 import org.example.backendoportuniabravo.mapper.InternshipMapper
+import org.example.backendoportuniabravo.mapper.ModalityMapper
 import org.example.backendoportuniabravo.repository.*
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 import java.util.*
 import kotlin.NoSuchElementException
 
 @Service
-class InternshipServiceImpl (
+class InternshipServiceImpl(
     private val studentRepository: StudentRepository,
     private val internshipRepository: InternshipRepository,
     private val companyRepository: CompanyRepository,
@@ -23,6 +23,7 @@ class InternshipServiceImpl (
     private val internshipMapper: InternshipMapper,
     private val markedInternshipRepository: MarkedInternshipRepository,
     private val userRepository: UserRepository,
+    private val modalityMapper: ModalityMapper,
 ) : InternshipService {
 
     /**
@@ -42,7 +43,7 @@ class InternshipServiceImpl (
             publicationDate = dto.publicationDate,
             duration = dto.duration,
             salary = dto.salary,
-            modality = dto.modality,
+            modality = modalityMapper.modalityRequestTOModality(dto.modality),
             schedule = dto.schedule,
             requirements = dto.requirements,
             activities = dto.activities,
@@ -126,8 +127,7 @@ class InternshipServiceImpl (
         dto.publicationDate?.let { internship.publicationDate = it }
         dto.duration?.let { internship.duration = it }
         dto.salary?.let { internship.salary = it }
-        dto.modality?.let { internship.modality = it }
-        dto.schedule?.let { internship.schedule = it }
+        dto.modality?.let { internship.modality = modalityMapper.modalityRequestTOModality(it) }
         dto.requirements?.let { internship.requirements = it }
         dto.activities?.let { internship.activities = it }
         dto.link?.let { internship.link = it }

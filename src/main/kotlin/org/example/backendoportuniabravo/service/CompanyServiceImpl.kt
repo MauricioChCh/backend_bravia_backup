@@ -5,6 +5,7 @@ import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.mapper.InternshipMapper
 import org.example.backendoportuniabravo.mapper.LocationMapper
+import org.example.backendoportuniabravo.mapper.ModalityMapper
 import org.example.backendoportuniabravo.repository.*
 import org.example.backendoportuniabravo.repository.MarkedInternshipRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -41,6 +42,8 @@ class CompanyServiceImpl(
     private val passwordEncoder: BCryptPasswordEncoder,
     private val roleRepository: RoleRepository,
     private val markedInternshipRepository: MarkedInternshipRepository,
+    private val modalityRepository: ModalityRepository,
+    private val modalityMapper: ModalityMapper
 ) : CompanyService {
 
     /**
@@ -427,6 +430,12 @@ class CompanyServiceImpl(
     }
 
 
+    override fun getAllModalities(): List<ModalityResponse> {
+        return modalityRepository.findAll().map { modality ->
+            modalityMapper.modalityToModalityResponse(modality)
+        }
+    }
+
 
     /**
      * Marks internships as bookmarked for a user.
@@ -457,6 +466,8 @@ class CompanyServiceImpl(
 
         return internship
     }
+
+
 
 
 }

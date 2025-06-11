@@ -1,6 +1,7 @@
 package org.example.backendoportuniabravo.repository
 
 import org.example.backendoportuniabravo.entity.Internship
+import org.example.backendoportuniabravo.entity.Modality
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Query
 import org.springframework.data.repository.query.Param
@@ -16,7 +17,7 @@ interface InternshipRepository : JpaRepository<Internship, Long> {
     fun findAllByOrderByPublicationDateDesc(): List<Internship>
 
     // Buscar pasantías por modalidad
-    fun findByModalityIgnoreCase(modality: String): List<Internship>
+//    fun findByModalityIgnoreCase(modality: Modality): List<Internship>
 
     // Buscar pasantías por ubicación
     fun findByLocation_City_NameContainingIgnoreCase(cityName: String): List<Internship>

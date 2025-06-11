@@ -494,6 +494,34 @@ class DataSeeder {
             }
         }
     }
+
+    @Bean
+    fun insertModalities(modalityRepository: ModalityRepository): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting modalities...")
+
+            // Solo inserta si la tabla está vacía
+            if (modalityRepository.findAll().isEmpty()) {
+                val modalities = listOf(
+                    Modality( name = "Remote"),
+                    Modality( name = "On-site"),
+                    Modality( name = "Hybrid"),
+                    Modality( name = "Flexible"),
+                    Modality( name = "Part-time"),
+                    Modality( name = "Full-time"),
+                    Modality( name = "Internship"),
+                    Modality( name = "Contract"),
+                    Modality( name = "Temporary"),
+                    Modality( name = "Volunteer")
+                )
+                modalityRepository.saveAll(modalities)
+                println("✅ Modalities inserted successfully")
+            } else {
+                println("⚠️ Modalities already exist. No data was inserted.")
+            }
+        }
+    }
+
 }
 
 
