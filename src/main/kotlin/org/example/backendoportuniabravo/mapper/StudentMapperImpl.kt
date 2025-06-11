@@ -36,8 +36,8 @@ class StudentMapperImpl : StudentMapper {
 
         return StudentResponseDTO(
             id = student.id,
-            description = student.description,
-            academicCenter = student.academicCenter,
+            description = student.description!!,
+            academicCenter = student.academicCenter!!,
             userInput = userResult
         )
     }
@@ -66,12 +66,12 @@ class StudentMapperImpl : StudentMapper {
 
         // Mapear hobbies
         dto.hobbies.forEach { name ->
-            student.hobbies.add(Hobby(name = name, student = student))
+            student.hobbies?.add(Hobby(name = name, student = student))
         }
 
         // Mapear certificaciones
         dto.certifications.forEach { certDto ->
-            student.certifications.add(
+            student.certifications?.add(
                 Certification(
                     name = certDto.name,
                     date = certDto.date,
@@ -83,7 +83,7 @@ class StudentMapperImpl : StudentMapper {
 
         // Mapear experiencias
         dto.experiences.forEach { expDto ->
-            student.experiences.add(
+            student.experiences?.add(
                 Experience(
                     name = expDto.name,
                     description = expDto.description,
@@ -94,7 +94,7 @@ class StudentMapperImpl : StudentMapper {
 
         // Mapear habilidades
         dto.skills.forEach { skillDto ->
-            student.skills.add(
+            student.skills?.add(
                 Skill(
                     name = skillDto.name,
                     description = skillDto.description,
@@ -105,12 +105,12 @@ class StudentMapperImpl : StudentMapper {
 
         // Mapear carreras
         dto.careers.forEach { career ->
-            student.careers.add(Career(career = career, student = student))
+            student.careers?.add(Career(career = career, student = student))
         }
 
         // Mapear URLs de CV
         dto.cvUrls.forEach { url ->
-            student.cvUrls.add(CVUrl(url = url, student = student))
+            student.cvUrls?.add(CVUrl(url = url, student = student))
         }
 
         // Mapear relaciones many-to-many
@@ -144,13 +144,13 @@ class StudentMapperImpl : StudentMapper {
         return StudentCurriculumResponseDTO(
             id = student.id ?: 0L,
             userInput = userResult,
-            description = student.description,
-            academicCenter = student.academicCenter,
-            hobbies = mapHobbies(student.hobbies).toMutableList(),
-            certifications = mapCertifications(student.certifications).toMutableList(),
-            experiences = mapExperiences(student.experiences).toMutableList(),
-            skills = mapSkills(student.skills).toMutableList(),
-            careers = mapCareers(student.careers).toMutableList()
+            description = student.description!!,
+            academicCenter = student.academicCenter!!,
+            hobbies = mapHobbies(student.hobbies!!).toMutableList(),
+            certifications = mapCertifications(student.certifications!!).toMutableList(),
+            experiences = mapExperiences(student.experiences!!).toMutableList(),
+            skills = mapSkills(student.skills!!).toMutableList(),
+            careers = mapCareers(student.careers!!).toMutableList()
         )
     }
 
@@ -181,4 +181,25 @@ class StudentMapperImpl : StudentMapper {
             CareerDTO(it.id, it.career)
         }
     }
+
+    override fun mapStudentToStudentResponseDTO(student: Student): StudentResponseDTO {
+        val user = student.profile?.user
+
+        val userResult = UserResult(
+            id = user?.id,
+            email = user?.email,
+            firstName = user?.firstName,
+            lastName = user?.lastName
+        )
+
+        return StudentResponseDTO(
+            id = student.id,
+            description = student.description!!,
+            academicCenter = student.academicCenter!!,
+            userInput = userResult
+        )
+    }
+
+
+
 }

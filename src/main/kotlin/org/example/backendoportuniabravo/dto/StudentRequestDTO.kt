@@ -27,6 +27,16 @@ data class StudentCreateRequestDTO(
     val internshipsIds: Set<Long> = emptySet()
 )
 
+data class StudentRegister(
+    val email: String,
+    val password: String,
+    val confirmPassword: String,
+    val firstName: String,
+    val lastName: String,
+    val college: CollegeDetails,
+    val degree: DegreeDetails,
+    val interest: List<InterestDetails>,
+)
 
 
 data class StudentRequestDTO(

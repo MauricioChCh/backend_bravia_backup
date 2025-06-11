@@ -25,8 +25,9 @@ class AccessController(
         return ResponseEntity.status(HttpStatus.CREATED).body(saved)
     }
     @PostMapping("/signup/student")
-    fun create(@RequestBody dto: StudentCreateRequestDTO): ResponseEntity<StudentResponseDTO> {
-        val response = studentService.create(dto)
+    fun create(@RequestBody dto: StudentRegister): ResponseEntity<StudentResponseDTO> {
+//        val response = studentService.create(dto) // TODO el metodo de create no esta acorde con el frontend
+        val response = studentService.registerStudent(dto)
         return ResponseEntity.status(HttpStatus.CREATED).body(response)
     }
 

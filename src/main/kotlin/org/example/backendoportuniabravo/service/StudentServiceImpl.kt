@@ -1,14 +1,10 @@
 package org.example.backendoportuniabravo.service
 
-import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
-import org.example.backendoportuniabravo.dto.StudentCurriculumResponseDTO
-import org.example.backendoportuniabravo.dto.StudentRequestDTO
-import org.example.backendoportuniabravo.dto.StudentResponseDTO
+import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.*
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.data.crossstore.ChangeSetPersister
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
@@ -18,7 +14,6 @@ import java.util.*
 class StudentServiceImpl(
     private val studentRepository: StudentRepository,
     private val profileRepository: ProfileRepository,
-    private val mapper: StudentMapper,
     private val languageRepository: LanguageRepository,
     private val degreeRepository: DegreeRepository,
     private val interestRepository: InterestRepository,
@@ -28,12 +23,13 @@ class StudentServiceImpl(
     private val userRepository: UserRepository,
     private val roleRepository: RoleRepository,
     private val passwordEncoder: BCryptPasswordEncoder,
+    private val studentMapper: StudentMapper,
 
     ) : StudentService {
 
     @Transactional
     override fun create(dto: StudentCreateRequestDTO): StudentResponseDTO {
-        val userInput = dto.user ?: throw IllegalArgumentException("User input is required")
+        val userInput = dto.user
 
         if (userRepository.existsByEmail(userInput.email!!)) {
             throw IllegalArgumentException("User with email '${userInput.email}' already exists")
@@ -71,11 +67,11 @@ class StudentServiceImpl(
         )
 
         dto.hobbies.forEach { name ->
-            student.hobbies.add(Hobby(name = name, student = student))
+            student.hobbies?.add(Hobby(name = name, student = student))
         }
 
         dto.certifications.forEach {
-            student.certifications.add(
+            student.certifications?.add(
                 Certification(
                     name = it.name,
                     date = it.date,
@@ -86,7 +82,7 @@ class StudentServiceImpl(
         }
 
         dto.experiences.forEach {
-            student.experiences.add(
+            student.experiences?.add(
                 Experience(
                     name = it.name,
                     description = it.description,
@@ -96,15 +92,15 @@ class StudentServiceImpl(
         }
 
         dto.skills.forEach {
-            student.skills.add(Skill(name = it.name, description = it.description, student = student))
+            student.skills?.add(Skill(name = it.name, description = it.description, student = student))
         }
 
         dto.careers.forEach {
-            student.careers.add(Career(career = it, student = student))
+            student.careers?.add(Career(career = it, student = student))
         }
 
         dto.cvUrls.forEach {
-            student.cvUrls.add(CVUrl(url = it, student = student))
+            student.cvUrls?.add(CVUrl(url = it, student = student))
         }
 
         student.languages = languageRepository.findAllById(dto.languagesIds).toMutableSet()
@@ -113,7 +109,7 @@ class StudentServiceImpl(
         student.interests = interestRepository.findAllById(dto.interestsIds).toMutableSet()
         student.internships = internshipRepository.findAllById(dto.internshipsIds).toMutableSet()
 
-        return mapper.toDto(studentRepository.save(student))
+        return studentMapper.toDto(studentRepository.save(student))
     }
 
 
@@ -122,11 +118,11 @@ class StudentServiceImpl(
         val student = studentRepository.findById(id)
             .orElseThrow { RuntimeException("Student not found") }
 
-        return mapper.toDto(student)
+        return studentMapper.toDto(student)
     }
 
     override fun findAll(): List<StudentResponseDTO> {
-        return studentRepository.findAll().map(mapper::toDto)
+        return studentRepository.findAll().map(studentMapper::toDto)
     }
 
     override fun delete(id: Long) {
@@ -140,15 +136,76 @@ class StudentServiceImpl(
         val student = studentRepository.findById(id)
             .orElseThrow { RuntimeException("Student not found") }
 
-        mapper.updateFromDto(dto, student)
-        return mapper.toDto(studentRepository.save(student))
+        studentMapper.updateFromDto(dto, student)
+        return studentMapper.toDto(studentRepository.save(student))
     }
 
     override fun returnStudentCurriculum(id: Long): StudentCurriculumResponseDTO {
         val student = studentRepository.findById(id)
             .orElseThrow { RuntimeException("Student not found") }
 
-        return mapper.toCurriculumDto(student)
+        return studentMapper.toCurriculumDto(student)
+    }
+
+    override fun registerStudent(dto: StudentRegister): StudentResponseDTO {
+
+        // 1. Validaciones básicas
+        if (userRepository.existsByEmail(dto.email)) {
+            throw IllegalArgumentException("User with email '${dto.email}' already exists")
+        }
+
+        if (dto.password != dto.confirmPassword) {
+            throw IllegalArgumentException("Passwords do not match")
+        }
+
+        // 2. Obtener rol y entidades referenciadas
+        val role = roleRepository.findByName("ROLE_STUDENT")
+            .orElseThrow { NoSuchElementException("Role not found") }
+
+        val college = collegeRepository.findById(dto.college.id!!)
+            .orElseThrow { NoSuchElementException("College not found with id ${dto.college.id}") }
+
+        val degree = degreeRepository.findById(dto.degree.id!!)
+            .orElseThrow { NoSuchElementException("Degree not found with id ${dto.degree.id}") }
+
+        val interests: Set<Interest> = dto.interest.map { interestDto ->
+            interestRepository.findById(interestDto.id!!)
+                .orElseThrow { NoSuchElementException("Interest not found with id ${interestDto.id}") }
+        }.toSet()
+
+        // 3. Crear User y Profile
+        val user = User(
+            firstName = dto.firstName,
+            lastName = dto.lastName,
+            email = dto.email,
+            password = passwordEncoder.encode(dto.password),
+            createDate = Date(),
+            tokenExpired = false,
+            enabled = true,
+            roleList = mutableSetOf(role)
+        )
+
+        val profile = Profile(user = user, verified = false)
+        user.profile = profile
+
+        // 4. Crear Student
+        val student = Student(
+            profile = profile,
+            colleges = mutableSetOf(college),
+            degrees = mutableSetOf(degree),
+            interests = interests.toMutableSet(),
+            academicCenter = college.name
+        )
+        profile.student = student
+
+        // 5. Guardar
+        userRepository.save(user) // cascade guarda profile y student
+        profileRepository.save(profile)
+        val savedStudent = studentRepository.save(student)
+
+
+        // 6. Retornar DTO de respuesta (puedes adaptar según tu modelo)
+        return studentMapper.mapStudentToStudentResponseDTO(savedStudent)
     }
 
 }

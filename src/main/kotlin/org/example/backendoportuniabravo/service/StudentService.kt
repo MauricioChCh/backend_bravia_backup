@@ -1,9 +1,6 @@
 package org.example.backendoportuniabravo.service
 
-import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
-import org.example.backendoportuniabravo.dto.StudentCurriculumResponseDTO
-import org.example.backendoportuniabravo.dto.StudentRequestDTO
-import org.example.backendoportuniabravo.dto.StudentResponseDTO
+import org.example.backendoportuniabravo.dto.*
 
 interface StudentService {
     fun create(dto: StudentCreateRequestDTO): StudentResponseDTO
@@ -12,4 +9,5 @@ interface StudentService {
     fun delete(id: Long)
     fun update(id: Long, dto: StudentRequestDTO): StudentResponseDTO
     fun returnStudentCurriculum(id: Long): StudentCurriculumResponseDTO
+    fun registerStudent(dto: StudentRegister): StudentResponseDTO
 }

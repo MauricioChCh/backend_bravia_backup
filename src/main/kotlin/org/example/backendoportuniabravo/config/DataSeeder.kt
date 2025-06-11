@@ -370,7 +370,7 @@ class DataSeeder {
                     // 4. Agregar las entidades dependientes (OneToMany)
                     studentData.hobbies.forEach { hobbyName ->
                         val hobby = Hobby(student = savedStudent, name = hobbyName)
-                        savedStudent.hobbies.add(hobby)
+                        savedStudent.hobbies?.add(hobby)
                     }
 
                     studentData.certifications.forEach { certData ->
@@ -380,7 +380,7 @@ class DataSeeder {
                             date = java.sql.Date.valueOf(certData.date),
                             organization = certData.organization
                         )
-                        savedStudent.certifications.add(certification)
+                        savedStudent.certifications?.add(certification)
                     }
 
                     studentData.experiences.forEach { expData ->
@@ -389,7 +389,7 @@ class DataSeeder {
                             name = expData.name,
                             description = expData.description
                         )
-                        savedStudent.experiences.add(experience)
+                        savedStudent.experiences?.add(experience)
                     }
 
                     studentData.skills.forEach { skillData ->
@@ -398,17 +398,17 @@ class DataSeeder {
                             name = skillData.name,
                             description = skillData.description
                         )
-                        savedStudent.skills.add(skill)
+                        savedStudent.skills?.add(skill)
                     }
 
                     studentData.careers.forEach { careerName ->
                         val career = Career(student = savedStudent, career = careerName)
-                        savedStudent.careers.add(career)
+                        savedStudent.careers?.add(career)
                     }
 
                     studentData.cvUrls.forEach { url ->
                         val cvUrl = CVUrl(student = savedStudent, url = url)
-                        savedStudent.cvUrls.add(cvUrl)
+                        savedStudent.cvUrls?.add(cvUrl)
                     }
 
                     // 5. Guardar una vez más para persistir todas las relaciones

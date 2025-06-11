@@ -1,21 +1,9 @@
 package org.example.backendoportuniabravo.mapper
 
-import org.example.backendoportuniabravo.dto.CareerDTO
-import org.example.backendoportuniabravo.dto.CertificationDTO
-import org.example.backendoportuniabravo.dto.ExperienceDTO
-import org.example.backendoportuniabravo.dto.HobbyDTO
-import org.example.backendoportuniabravo.dto.SkillDTO
-import org.example.backendoportuniabravo.dto.StudentCurriculumResponseDTO
-import org.example.backendoportuniabravo.dto.StudentRequestDTO
-import org.example.backendoportuniabravo.dto.StudentResponseDTO
-import org.example.backendoportuniabravo.entity.Career
-import org.example.backendoportuniabravo.entity.Certification
-import org.example.backendoportuniabravo.entity.Experience
-import org.example.backendoportuniabravo.entity.Hobby
-import org.example.backendoportuniabravo.entity.Profile
-import org.example.backendoportuniabravo.entity.Skill
-import org.example.backendoportuniabravo.entity.Student
+import org.example.backendoportuniabravo.dto.*
+import org.example.backendoportuniabravo.entity.*
 import org.mapstruct.*
+
 
 interface StudentMapper {
     fun toDto(student: Student): StudentResponseDTO
@@ -34,4 +22,11 @@ interface StudentMapper {
     fun mapExperiences(experiences: List<Experience>): List<ExperienceDTO>
     fun mapSkills(skills: List<Skill>): List<SkillDTO>
     fun mapCareers(careers: List<Career>): List<CareerDTO>
+
+    fun mapStudentToStudentResponseDTO(student: Student): StudentResponseDTO
+
+//    fun mapCollegeDetailsToCollege(collegeDetails: CollegeDetails): College
+//    fun mapDegreeDetailsToDegree(degreeDetails: DegreeDetails): Degree
+//    fun mapInterestDetailsToInterest(interestDetails: InterestDetails): Interest
 }
+

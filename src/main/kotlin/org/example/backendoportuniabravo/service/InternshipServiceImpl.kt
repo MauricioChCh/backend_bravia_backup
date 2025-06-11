@@ -97,13 +97,13 @@ class InternshipServiceImpl (
             .orElseThrow { RuntimeException("Student not found") }
 
         // Extrae los intereses en minúsculas
-        val interests = student.interests.map { it.name.lowercase() }
+        val interests = student.interests?.map { it.name.lowercase() }
 
         // Filtra pasantías que contengan al menos un interés en sus requisitos
         val matchingInternships = internshipRepository
             .findAll() //Podría optimizarse con una consulta en BD
             .filter { i ->
-                interests.any { interest -> i.requirements.lowercase().contains(interest) }
+                interests!!.any { interest -> i.requirements.lowercase().contains(interest) }
             }
             .sortedByDescending { it.publicationDate } // También se puede usar salario u otro criterio
             .take(30)

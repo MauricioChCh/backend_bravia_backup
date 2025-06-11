@@ -17,31 +17,31 @@ data class Student(
     var profile: Profile? = null,
 
     @Column(name = "description", columnDefinition = "TEXT")
-    var description: String,
+    var description: String? = null,
 
     @Column(name = "academic_center", nullable = false)
-    var academicCenter: String,
+    var academicCenter: String? = null,
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var hobbies: MutableList<Hobby> = mutableListOf(),
+    var hobbies: MutableList<Hobby>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var certifications: MutableList<Certification> = mutableListOf(),
+    var certifications: MutableList<Certification>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var experiences: MutableList<Experience> = mutableListOf(),
+    var experiences: MutableList<Experience>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var skills: MutableList<Skill> = mutableListOf(),
+    var skills: MutableList<Skill>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var careers: MutableList<Career> = mutableListOf(),
+    var careers: MutableList<Career>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var cvUrls: MutableList<CVUrl> = mutableListOf(),
+    var cvUrls: MutableList<CVUrl>? = mutableListOf(),
 
     @OneToMany(mappedBy = "student", cascade = [CascadeType.ALL], orphanRemoval = true)
-    var mockInterviews: MutableList<MockInterview> = mutableListOf(),
+    var mockInterviews: MutableList<MockInterview>? = mutableListOf(),
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
@@ -49,7 +49,7 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id")],
         inverseJoinColumns = [JoinColumn(name = "language_id")]
     )
-    var languages: MutableSet<Language> = mutableSetOf(),
+    var languages: MutableSet<Language>? = mutableSetOf(),
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
@@ -57,7 +57,7 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "degree_id", referencedColumnName = "id")]
     )
-    var degrees: MutableSet<Degree> = mutableSetOf(),
+    var degrees: MutableSet<Degree>? = mutableSetOf(),
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
@@ -65,7 +65,7 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "college_id", referencedColumnName = "id")]
     )
-    var colleges: MutableSet<College> = mutableSetOf(),
+    var colleges: MutableSet<College>? = mutableSetOf(),
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
@@ -73,7 +73,7 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "interest_id", referencedColumnName = "id")],
     )
-    var interests: MutableSet<Interest> = mutableSetOf(),
+    var interests: MutableSet<Interest>? = mutableSetOf(),
 
     @ManyToMany(cascade = [CascadeType.ALL], fetch = FetchType.LAZY)
     @JoinTable(
@@ -81,7 +81,7 @@ data class Student(
         joinColumns = [JoinColumn(name = "student_id", referencedColumnName = "id")],
         inverseJoinColumns = [JoinColumn(name = "internship_id", referencedColumnName = "id")]
     )
-    var internships: MutableSet<Internship> = mutableSetOf(),
+    var internships: MutableSet<Internship>? = mutableSetOf(),
 
 ) {
     override fun toString(): String {
