@@ -6,6 +6,7 @@ import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Contact
 import org.example.backendoportuniabravo.entity.Location
 import org.example.backendoportuniabravo.entity.User
+import java.util.Optional
 
 @Mapper(
   componentModel = "spring",

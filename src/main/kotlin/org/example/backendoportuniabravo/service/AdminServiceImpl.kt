@@ -131,6 +131,58 @@ class AdminServiceImpl(
         }
     }
 
+    override fun getCompanyById(companyId: Long): CompanyUserResponse? {
+        return try {
+            val company = companyRepository.findById(companyId).orElse(null)
+            company?.let { companyMapper.companyToCompanyUserResponse(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la compañía con ID $companyId", e)
+        }
+    }
+
+
+    /* override fun getCompanyByEmail(email: String): CompanyUserResponse? {
+         return try {
+             val company = companyRepository.findCompanyByEmailIgnoreCase(email)
+             company?.let { companyMapper.companyToCompanyUserResponse(it) }
+         } catch (e: Exception) {
+             e.printStackTrace()
+             throw RuntimeException("Error al obtener la compañía con email $email", e)
+         }
+     }*/
+
+    override fun getStudentById(studentId: Long): StudentResponseDTO? {
+        return try {
+            val student = studentRepository.findById(studentId).orElse(null)
+            student?.let { studentMapper.toDto(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener el estudiante con ID $studentId", e)
+        }
+    }
+
+
+    override fun getCompanyByUserId(userId: Long): CompanyUserResponse? {
+        return try {
+            val company = companyRepository.findByProfileId(userId).orElse(null)
+            company?.let { companyMapper.companyToCompanyUserResponse(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la compañía con ID $userId", e)
+        }
+    }
+
+    override fun getStudentByUserId(userId: Long): StudentResponseDTO? {
+        return try {
+            val student = studentRepository.findByProfileId(userId)
+            student?.let { studentMapper.toDto(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener el estudiante con ID $userId", e)
+        }
+    }
+
 }
 
 @Service

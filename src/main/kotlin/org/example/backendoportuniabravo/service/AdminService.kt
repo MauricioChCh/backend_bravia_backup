@@ -12,7 +12,10 @@ interface AdminService{
     fun deleteAdmin(profileId: Long) : Boolean
     fun getAllCompanies(): List<CompanyUserResponse>
     fun getAllStudents(): List<StudentResponseDTO>
-
+    fun getStudentById(studentId: Long): StudentResponseDTO?
+    fun getCompanyById(companyId: Long): CompanyUserResponse?       // ← agregado
+    fun getCompanyByUserId(userId: Long): CompanyUserResponse?
+    fun getStudentByUserId(userId: Long): StudentResponseDTO?
 }
 
 interface ReportActionService {

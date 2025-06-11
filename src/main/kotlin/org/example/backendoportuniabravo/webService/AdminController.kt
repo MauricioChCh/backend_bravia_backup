@@ -42,6 +42,24 @@ class AdminController(
         return ResponseEntity.ok(students)
     }
 
+    @GetMapping("/companies/{companyId}")
+    fun getCompanyById(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
+        val company = adminService.getCompanyByUserId(companyId)
+        return ResponseEntity.ok(company)
+    }
+
+    @GetMapping("/companies/company/{companyId}")
+    fun getCompanyByCompanyId(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
+        val company = adminService.getCompanyById(companyId)
+        return ResponseEntity.ok(company)
+    }
+
+    @GetMapping("/students/{studentId}")
+    fun getStudentById(@PathVariable studentId: Long): ResponseEntity<StudentResponseDTO> {
+        val student = adminService.getStudentByUserId(studentId)
+        return ResponseEntity.ok(student)
+    }
+
     /**
      * Retrieves a specific admin by their ID.
      * @param id the admin ID
