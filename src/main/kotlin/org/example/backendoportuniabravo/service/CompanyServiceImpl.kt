@@ -395,15 +395,9 @@ class CompanyServiceImpl(
      */
     @Throws(NoSuchElementException::class)
     override fun getInternships(username: String): List<InternshipResponseDTO> {
-        val user: User? = userRepository.findByEmail(username)
+        val relatedId = getRelatedId(username, userRepository)
 
-        val relatedId = when {
-            user?.profile?.student != null -> user.profile?.student?.id
-            user?.profile?.company != null -> user.profile?.company?.id
-            else -> throw NoSuchElementException("User with email $username not found")
-        }
-
-        val company: Optional<Company> = companyRepository.findById(relatedId!!)
+        val company: Optional<Company> = companyRepository.findById(relatedId)
 
         if (company.isEmpty) {
             throw NoSuchElementException("Company with username $username not found")
@@ -457,4 +451,15 @@ class CompanyServiceImpl(
     }
 
 
+}
+
+fun getRelatedId(username: String, userRepository: UserRepository): Long {
+    val user: User? = userRepository.findByEmail(username)
+
+    val relatedId = when {
+        user?.profile?.student != null -> user.profile?.student?.id
+        user?.profile?.company != null -> user.profile?.company?.id
+        else -> throw NoSuchElementException("User with email $username not found")
+    }
+    return relatedId!!
 }

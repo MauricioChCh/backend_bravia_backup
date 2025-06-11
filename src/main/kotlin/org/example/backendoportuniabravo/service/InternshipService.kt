@@ -66,12 +66,12 @@ interface InternshipService {
      * @param marked true to bookmark, false to unbookmark
      * @return the updated internship response DTO
      */
-    fun bookmarkInternship(internshipId: Long, userId: Long, marked: Boolean)
+    fun bookmarkInternship(internshipId: Long, username: String, marked: Boolean)
 
     /**
      * Retrieves all internships bookmarked by a user.
      * @param userId The ID of the user.
      * @return A list of bookmarked internships, or null if none are found.
      */
-    fun getBookmarkedInternships(userId: Long): List<InternshipResponseDTO>?
+    fun getBookmarkedInternships(username: String): List<InternshipResponseDTO>?
 }
