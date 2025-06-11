@@ -394,10 +394,19 @@ class CompanyServiceImpl(
      * @throws NoSuchElementException if no internships are found.
      */
     @Throws(NoSuchElementException::class)
-    override fun getInternships(id: Long): List<InternshipResponseDTO> {
-        val company: Optional<Company> = companyRepository.findById(id)
+    override fun getInternships(username: String): List<InternshipResponseDTO> {
+        val user: User? = userRepository.findByEmail(username)
+
+        val relatedId = when {
+            user?.profile?.student != null -> user.profile?.student?.id
+            user?.profile?.company != null -> user.profile?.company?.id
+            else -> throw NoSuchElementException("User with email $username not found")
+        }
+
+        val company: Optional<Company> = companyRepository.findById(relatedId!!)
+
         if (company.isEmpty) {
-            throw NoSuchElementException("Company with id $id not found")
+            throw NoSuchElementException("Company with username $username not found")
         }
         val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
 

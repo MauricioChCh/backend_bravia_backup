@@ -125,7 +125,7 @@ interface CompanyService {
      * @return A list of all internships for the company.
      * @throws NoSuchElementException if no internships are found.
      */
-    fun getInternships(id: Long): List<InternshipResponseDTO>
+    fun getInternships(username: String): List<InternshipResponseDTO>
 
 
     /**

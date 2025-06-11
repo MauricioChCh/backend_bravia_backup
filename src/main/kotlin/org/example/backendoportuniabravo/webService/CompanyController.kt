@@ -78,9 +78,9 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(updated)
     }
 
-    @GetMapping("{id}/internships")
-    fun getCompanyInternships(@PathVariable id: Long) : ResponseEntity<List<InternshipResponseDTO>>? {
-        val internships = service.getInternships(id)
+    @GetMapping("{username}/internships")
+    fun getCompanyInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponseDTO>>? {
+        val internships = service.getInternships(username)
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }
 
