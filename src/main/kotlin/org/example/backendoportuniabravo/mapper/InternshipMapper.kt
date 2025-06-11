@@ -2,7 +2,10 @@ package org.example.backendoportuniabravo.mapper
 
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
+import org.example.backendoportuniabravo.dto.ModalityRequest
+import org.example.backendoportuniabravo.dto.ModalityResponse
 import org.example.backendoportuniabravo.entity.Internship
+import org.example.backendoportuniabravo.entity.Modality
 import org.mapstruct.*
 
 @Mapper(componentModel = "spring")
@@ -31,5 +34,15 @@ interface InternshipMapper {
     @Mapping(source = "location.country.name", target = "countryName")
     @Mapping(source = "bookmarked", target = "isBookmarked", defaultValue = "false")
     fun internshipToInternshipResponseDTO(internship: Internship): InternshipResponseDTO
+
+}
+
+
+@Mapper(componentModel = "spring")
+interface ModalityMapper {
+
+    fun modalityRequestTOModality(dto: ModalityRequest): Modality
+
+    fun modalityToModalityResponse(dto: Modality) : ModalityResponse
 
 }

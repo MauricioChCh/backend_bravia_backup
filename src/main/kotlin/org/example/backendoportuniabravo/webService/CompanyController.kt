@@ -90,7 +90,11 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(internship)
     }
 
-
+    @GetMapping("internships/modalities")
+    fun getAllModalities(): ResponseEntity<List<ModalityResponse>> {
+        val modalities = service.getAllModalities()
+        return ResponseEntity.status(HttpStatus.OK).body(modalities)
+    }
 
 
 }
