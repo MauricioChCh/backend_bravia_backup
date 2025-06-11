@@ -93,15 +93,17 @@ class JwtAuthenticationFilter(authenticationManager: AuthenticationManager) : Us
             .setExpiration(Date(System.currentTimeMillis() + SecurityConstants.TOKEN_LIFETIME))
             .compact()
 
+        response.addHeader(HttpHeaders.AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
+
+
         //asi no se deberia enviar el token, ya eso sirve
         val responseDto = AuthResponseDto(
-            token = token,
+//            token = token,
             userId = user.username, // o un ID real si lo tienes
             username = user.username,
             authorities = user.authorities.map { AuthorityDto(it.authority) }
         )
 
-        response.addHeader(HttpHeaders.AUTHORIZATION, SecurityConstants.TOKEN_PREFIX + token)
         val out = response.writer
         response.contentType = SecurityConstants.APPLICATION_JSON
         response.characterEncoding = SecurityConstants.UTF_8

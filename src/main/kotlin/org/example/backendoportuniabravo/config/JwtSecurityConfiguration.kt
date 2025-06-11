@@ -71,8 +71,8 @@ class JwtSecurityConfiguration (
 //                    .requestMatchers("$urlStudents/**").hasRole("STUDENT")
 //                    .requestMatchers("$urlAdmin/**").hasRole("ADMIN")
 
-//                    .anyRequest().authenticated()
-                    .anyRequest().permitAll()
+                    .anyRequest().authenticated()
+//                    .anyRequest().permitAll()
             }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authenticationProvider(authenticationProvider())
