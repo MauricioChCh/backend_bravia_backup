@@ -484,7 +484,6 @@ class DataSeeder {
         }
     }
 
-/*
 
     @Bean
     fun insertDegrees(degreeRepository: DegreeRepository): CommandLineRunner {
@@ -535,8 +534,7 @@ class DataSeeder {
         }
     }
 
-}
-*/
+
 
     @Bean
     @Order(7)
