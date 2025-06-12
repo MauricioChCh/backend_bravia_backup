@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.service
 
+import jakarta.persistence.EntityNotFoundException
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
 import org.example.backendoportuniabravo.mapper.StudentMapper
@@ -35,12 +36,10 @@ class StudentServiceImpl(
             throw IllegalArgumentException("User with email '${userInput.email}' already exists")
         }
 
-        userInput.password ?:
-        throw IllegalArgumentException("User password cannot be null")
+        userInput.password ?: throw IllegalArgumentException("User password cannot be null")
 
         val role = roleRepository.findByName("ROLE_STUDENT")
             .orElseThrow { NoSuchElementException("Role not found") }
-
 
 
         val user = User(
@@ -83,7 +82,7 @@ class StudentServiceImpl(
 
         dto.experiences.forEach {
             student.experiences?.add(
-                Experience(
+                org.example.backendoportuniabravo.entity.Experience(
                     name = it.name,
                     description = it.description,
                     student = student
@@ -92,7 +91,13 @@ class StudentServiceImpl(
         }
 
         dto.skills.forEach {
-            student.skills?.add(Skill(name = it.name, description = it.description, student = student))
+            student.skills?.add(
+                org.example.backendoportuniabravo.entity.Skill(
+                    name = it.name,
+                    description = it.description,
+                    student = student
+                )
+            )
         }
 
         dto.careers.forEach {
@@ -111,7 +116,6 @@ class StudentServiceImpl(
 
         return studentMapper.toStudentResponseDto(studentRepository.save(student))
     }
-
 
 
     override fun findById(id: Long): StudentResponseDTO {
@@ -151,12 +155,43 @@ class StudentServiceImpl(
         return studentMapper.toStudentResponseDto(studentRepository.save(student))
     }
 
-    override fun returnStudentCurriculum(id: Long): StudentCurriculumResponseDTO {
-        val student = studentRepository.findById(id)
-            .orElseThrow { RuntimeException("Student not found") }
+    override fun returnStudentCurriculum(studentId: Long): StudentCurriculumResponseDTO {
+        val student = studentRepository.findById(studentId)
+            .orElseThrow { EntityNotFoundException("Student not found") }
 
-        return studentMapper.toCurriculumDto(student)
+        return StudentCurriculumResponseDTO(
+            id = student.id ?: 0L,
+            userInput = UserResult(
+                firstName = student.profile?.user?.firstName ?: "",
+                lastName = student.profile?.user?.lastName ?: "",
+                email = student.profile?.user?.email ?: ""
+            ),
+            description = student.description ?: "",
+            academicCenter = student.academicCenter ?: "",
+            hobbies = student.hobbies?.map { HobbyDTO(id = it.id ?: 0L, name = it.name) }?.toMutableList() ?: mutableListOf(),
+             certifications = student.certifications?.map {
+                CertificationDTO(
+                    name = it.name,
+                    date = it.date,
+                    organization = it.organization
+                )
+            }?.toMutableList() ?: mutableListOf(),
+            experiences = student.experiences?.map {
+                ExperienceDTO(
+                    name = it.name,
+                    description = it.description
+                )
+            }?.toMutableList() ?: mutableListOf(),
+            skills = student.skills?.map {
+                SkillDTO(
+                    name = it.name,
+                    description = it.description
+                )
+            }?.toMutableList() ?: mutableListOf(),
+            careers = student.careers?.map { CareerDTO(id = it.id ?: 0L, career = it.career) }?.toMutableList() ?: mutableListOf()
+        )
     }
+
 
     override fun registerStudent(dto: StudentRegister): StudentResponseDTO {
 
@@ -214,9 +249,50 @@ class StudentServiceImpl(
         profileRepository.save(profile)
         val savedStudent = studentRepository.save(student)
 
-
         // 6. Retornar DTO de respuesta (puedes adaptar según tu modelo)
         return studentMapper.mapStudentToStudentResponseDTO(savedStudent)
     }
-
 }
+
+// NOTA: Estas data classes deberían ir en un archivo separado o ser renombradas
+// para evitar conflictos con las entidades JPA
+
+// Alternativa 1: Usar nombres diferentes
+data class EducationData(val degree: String, val institution: String, val year: Int) {
+    fun toMap(): Map<String, Any> {
+        return mapOf(
+            "degree" to degree,
+            "institution" to institution,
+            "year" to year
+        )
+    }
+}
+
+data class ExperienceData(val name: String, val description: String) {
+    fun toMap(): Map<String, Any> {
+        return mapOf(
+            "name" to name,
+            "description" to description
+        )
+    }
+}
+
+data class SkillData(val name: String, val description: String) {
+    fun toMap(): Map<String, Any> {
+        return mapOf(
+            "name" to name,
+            "description" to description
+        )
+    }
+}
+
+// Alternativa 2: Mover estas classes a un paquete diferente
+// package org.example.backendoportuniabravo.dto.curriculum
+
+// Alternativa 3: Usar extension functions en las entidades JPA
+// fun org.example.backendoportuniabravo.entity.Experience.toMap(): Map<String, Any> {
+//     return mapOf(
+//         "name" to (this.name ?: ""),
+//         "description" to (this.description ?: "")
+//     )
+// }
