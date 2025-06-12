@@ -21,7 +21,7 @@ interface InternshipService {
      * Retrieves all internships in the system.
      * @return a list of internships
      */
-    fun getAll(): List<InternshipResponseDTO>
+    fun getAll(): List<InternshipResponse>
 
     /**
      * Updates a complete internship by its ID.
@@ -36,7 +36,7 @@ interface InternshipService {
      * @param id the ID of the internship
      * @return the corresponding internship response DTO
      */
-    fun findById(id: Long): InternshipResponseDTO
+    fun findById(id: Long): InternshipResponse
 
     /**
      * Searches internships by a keyword matching title or requirements.

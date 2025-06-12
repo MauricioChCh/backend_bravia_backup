@@ -33,7 +33,7 @@ class InternshipController(private val service: InternshipService) {
      * @return a list of internship responses
      */
     @GetMapping
-    fun list(): ResponseEntity<List<InternshipResponseDTO>> =
+    fun list(): ResponseEntity<List<InternshipResponse>> =
         ResponseEntity.ok(service.getAll())
 
     /**
@@ -64,7 +64,7 @@ class InternshipController(private val service: InternshipService) {
      * @return the internship response
      */
     @GetMapping("{id}")
-    fun findById(@PathVariable id: Long): ResponseEntity<InternshipResponseDTO> =
+    fun findById(@PathVariable id: Long): ResponseEntity<InternshipResponse> =
         ResponseEntity.ok(service.findById(id))
 
     /**

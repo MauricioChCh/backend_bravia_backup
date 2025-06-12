@@ -65,6 +65,7 @@ class JwtSecurityConfiguration (
             .authorizeHttpRequests {
                 it
                     .requestMatchers(HttpMethod.POST, "$urlSignup/**").permitAll()
+                    .requestMatchers(HttpMethod.GET, "$urlSignup/**").permitAll()
                     .requestMatchers(HttpMethod.POST, urlLogin).permitAll()
 
 //                    .requestMatchers("$urlCompanies/**").hasRole("COMPANY")

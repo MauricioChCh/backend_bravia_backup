@@ -61,8 +61,8 @@ class InternshipServiceImpl(
     /**
      * Retorna todas las pasantías registradas en el sistema.
      */
-    override fun getAll(): List<InternshipResponseDTO> =
-        internshipRepository.findAll().map { internshipMapper.toDto(it) }
+    override fun getAll(): List<InternshipResponse> =
+        internshipRepository.findAll().map { internshipMapper.internshipTOInternshipResponse(it) }
 
     /**
      * Actualiza todos los campos de una pasantía existente.
@@ -79,10 +79,10 @@ class InternshipServiceImpl(
     /**
      * Busca una pasantía por ID.
      */
-    override fun findById(id: Long): InternshipResponseDTO {
+    override fun findById(id: Long): InternshipResponse {
         val internship = internshipRepository.findById(id)
             .orElseThrow { NoSuchElementException("Internship not found") }
-        return internshipMapper.toDto(internship)
+        return internshipMapper.internshipTOInternshipResponse(internship)
     }
 
     /**
