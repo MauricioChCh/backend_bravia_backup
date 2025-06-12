@@ -11,7 +11,7 @@ data class Internship(
     @Column(name = "id")
     var id: Long? = null,
 
-    // Relation con el user que  la pasantía
+    // Relation con el user que la pasantía
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "company_id")
     var company: Company,
@@ -56,7 +56,7 @@ data class Internship(
     @ManyToMany(mappedBy = "internships")
     var students: MutableSet<Student> = mutableSetOf(),
 
-    @OneToOne(cascade = [CascadeType.ALL], fetch = FetchType.LAZY, orphanRemoval = true)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "modality_id", referencedColumnName = "id")
     var modality: Modality? = null,
 
@@ -100,8 +100,8 @@ data class Modality(
     @Column(name = "name", nullable = false, unique = true)
     var name: String,
 
-    @OneToOne(mappedBy = "modality", fetch = FetchType.LAZY, cascade = [CascadeType.ALL])
-    var internship: Internship? = null
+    @OneToMany(mappedBy = "modality", fetch = FetchType.LAZY)
+    var internships: MutableList<Internship> = mutableListOf(),
 ) {
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
