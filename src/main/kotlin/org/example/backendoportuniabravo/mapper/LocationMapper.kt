@@ -29,38 +29,39 @@ interface LocationMapper {
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface CityMapper {
-    fun provinceToCityDetails(
-        city: City
-    ) : CityDetails
-    
-    fun provinceListToCityDetailsList(
-        cityList: List<City>
-    ) : List<CityDetails>
-    
-    fun provinceDetailsToProvince(
-        cityDetails: CityDetails
-    ) : City
-    
-    fun provinceDetailsListToProvince(
-        cityDetailsList: List<CityDetails>
-    ) : List<City>
+//    fun provinceToCityDetails(
+//        city: City
+//    ) : CityDetails
+//
+//    fun provinceListToCityDetailsList(
+//        cityList: List<City>
+//    ) : List<CityDetails>
+//
+//    fun provinceDetailsToProvince(
+//        cityDetails: CityDetails
+//    ) : City
+//
+//    fun provinceDetailsListToProvince(
+//        cityDetailsList: List<CityDetails>
+//    ) : List<City>
+
+    fun cityDetailsToCity(cityDetails: CityDetails) : CountryDetails
+    fun cityToCityDetails(city: City) : CityDetails
 }
 
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 interface CountryMapper {
-    fun countryToCountryDetails(
-        country: Country
-    ) : CountryDetails
+    fun countryToCountryDetails(country: Country) : CountryDetails
     
     fun countryListToCountryDetailsList(
         countryList: List<Country>
     ) : List<CountryDetails>
     
-    fun countryDetailsToCountry(
-        countryDetails: CountryDetails
-    ) : Country
+    fun countryDetailsToCountry(countryDetails: CountryDetails) : Country
 
     fun countryDetailsListToCountry(
         countryDetailsList: List<CountryDetails>
     ) : List<Country>
+
+
 }

@@ -2,10 +2,7 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.*
-import org.example.backendoportuniabravo.mapper.CompanyMapper
-import org.example.backendoportuniabravo.mapper.InternshipMapper
-import org.example.backendoportuniabravo.mapper.LocationMapper
-import org.example.backendoportuniabravo.mapper.ModalityMapper
+import org.example.backendoportuniabravo.mapper.*
 import org.example.backendoportuniabravo.repository.*
 import org.example.backendoportuniabravo.repository.MarkedInternshipRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -44,7 +41,9 @@ class CompanyServiceImpl(
     private val roleRepository: RoleRepository,
     private val markedInternshipRepository: MarkedInternshipRepository,
     private val modalityRepository: ModalityRepository,
-    private val modalityMapper: ModalityMapper
+    private val modalityMapper: ModalityMapper,
+    private val cityMapper: CityMapper,
+    private val countryMapper: CountryMapper
 ) : CompanyService {
 
     /**
@@ -480,6 +479,26 @@ class CompanyServiceImpl(
         return internshipMapper.internshipTOInternshipResponse(updatedInternship)
     }
 
+    override fun getAllCities(): List<CityDetails> {
+        return cityRepository.findAll().map { city ->
+            cityMapper.cityToCityDetails(city)
+        }
+    }
+
+    override fun getAllCountries(): List<CountryDetails> {
+        return countryRepository.findAll().map { country ->
+            countryMapper.countryToCountryDetails(country)
+        }
+    }
+
+    override fun getAllTags(): List<TagDetails> {
+        return tagRepository.findAll().map { tag ->
+            TagDetails(
+                id = tag.id,
+                name = tag.name,
+            )
+        }
+    }
 
     /**
      * Marks internships as bookmarked for a user.

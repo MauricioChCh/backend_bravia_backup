@@ -141,5 +141,11 @@ interface CompanyService {
 
     fun updateInternship(username: String, dto: InternshipRequestUpdateDTO): InternshipResponse?
 
+    fun getAllCities(): List<CityDetails>
+
+    fun getAllCountries(): List<CountryDetails>
+
+    fun getAllTags(): List<TagDetails>
+
 }
 
