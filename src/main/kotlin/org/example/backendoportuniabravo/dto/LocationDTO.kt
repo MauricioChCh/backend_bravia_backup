@@ -55,3 +55,6 @@ data class LocationInput(
 )
 
 
+class LocationDTO {
+
+}

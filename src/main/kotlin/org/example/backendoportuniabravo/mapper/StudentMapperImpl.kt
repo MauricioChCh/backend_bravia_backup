@@ -201,5 +201,56 @@ class StudentMapperImpl : StudentMapper {
     }
 
 
+    override fun toStudentResponseDto(student: Student): StudentResponseDTO {
+        return mapStudentToStudentResponseDTO(student)
+    }
+
+    override fun toStudentProfileDto(student: Student): StudentProfileResponseDTO {
+        val user = student.profile?.user
+
+        // Mapear URLs de CV
+        val cvUrlsList = student.cvUrls?.map { it.url } ?: emptyList()
+
+        // Mapear relaciones many-to-many (versión simplificada sin Institution y Location)
+        val languagesList = student.languages?.map {
+            LanguageDTO(it.id, it.name)
+        }?.toList() ?: emptyList()
+
+        val degreesList = student.degrees?.map {
+            DegreeDTO(it.id, it.name)
+        }?.toList() ?: emptyList()
+
+        val collegesList = student.colleges?.map {
+            CollegeDTO(it.id, it.name)
+        }?.toList() ?: emptyList()
+
+        val interestsList = student.interests?.map {
+            InterestDTO(it.id, it.name)
+        }?.toList() ?: emptyList()
+
+        return StudentProfileResponseDTO(
+            id = student.id,
+            firstName = user?.firstName,
+            lastName = user?.lastName,
+            email = user?.email,
+            description = student.description,
+            academicCenter = student.academicCenter,
+            institution = null, // Temporalmente null hasta implementar Institution
+            location = null,    // Temporalmente null hasta implementar Location
+            hobbies = mapHobbies(student.hobbies ?: emptyList()),
+            certifications = mapCertifications(student.certifications ?: emptyList()),
+            certificates = emptyList(), // Temporalmente vacío
+            experiences = mapExperiences(student.experiences ?: emptyList()),
+            skills = mapSkills(student.skills ?: emptyList()),
+            careers = mapCareers(student.careers ?: emptyList()),
+            cvUrls = cvUrlsList,
+            languages = languagesList,
+            degrees = degreesList,
+            colleges = collegesList,
+            interests = interestsList,
+            education = emptyList(), // Temporalmente vacío
+            contacts = emptyList()   // Temporalmente vacío
+        )
+    }
 
 }

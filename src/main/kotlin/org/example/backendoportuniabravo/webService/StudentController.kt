@@ -1,10 +1,7 @@
 package org.example.backendoportuniabravo.webService
 
 import kotlinx.coroutines.runBlocking
-import org.example.backendoportuniabravo.dto.StudentCreateRequestDTO
-import org.example.backendoportuniabravo.dto.StudentCurriculumResponseDTO
-import org.example.backendoportuniabravo.dto.StudentRequestDTO
-import org.example.backendoportuniabravo.dto.StudentResponseDTO
+import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.service.AIService
 import org.example.backendoportuniabravo.service.StudentService
 import org.springframework.http.HttpStatus
@@ -19,12 +16,18 @@ class StudentController(
 ) {
 
 
-
-    @GetMapping("{id}")
+    //Endpoint que identifica si es un correo o un ID
+    @GetMapping("/{id}")
     fun getById(@PathVariable id: Long): ResponseEntity<StudentResponseDTO> {
-        return ResponseEntity.ok(service.findById(id))
+        val student = service.findById(id)
+        return ResponseEntity.ok(student)
     }
 
+    @GetMapping("/email/{email}")
+    fun getByEmail(@PathVariable email: String): ResponseEntity<StudentProfileResponseDTO> {
+        val studentProfile = service.findByUsername(email)
+        return ResponseEntity.ok(studentProfile)
+    }
     @GetMapping
     fun getAll(): ResponseEntity<List<StudentResponseDTO>> {
         return ResponseEntity.ok(service.findAll())

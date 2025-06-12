@@ -5,6 +5,7 @@ import org.example.backendoportuniabravo.dto.*
 interface StudentService {
     fun create(dto: StudentCreateRequestDTO): StudentResponseDTO
     fun findById(id: Long): StudentResponseDTO
+    fun findByUsername(username: String): StudentProfileResponseDTO
     fun findAll(): List<StudentResponseDTO>
     fun delete(id: Long)
     fun update(id: Long, dto: StudentRequestDTO): StudentResponseDTO

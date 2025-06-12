@@ -109,7 +109,7 @@ class StudentServiceImpl(
         student.interests = interestRepository.findAllById(dto.interestsIds).toMutableSet()
         student.internships = internshipRepository.findAllById(dto.internshipsIds).toMutableSet()
 
-        return studentMapper.toDto(studentRepository.save(student))
+        return studentMapper.toStudentResponseDto(studentRepository.save(student))
     }
 
 
@@ -118,11 +118,22 @@ class StudentServiceImpl(
         val student = studentRepository.findById(id)
             .orElseThrow { RuntimeException("Student not found") }
 
-        return studentMapper.toDto(student)
+        return studentMapper.toStudentResponseDto(student)
+    }
+
+    override fun findByUsername(username: String): StudentProfileResponseDTO {
+        val user = userRepository.findByEmail(username)
+            ?: throw RuntimeException("User not found")
+
+        val student = studentRepository.findByProfileId(user.profile?.id ?: throw RuntimeException("Profile not found"))
+            ?: throw RuntimeException("Student not found for user $username")
+
+        return studentMapper.toStudentProfileDto(student)
+
     }
 
     override fun findAll(): List<StudentResponseDTO> {
-        return studentRepository.findAll().map(studentMapper::toDto)
+        return studentRepository.findAll().map(studentMapper::toStudentResponseDto)
     }
 
     override fun delete(id: Long) {
@@ -137,7 +148,7 @@ class StudentServiceImpl(
             .orElseThrow { RuntimeException("Student not found") }
 
         studentMapper.updateFromDto(dto, student)
-        return studentMapper.toDto(studentRepository.save(student))
+        return studentMapper.toStudentResponseDto(studentRepository.save(student))
     }
 
     override fun returnStudentCurriculum(id: Long): StudentCurriculumResponseDTO {

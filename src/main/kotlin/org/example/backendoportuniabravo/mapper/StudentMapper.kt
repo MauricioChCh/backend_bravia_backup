@@ -7,6 +7,8 @@ import org.mapstruct.*
 
 interface StudentMapper {
     fun toDto(student: Student): StudentResponseDTO
+    fun toStudentResponseDto(student: Student): StudentResponseDTO
+    fun toStudentProfileDto  (student: Student): StudentProfileResponseDTO
 
     fun toDtoList(list: List<Student>): List<StudentResponseDTO>
 

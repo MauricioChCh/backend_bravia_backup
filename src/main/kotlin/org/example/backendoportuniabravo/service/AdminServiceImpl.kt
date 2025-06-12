@@ -124,7 +124,7 @@ class AdminServiceImpl(
             val studentList = studentRepository.findAll()
 
             studentList.map {
-                    student -> studentMapper.toDto(student)
+                    student -> studentMapper.toStudentResponseDto(student)
             }
         } catch (e: Exception) {
             e.printStackTrace()
@@ -156,7 +156,7 @@ class AdminServiceImpl(
     override fun getStudentById(studentId: Long): StudentResponseDTO? {
         return try {
             val student = studentRepository.findById(studentId).orElse(null)
-            student?.let { studentMapper.toDto(it) }
+            student?.let { studentMapper.toStudentResponseDto(it) }
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("Error al obtener el estudiante con ID $studentId", e)
@@ -177,7 +177,7 @@ class AdminServiceImpl(
     override fun getStudentByUserId(userId: Long): StudentResponseDTO? {
         return try {
             val student = studentRepository.findByProfileId(userId)
-            student?.let { studentMapper.toDto(it) }
+            student?.let { studentMapper.toStudentResponseDto(it) }
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("Error al obtener el estudiante con ID $userId", e)
