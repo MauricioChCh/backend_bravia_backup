@@ -2,10 +2,13 @@ package org.example.backendoportuniabravo.webService
 
 import org.example.backendoportuniabravo.dto.AdminRequestDTO
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
+import org.example.backendoportuniabravo.dto.CompanyUserResponse
 import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
 import org.example.backendoportuniabravo.dto.ReportActionResponseDTO
+import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.mapper.ReportActionMapper
 import org.example.backendoportuniabravo.service.AdminService
+import org.example.backendoportuniabravo.service.CompanyService
 import org.example.backendoportuniabravo.service.ReportActionService
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -15,7 +18,7 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("\${url.admins}")
 class AdminController(
-    private val adminService: AdminService
+    private val adminService: AdminService,
 ) {
 
     /**
@@ -25,6 +28,37 @@ class AdminController(
     @GetMapping
     fun listAdmins(): ResponseEntity<List<AdminResponseDTO>> =
         ResponseEntity.ok(adminService.getAdmins() ?: emptyList())
+
+
+    @GetMapping("/companies")
+    fun getAllCompanies(): ResponseEntity<List<CompanyUserResponse>> {
+        val companies = adminService.getAllCompanies()
+        return ResponseEntity.ok(companies)
+    }
+
+    @GetMapping("/students")
+    fun getAllStudents(): ResponseEntity<List<StudentResponseDTO>> {
+        val students = adminService.getAllStudents()
+        return ResponseEntity.ok(students)
+    }
+
+    @GetMapping("/companies/{companyId}")
+    fun getCompanyById(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
+        val company = adminService.getCompanyByUserId(companyId)
+        return ResponseEntity.ok(company)
+    }
+
+    @GetMapping("/companies/company/{companyId}")
+    fun getCompanyByCompanyId(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
+        val company = adminService.getCompanyById(companyId)
+        return ResponseEntity.ok(company)
+    }
+
+    @GetMapping("/students/{studentId}")
+    fun getStudentById(@PathVariable studentId: Long): ResponseEntity<StudentResponseDTO> {
+        val student = adminService.getStudentByUserId(studentId)
+        return ResponseEntity.ok(student)
+    }
 
     /**
      * Retrieves a specific admin by their ID.
@@ -76,43 +110,6 @@ class ReportActionController(
     private val mapper: ReportActionMapper
 ) {
 
-/*    @PostMapping
-    fun createReportAction(@RequestBody requestDTO: ReportActionRequestDTO ): ResponseEntity<ReportActionResponseDTO> {
-        val createdEntity = reportActionService.createAction(requestDTO)
-        val responseDTO = mapper.toResponseDto(createdEntity)
-        return ResponseEntity.status(HttpStatus.CREATED).body(responseDTO)
-    }
-
-    @GetMapping
-    fun getAllActions(): ResponseEntity<List<ReportActionResponseDTO>> {
-        val actions = reportActionService.getAllActions()
-        val responseList = actions.map { mapper.toResponseDto(it) }
-        return ResponseEntity.ok(responseList)
-    }
-
-    @GetMapping("/admin/{adminId}")
-    fun getActionsByAdmin(@PathVariable adminId: Long): ResponseEntity<List<ReportActionResponseDTO>> {
-        val actions = reportActionService.getActionsByAdminId(adminId)
-        val responseList = actions.map { mapper.toResponseDto(it) }
-        return ResponseEntity.ok(responseList)
-    }
-
-    @GetMapping("/report/{reportId}")
-    fun getActionByUserReportId(@PathVariable reportId: Long): ResponseEntity<ReportActionResponseDTO> {
-        val action = reportActionService.getActionByUserReportId(reportId)
-        return if (action != null) {
-            ResponseEntity.ok(mapper.toResponseDto(action))
-        } else {
-            ResponseEntity.notFound().build()
-        }
-    }
-
-    @GetMapping("/search")
-    fun searchByAction(@RequestParam keyword: String): ResponseEntity<List<ReportActionResponseDTO>> {
-        val actions = reportActionService.searchByActionText(keyword)
-        val responseList = actions.map { mapper.toResponseDto(it) }
-        return ResponseEntity.ok(responseList)
-    }*/
 
     @GetMapping
     fun getAllActions(): ResponseEntity<List<ReportActionResponseDTO>> {

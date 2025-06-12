@@ -22,4 +22,5 @@ interface ContactRepository : JpaRepository<Contact, Long>
 @Repository
 interface CompanyRepository : JpaRepository<Company, Long>{
     fun deleteCompanyById(id: Long): Unit
+    fun findByProfileId(profileId: Long): Optional<Company>
 }

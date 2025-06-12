@@ -19,7 +19,10 @@ class DataSeeder {
     @Bean
     @Order(1) // Ejecutar PRIMERO
     @Transactional
-    fun insertRolesAndPrivileges(roleRepository: RoleRepository, privilegeRepository: PrivilegeRepository): CommandLineRunner {
+    fun insertRolesAndPrivileges(
+        roleRepository: RoleRepository,
+        privilegeRepository: PrivilegeRepository
+    ): CommandLineRunner {
         return CommandLineRunner {
             println("📦 Inserting roles and privileges with relationships...")
 
@@ -51,49 +54,49 @@ class DataSeeder {
     }
 
 
-        @Bean
-        @Order(2)
-        @Transactional
-        fun insertLocations(
-            countryRepository: CountryRepository,
-            cityRepository: CityRepository,
-            locationRepository: LocationRepository
-        ): CommandLineRunner {
-            return CommandLineRunner {
-                println("📦 Inserting Location Data...")
+    @Bean
+    @Order(2)
+    @Transactional
+    fun insertLocations(
+        countryRepository: CountryRepository,
+        cityRepository: CityRepository,
+        locationRepository: LocationRepository
+    ): CommandLineRunner {
+        return CommandLineRunner {
+            println("📦 Inserting Location Data...")
 
-                val country = countryRepository.findByName("Costa Rica")
-                    ?: countryRepository.save(Country(name = "Costa Rica"))
+            val country = countryRepository.findByName("Costa Rica")
+                ?: countryRepository.save(Country(name = "Costa Rica"))
 
-                //Verifica si la ciudad ya existe, si no existe la crea por medio e una lista asociativa
-                val cities = listOf("Heredia", "San José", "Cartago", "Alajuela", "Limón").associateWith {
-                    cityRepository.findByName(it) ?: cityRepository.save(City(name = it))
+            //Verifica si la ciudad ya existe, si no existe la crea por medio e una lista asociativa
+            val cities = listOf("Heredia", "San José", "Cartago", "Alajuela", "Limón").associateWith {
+                cityRepository.findByName(it) ?: cityRepository.save(City(name = it))
+            }
+
+            // Variable de tipo lista que contiene una lista de tuplas triples,
+            // donde cada tupla contiene el nombre de la ciudad, la dirección y la ciudad para la facilidad de busqueda de location y la creacion o modificacion de ciudades por defecto
+            val expectedLocations = listOf(
+                Triple("Heredia", "Barrio Tournón", cities["Heredia"]),
+                Triple("San José", "Avenida Central", cities["San José"]),
+                Triple("Cartago", "Ruinas de Cartago", cities["Cartago"]),
+                Triple("Alajuela", "Parque Central", cities["Alajuela"]),
+                Triple("Limón", "Puerto Limón", cities["Limón"])
+            )
+
+            //Me traigo toda la lista de ubicaciones, especificamente solo las adress
+            val existingAddresses = locationRepository.findAll().map { it.address }
+
+            // Filtro la lista de tuplas para quedarme solo con las adress que no existen en la base de datos y luego por cada una de estas verifica si la ciudad no es nula y la agrega
+            expectedLocations.filter { it.second !in existingAddresses }
+                .forEach { (cityName, address, city) ->
+                    city?.let {
+                        locationRepository.save(Location(city = it, country = country, address = address))
+                    }
                 }
 
-                // Variable de tipo lista que contiene una lista de tuplas triples,
-                // donde cada tupla contiene el nombre de la ciudad, la dirección y la ciudad para la facilidad de busqueda de location y la creacion o modificacion de ciudades por defecto
-                val expectedLocations = listOf(
-                    Triple("Heredia", "Barrio Tournón", cities["Heredia"]),
-                    Triple("San José", "Avenida Central", cities["San José"]),
-                    Triple("Cartago", "Ruinas de Cartago", cities["Cartago"]),
-                    Triple("Alajuela", "Parque Central", cities["Alajuela"]),
-                    Triple("Limón", "Puerto Limón", cities["Limón"])
-                )
-
-                //Me traigo toda la lista de ubicaciones, especificamente solo las adress
-                val existingAddresses = locationRepository.findAll().map { it.address }
-
-                // Filtro la lista de tuplas para quedarme solo con las adress que no existen en la base de datos y luego por cada una de estas verifica si la ciudad no es nula y la agrega
-                expectedLocations.filter { it.second !in existingAddresses }
-                    .forEach { (cityName, address, city) ->
-                        city?.let {
-                            locationRepository.save(Location(city = it, country = country, address = address))
-                        }
-                    }
-
-                println("✅ Location data ensured")
-            }
+            println("✅ Location data ensured")
         }
+    }
 
     @Bean
     @Order(3) // Ejecutar tercero
@@ -108,9 +111,10 @@ class DataSeeder {
             println("📦 Inserting Student Metadata...")
 
             val defaultLanguages = listOf("Español", "Inglés", "Francés", "Alemán", "Portugués")
-            val defaultDegrees = listOf("Diplomado","Bachillerato", "Licenciatura", "Maestría", "Doctorado")
+            val defaultDegrees = listOf("Diplomado", "Bachillerato", "Licenciatura", "Maestría", "Doctorado")
             val defaultColleges = listOf("UCR", "TEC", "UNA", "ULATINA", "UNED")
-            val defaultInterests = listOf("Inteligencia Artificial", "Ciberseguridad", "Desarrollo Web", "Videojuegos", "Ciencia de Datos")
+            val defaultInterests =
+                listOf("Inteligencia Artificial", "Ciberseguridad", "Desarrollo Web", "Videojuegos", "Ciencia de Datos")
 
             defaultLanguages.forEach { name ->
                 if (!languageRepository.existsByName(name)) {
@@ -141,10 +145,12 @@ class DataSeeder {
     }
 
 
+
     @Bean
     @Order(4) // Ejecutar CUARTO
-    fun insertSampleForCompany(businessAreaRepository: BusinessAreaRepository, tagRepository: TagRepository,
-                               countryRepository: CountryRepository, cityRepository: CityRepository
+    fun insertSampleForCompany(
+        businessAreaRepository: BusinessAreaRepository, tagRepository: TagRepository,
+        countryRepository: CountryRepository, cityRepository: CityRepository
     ): CommandLineRunner {
         return CommandLineRunner {
             println("📦 Inserting test data into Docker...")
@@ -158,7 +164,7 @@ class DataSeeder {
             } else {
                 println("⚠️ Data for bvusiness areas already exists. No data was inserted.")
             }
-            if (tagRepository.findAll().isEmpty()){
+            if (tagRepository.findAll().isEmpty()) {
                 tagRepository.save(Tag(name = "Desarrollo"))
                 tagRepository.save(Tag(name = "Backend"))
                 tagRepository.save(Tag(name = "Frontend"))
@@ -169,7 +175,7 @@ class DataSeeder {
                 println("⚠️ Data for tags already exists. No data was inserted.")
             }
 
-            if(countryRepository.findAll().isEmpty() && cityRepository.findAll().isEmpty()){
+            if (countryRepository.findAll().isEmpty() && cityRepository.findAll().isEmpty()) {
                 countryRepository.save(Country(name = "Costa Rica"))
                 countryRepository.save(Country(name = "Colombia"))
                 countryRepository.save(Country(name = "Argentina"))
@@ -256,6 +262,8 @@ class DataSeeder {
             println("⚠️ Admin data already exists. No data was inserted.")
         }
     }
+}
+/*
 
     @Bean
     @Order(6) // Ejecutar SEXTO
@@ -427,7 +435,9 @@ class DataSeeder {
             println("⚠️ Student data already exists. No data was inserted.")
         }
     }
+*/
 
+/*
 
     @Bean
     fun insertColleges(collegeRepository: CollegeRepository): CommandLineRunner {
@@ -472,6 +482,8 @@ class DataSeeder {
             }
         }
     }
+*/
+/*
 
     @Bean
     fun insertDegrees(degreeRepository: DegreeRepository): CommandLineRunner {
@@ -523,6 +535,7 @@ class DataSeeder {
     }
 
 }
+*/
 
 
 //                StudentSeedData(
@@ -608,6 +621,7 @@ class DataSeeder {
 //                    collegeNames = listOf("UNA"),
 //                    interestNames = listOf("Ciencia de Datos", "Inteligencia Artificial")
 //                ),
+/*
 
     @Bean
     @Order(7)
@@ -669,5 +683,6 @@ class DataSeeder {
             println("⚠️ User report data already exists. No data was inserted.")
         }
     }
+*/
 
 

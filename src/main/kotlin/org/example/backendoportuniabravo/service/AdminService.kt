@@ -2,6 +2,7 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.*
 import org.example.backendoportuniabravo.entity.ReportAction
+import org.example.backendoportuniabravo.entity.Student
 
 
 interface AdminService{
@@ -9,7 +10,12 @@ interface AdminService{
     fun getAdminById(id: Long) : AdminResponseDTO?
     fun addAdmin(id: Long) : Long?
     fun deleteAdmin(profileId: Long) : Boolean
-
+    fun getAllCompanies(): List<CompanyUserResponse>
+    fun getAllStudents(): List<StudentResponseDTO>
+    fun getStudentById(studentId: Long): StudentResponseDTO?
+    fun getCompanyById(companyId: Long): CompanyUserResponse?       // ← agregado
+    fun getCompanyByUserId(userId: Long): CompanyUserResponse?
+    fun getStudentByUserId(userId: Long): StudentResponseDTO?
 }
 
 interface ReportActionService {

@@ -9,6 +9,7 @@ import org.example.backendoportuniabravo.service.UserReportService
 import org.example.backendoportuniabravo.service.UserService
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -33,5 +34,12 @@ class UserReportController(
         val saved = userReportService.save(report)
         val response = userReportMapper.toResponseDTO(saved)
         return ResponseEntity.ok(response)
+    }
+
+    @GetMapping("/{id}")
+    fun getReportById(@PathVariable id: Long): ResponseEntity<UserReportResponseDTO> {
+        val report = userReportService.findById(id)
+        val responseDTO = userReportMapper.toResponseDTO(report)
+        return ResponseEntity.ok(responseDTO)
     }
 }

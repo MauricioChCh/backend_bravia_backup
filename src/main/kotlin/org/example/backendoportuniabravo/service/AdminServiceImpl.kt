@@ -1,14 +1,20 @@
 package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
+import org.example.backendoportuniabravo.dto.CompanyUserResponse
 import org.example.backendoportuniabravo.dto.ReportActionRequestDTO
+import org.example.backendoportuniabravo.dto.StudentResponseDTO
 import org.example.backendoportuniabravo.entity.Admin
 import org.example.backendoportuniabravo.entity.ReportAction
 import org.example.backendoportuniabravo.mapper.AdminMapper
+import org.example.backendoportuniabravo.mapper.CompanyMapper
 import org.example.backendoportuniabravo.mapper.ReportActionMapper
+import org.example.backendoportuniabravo.mapper.StudentMapper
 import org.example.backendoportuniabravo.repository.AdminRepository
+import org.example.backendoportuniabravo.repository.CompanyRepository
 import org.example.backendoportuniabravo.repository.ProfileRepository
 import org.example.backendoportuniabravo.repository.ReportActionRepository
+import org.example.backendoportuniabravo.repository.StudentRepository
 import org.example.backendoportuniabravo.repository.UserReportRepository
 import org.example.backendoportuniabravo.repository.UserRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -24,14 +30,22 @@ class AdminServiceImpl(
     @Autowired
     private val profileRepository: ProfileRepository,
     @Autowired
-    private val userRepository: UserRepository // Asegúrate de tener el repositorio del User
+    private val userRepository: UserRepository, // Asegúrate de tener el repositorio del User
+    @Autowired
+    private val companyRepository: CompanyRepository,
+    @Autowired
+    private val companyMapper: CompanyMapper,
+    @Autowired
+    private val studentRepository: StudentRepository,
+    @Autowired
+    private val studentMapper: StudentMapper,
 
-): AdminService {
+
+    ): AdminService {
     override fun getAdmins(): List<AdminResponseDTO>? {
         return try {
             val adminList = adminRepository.findAll()
-            //println("Admins: $adminList") // Debug
-            //adminMapper.adminListToAdminResponseDTOList(adminList)
+
             adminList.map {
                 val user = userRepository.findByProfileId(it.profile?.id) // Asumiendo que el repositorio tiene un método así
                 adminMapper.adminToAdminResponseDTOWithFullName(it, user) // Pasamos el User al Mapper
@@ -90,6 +104,85 @@ class AdminServiceImpl(
             false
         }
     }
+
+    override fun getAllCompanies(): List<CompanyUserResponse> {
+        return try {
+            val companyList = companyRepository.findAll()
+
+            companyList.map {
+                    company -> companyMapper.companyToCompanyUserResponse(company)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la lista de companias", e)
+        }
+    }
+
+    override fun getAllStudents(): List<StudentResponseDTO> {
+        return try {
+            val studentList = studentRepository.findAll()
+
+            studentList.map {
+                    student -> studentMapper.toDto(student)
+            }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la lista de estudiantes", e)
+        }
+    }
+
+    override fun getCompanyById(companyId: Long): CompanyUserResponse? {
+        return try {
+            val company = companyRepository.findById(companyId).orElse(null)
+            company?.let { companyMapper.companyToCompanyUserResponse(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la compañía con ID $companyId", e)
+        }
+    }
+
+
+    /* override fun getCompanyByEmail(email: String): CompanyUserResponse? {
+         return try {
+             val company = companyRepository.findCompanyByEmailIgnoreCase(email)
+             company?.let { companyMapper.companyToCompanyUserResponse(it) }
+         } catch (e: Exception) {
+             e.printStackTrace()
+             throw RuntimeException("Error al obtener la compañía con email $email", e)
+         }
+     }*/
+
+    override fun getStudentById(studentId: Long): StudentResponseDTO? {
+        return try {
+            val student = studentRepository.findById(studentId).orElse(null)
+            student?.let { studentMapper.toDto(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener el estudiante con ID $studentId", e)
+        }
+    }
+
+
+    override fun getCompanyByUserId(userId: Long): CompanyUserResponse? {
+        return try {
+            val company = companyRepository.findByProfileId(userId).orElse(null)
+            company?.let { companyMapper.companyToCompanyUserResponse(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener la compañía con ID $userId", e)
+        }
+    }
+
+    override fun getStudentByUserId(userId: Long): StudentResponseDTO? {
+        return try {
+            val student = studentRepository.findByProfileId(userId)
+            student?.let { studentMapper.toDto(it) }
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al obtener el estudiante con ID $userId", e)
+        }
+    }
+
 }
 
 @Service
