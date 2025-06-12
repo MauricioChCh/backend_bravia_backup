@@ -61,12 +61,11 @@ class AdminController(
         return ResponseEntity.ok(student)
     }
 
-    @PutMapping("/students/ban/{userId}")
+    @PutMapping("/students/ban")
     fun updateStudentBanStatus(
-        @PathVariable userId: Long,
         @RequestBody studentBan: AdminBanningStudentRequestDTO
     ): ResponseEntity<String> {
-        adminService.updateStudentBanStatus(userId, studentBan.bannStatus)
+        adminService.updateStudentBanStatus(studentBan.userId, studentBan.bannStatus)
         return ResponseEntity.ok("Estado de baneo actualizado correctamente.")
     }
     /**
