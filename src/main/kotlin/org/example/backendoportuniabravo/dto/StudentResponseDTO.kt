@@ -1,6 +1,6 @@
 package org.example.backendoportuniabravo.dto
 import org.example.backendoportuniabravo.dto.InstitutionDTO
-import org.example.backendoportuniabravo.dto.LocationDTO
+//import org.example.backendoportuniabravo.dto.LocationDTO
 import org.example.backendoportuniabravo.dto.CertificateDTO
 import org.example.backendoportuniabravo.dto.LanguageDTO
 import org.example.backendoportuniabravo.dto.DegreeDTO
