@@ -45,13 +45,13 @@ class AdminController(
 
     @GetMapping("/companies/{companyId}")
     fun getCompanyById(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
-        val company = adminService.getCompanyByUserId(companyId)
+        val company = adminService.getCompanyById(companyId)
         return ResponseEntity.ok(company)
     }
 
     @GetMapping("/companies/company/{companyId}")
     fun getCompanyByCompanyId(@PathVariable companyId: Long): ResponseEntity<CompanyUserResponse> {
-        val company = adminService.getCompanyById(companyId)
+        val company = adminService.getCompanyByUserId(companyId)
         return ResponseEntity.ok(company)
     }
 

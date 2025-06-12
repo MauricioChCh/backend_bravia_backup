@@ -214,8 +214,8 @@ class DataSeeder {
                 createDate = Date(),
                 firstName = "Gabriel",
                 lastName = "Vega",
-                email = "admin1.admin1@example.com",
-                password = passwordEncoder.encode("Password123!"),
+                email = "admin@live.com",
+                password = passwordEncoder.encode("Password123"),
                 tokenExpired = false,
                 enabled = true,
                 profile = profile,
@@ -289,8 +289,8 @@ class DataSeeder {
 
 
                 StudentSeedData(
-                    firstName = "Prueba",
-                    lastName = "Pruebon",
+                    firstName = "Estudiante",
+                    lastName = "de prueba",
                     email = "prueba@gmail.com",
                     description = "Desarrollador full-stack en formación con gran interés en tecnologías emergentes. Me gusta crear soluciones web modernas y estoy constantemente aprendiendo nuevas tecnologías.",
                     academicCenter = "Universidad Nacional - Campus Benjamin nuñez",
