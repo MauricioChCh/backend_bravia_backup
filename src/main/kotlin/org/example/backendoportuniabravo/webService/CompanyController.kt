@@ -103,4 +103,10 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(internship)
     }
 
+    @GetMapping("cities")
+    fun getAllCities(): ResponseEntity<List<CityDetails>> {
+        val cities = service.getAllCities()
+        return ResponseEntity.status(HttpStatus.OK).body(cities)
+    }
+
 }
