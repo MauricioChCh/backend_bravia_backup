@@ -36,6 +36,7 @@ class CompanyServiceImpl(
     private val tagRepository: TagRepository,
     @Autowired
     private val contactRepository: ContactRepository,
+    @Autowired val internshipRepository: InternshipRepository,
     private val locationRepository: LocationRepository,
     private val countryRepository: CountryRepository,
     private val cityRepository: CityRepository,
@@ -403,7 +404,7 @@ class CompanyServiceImpl(
      * @throws NoSuchElementException if no internships are found.
      */
     @Throws(NoSuchElementException::class)
-    override fun getInternships(username: String): List<InternshipResponseDTO> {
+    override fun getInternships(username: String): List<InternshipResponse> {
         val relatedId = getRelatedId(username, userRepository)
 
         val company: Optional<Company> = companyRepository.findById(relatedId)
@@ -413,10 +414,10 @@ class CompanyServiceImpl(
         }
         val internships = isInternshipsMark(company.get().profile?.user?.id!!, company.get().internships)
 
-        return internships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
+        return internships.map { internshipMapper.internshipTOInternshipResponse(it) }
     }
 
-    override fun getInternship(username: String, internshipId: Long): InternshipResponseDTO? {
+    override fun getInternship(username: String, internshipId: Long): InternshipResponse? {
         val relatedId = getRelatedId(username, userRepository)
 
         val company: Optional<Company> = companyRepository.findById(relatedId)
@@ -426,7 +427,7 @@ class CompanyServiceImpl(
         val internship = isInternshipMark(company.get().profile?.user?.id!!, company.get().internships.find { it.id == internshipId }!! )
 
 
-        return internshipMapper.internshipToInternshipResponseDTO(internship!!)
+        return internshipMapper.internshipTOInternshipResponse(internship!!)
     }
 
 
@@ -436,6 +437,35 @@ class CompanyServiceImpl(
         }
     }
 
+   override fun updateInternship(username: String, dto: InternshipRequestUpdateDTO): InternshipResponse? {
+        val relatedId = getRelatedId(username, userRepository)
+
+        val internship: Optional<Internship> = internshipRepository.findById(dto.id)
+
+        if (internship.isEmpty) {
+            throw NoSuchElementException("Internship with id ${dto.id} not found")
+        }
+        val intern = internship.get()
+
+        intern.title = dto.title
+        intern.description = dto.description
+        intern.modality = modalityRepository.findByName(dto.modality)
+            ?: throw IllegalArgumentException("Modality not found")
+        intern.activities = dto.activities
+        intern.requirements = dto.requirements
+        intern.schedule = dto.schedule
+        intern.duration = dto.duration
+        intern.salary = dto.salary
+        intern.location = locationRepository.findById(dto.location)
+            .orElseThrow { IllegalArgumentException("Location not found") }
+        intern.link = dto.link
+
+        // Guardar los cambios
+        val updatedInternship = internshipRepository.save(intern)
+
+        // Retornar el DTO
+        return internshipMapper.internshipTOInternshipResponse(updatedInternship)
+    }
 
     /**
      * Marks internships as bookmarked for a user.
