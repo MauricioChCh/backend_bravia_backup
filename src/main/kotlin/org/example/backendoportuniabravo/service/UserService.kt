@@ -10,4 +10,5 @@ interface UserService {
     fun existsByProfileId(profileId: Long): Boolean
     fun save(user: User): User
     fun deleteByProfileId(profileId: Long)
+    fun updateUserEnabled(userId: Long, enabled: Boolean)
 }

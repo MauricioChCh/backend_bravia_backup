@@ -42,4 +42,8 @@ class UserServiceImpl(
             ?: throw NoSuchElementException("User with Profile ID $profileId not found")
         userRepository.deleteByProfile(user.profile)
     }
+
+    override fun updateUserEnabled(userId: Long, enabled: Boolean) {
+        val user = userRepository.updateUserEnabledById(userId, enabled)
+    }
 }

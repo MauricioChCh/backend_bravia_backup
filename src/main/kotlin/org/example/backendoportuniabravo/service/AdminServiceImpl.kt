@@ -39,6 +39,7 @@ class AdminServiceImpl(
     private val studentRepository: StudentRepository,
     @Autowired
     private val studentMapper: StudentMapper,
+    private val userService: UserService,
 
 
     ): AdminService {
@@ -180,6 +181,16 @@ class AdminServiceImpl(
         } catch (e: Exception) {
             e.printStackTrace()
             throw RuntimeException("Error al obtener el estudiante con ID $userId", e)
+        }
+    }
+
+    override fun updateStudentBanStatus(userId: Long, studentBan: Boolean): Boolean {
+        return try {
+            val user = userService.updateUserEnabled(userId, studentBan)
+            user != null  // Retorna true si el usuario fue encontrado y actualizado
+        } catch (e: Exception) {
+            e.printStackTrace()
+            throw RuntimeException("Error al banear usuario con ID $userId", e)
         }
     }
 
