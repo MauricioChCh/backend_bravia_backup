@@ -16,6 +16,7 @@ interface AdminService{
     fun getCompanyById(companyId: Long): CompanyUserResponse?       // ← agregado
     fun getCompanyByUserId(userId: Long): CompanyUserResponse?
     fun getStudentByUserId(userId: Long): StudentResponseDTO?
+    fun updateStudentBanStatus(userId: Long, studentBan: Boolean): Boolean
 }
 
 interface ReportActionService {

@@ -1,5 +1,6 @@
 package org.example.backendoportuniabravo.webService
 
+import org.example.backendoportuniabravo.dto.AdminBanningStudentRequestDTO
 import org.example.backendoportuniabravo.dto.AdminRequestDTO
 import org.example.backendoportuniabravo.dto.AdminResponseDTO
 import org.example.backendoportuniabravo.dto.CompanyUserResponse
@@ -60,6 +61,13 @@ class AdminController(
         return ResponseEntity.ok(student)
     }
 
+    @PutMapping("/students/ban")
+    fun updateStudentBanStatus(
+        @RequestBody studentBan: AdminBanningStudentRequestDTO
+    ): ResponseEntity<String> {
+        adminService.updateStudentBanStatus(studentBan.userId, studentBan.bannStatus)
+        return ResponseEntity.ok("Estado de baneo actualizado correctamente.")
+    }
     /**
      * Retrieves a specific admin by their ID.
      * @param id the admin ID
