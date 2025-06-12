@@ -437,35 +437,49 @@ class CompanyServiceImpl(
         }
     }
 
-   override fun updateInternship(username: String, dto: InternshipRequestUpdateDTO): InternshipResponse? {
+    override fun updateInternship(username: String, dto: InternshipRequestUpdateDTO): InternshipResponse? {
         val relatedId = getRelatedId(username, userRepository)
 
-        val internship: Optional<Internship> = internshipRepository.findById(dto.id)
+        val internship = internshipRepository.findById(dto.id)
+            .orElseThrow { NoSuchElementException("Internship with id ${dto.id} not found") }
 
-        if (internship.isEmpty) {
-            throw NoSuchElementException("Internship with id ${dto.id} not found")
+        // Validación de propiedad
+        if (internship.company.id != relatedId) {
+            throw IllegalArgumentException("Internship does not belong to the company associated with username $username")
         }
-        val intern = internship.get()
 
-        intern.title = dto.title
-        intern.description = dto.description
-        intern.modality = modalityRepository.findByName(dto.modality)
-            ?: throw IllegalArgumentException("Modality not found")
-        intern.activities = dto.activities
-        intern.requirements = dto.requirements
-        intern.schedule = dto.schedule
-        intern.duration = dto.duration
-        intern.salary = dto.salary
-        intern.location = locationRepository.findById(dto.location)
+        // Actualización de campos simples
+        internship.title = dto.title
+        internship.description = dto.description
+        internship.activities = dto.activities
+        internship.requirements = dto.requirements
+        internship.schedule = dto.schedule
+        internship.duration = dto.duration
+        internship.salary = dto.salary
+        internship.link = dto.link
+        internship.imageUrl = dto.imageUrl
+        internship.publicationDate = dto.publicationDate
+
+        // Actualización de location
+        internship.location = locationRepository.findById(dto.location)
             .orElseThrow { IllegalArgumentException("Location not found") }
-        intern.link = dto.link
 
-        // Guardar los cambios
-        val updatedInternship = internshipRepository.save(intern)
+        // Actualización de modality sin eliminar nada (ManyToOne)
+        val newModality = modalityRepository.findByName(dto.modality)
+            ?: throw IllegalArgumentException("Modality '${dto.modality}' not found")
 
-        // Retornar el DTO
+        // Solo reasignar si es diferente
+        if (internship.modality?.id != newModality.id) {
+            internship.modality = newModality
+        }
+
+        // Guardar cambios
+        val updatedInternship = internshipRepository.save(internship)
+
+        // Retornar DTO de respuesta
         return internshipMapper.internshipTOInternshipResponse(updatedInternship)
     }
+
 
     /**
      * Marks internships as bookmarked for a user.
