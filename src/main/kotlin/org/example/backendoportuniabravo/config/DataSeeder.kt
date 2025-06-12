@@ -145,7 +145,6 @@ class DataSeeder {
     }
 
 
-
     @Bean
     @Order(4) // Ejecutar CUARTO
     fun insertSampleForCompany(
@@ -194,7 +193,6 @@ class DataSeeder {
 
         }
     }
-
 
 
     @Bean
@@ -262,8 +260,7 @@ class DataSeeder {
             println("⚠️ Admin data already exists. No data was inserted.")
         }
     }
-}
-/*
+
 
     @Bean
     @Order(6) // Ejecutar SEXTO
@@ -303,8 +300,14 @@ class DataSeeder {
                         CertificationSeedData("MongoDB Developer", "2023-12-01", "MongoDB University")
                     ),
                     experiences = listOf(
-                        ExperienceSeedData("Desarrollador Freelance", "Desarrollo de sitios web para pequeñas empresas usando tecnologías modernas."),
-                        ExperienceSeedData("Interno de Desarrollo", "Colaboración en el desarrollo de aplicaciones móviles para startup local.")
+                        ExperienceSeedData(
+                            "Desarrollador Freelance",
+                            "Desarrollo de sitios web para pequeñas empresas usando tecnologías modernas."
+                        ),
+                        ExperienceSeedData(
+                            "Interno de Desarrollo",
+                            "Colaboración en el desarrollo de aplicaciones móviles para startup local."
+                        )
                     ),
                     skills = listOf(
                         SkillSeedData("JavaScript", "Desarrollo frontend y backend con frameworks modernos."),
@@ -435,9 +438,7 @@ class DataSeeder {
             println("⚠️ Student data already exists. No data was inserted.")
         }
     }
-*/
 
-/*
 
     @Bean
     fun insertColleges(collegeRepository: CollegeRepository): CommandLineRunner {
@@ -482,7 +483,7 @@ class DataSeeder {
             }
         }
     }
-*/
+
 /*
 
     @Bean
@@ -536,92 +537,6 @@ class DataSeeder {
 
 }
 */
-
-
-//                StudentSeedData(
-//                    firstName = "Ana",
-//                    lastName = "González",
-//                    email = "ana.gonzalez@student.com",
-//                    description = "Estudiante apasionada por la inteligencia artificial y el machine learning. Busco oportunidades para aplicar mis conocimientos en proyectos reales y contribuir al desarrollo de soluciones innovadoras.",
-//                    academicCenter = "Tecnológico de Costa Rica - Campus Central",
-//                    hobbies = listOf("Programación", "Lectura técnica", "Fotografía"),
-//                    certifications = listOf(
-//                        CertificationSeedData("Python for Data Science", "2024-01-15", "Coursera"),
-//                        CertificationSeedData("AWS Cloud Practitioner", "2023-11-20", "Amazon Web Services")
-//                    ),
-//                    experiences = listOf(
-//                        ExperienceSeedData("Desarrolladora Junior", "Desarrollo de aplicaciones web usando React y Node.js para proyectos académicos y freelance."),
-//                        ExperienceSeedData("Tutora de Programación", "Apoyo a estudiantes de primer año en cursos de programación básica.")
-//                    ),
-//                    skills = listOf(
-//                        SkillSeedData("Python", "Programación avanzada en Python para ciencia de datos y desarrollo web."),
-//                        SkillSeedData("React", "Desarrollo de interfaces de usuario modernas y responsivas."),
-//                        SkillSeedData("SQL", "Diseño y consulta de bases de datos relacionales.")
-//                    ),
-//                    careers = listOf("Ingeniería en Computación"),
-//                    cvUrls = listOf("https://drive.google.com/ana-cv", "https://linkedin.com/in/ana-gonzalez"),
-//                    languageNames = listOf("Español", "Inglés"),
-//                    degreeNames = listOf("Bachillerato"),
-//                    collegeNames = listOf("TEC"),
-//                    interestNames = listOf("Inteligencia Artificial", "Desarrollo Web")
-//                ),
-//
-//                StudentSeedData(
-//                    firstName = "Carlos",
-//                    lastName = "Rodríguez",
-//                    email = "carlos.rodriguez@student.com",
-//                    description = "Estudiante de ingeniería enfocado en ciberseguridad y desarrollo de sistemas seguros. Me interesa mucho la protección de datos y la implementación de mejores prácticas de seguridad.",
-//                    academicCenter = "Universidad de Costa Rica - Sede Central",
-//                    hobbies = listOf("Hacking ético", "Videojuegos", "Música"),
-//                    certifications = listOf(
-//                        CertificationSeedData("Certified Ethical Hacker", "2023-12-10", "EC-Council"),
-//                        CertificationSeedData("CompTIA Security+", "2023-08-05", "CompTIA")
-//                    ),
-//                    experiences = listOf(
-//                        ExperienceSeedData("Asistente de TI", "Soporte técnico y mantenimiento de sistemas en empresa local."),
-//                        ExperienceSeedData("Pentester Junior", "Pruebas de penetración en aplicaciones web para proyectos académicos.")
-//                    ),
-//                    skills = listOf(
-//                        SkillSeedData("Kali Linux", "Uso avanzado de herramientas de pentesting y auditoría de seguridad."),
-//                        SkillSeedData("Java", "Desarrollo de aplicaciones empresariales seguras."),
-//                        SkillSeedData("Network Security", "Configuración y análisis de seguridad en redes.")
-//                    ),
-//                    careers = listOf("Ingeniería en Sistemas"),
-//                    cvUrls = listOf("https://drive.google.com/carlos-cv"),
-//                    languageNames = listOf("Español", "Inglés", "Francés"),
-//                    degreeNames = listOf("Bachillerato"),
-//                    collegeNames = listOf("UCR"),
-//                    interestNames = listOf("Ciberseguridad", "Videojuegos")
-//                ),
-//
-//                StudentSeedData(
-//                    firstName = "María",
-//                    lastName = "Jiménez",
-//                    email = "maria.jimenez@student.com",
-//                    description = "Estudiante de último año con experiencia en análisis de datos y visualización. Me apasiona convertir datos complejos en insights accionables para tomar mejores decisiones de negocio.",
-//                    academicCenter = "Universidad Nacional - Campus Omar Dengo",
-//                    hobbies = listOf("Análisis de datos", "Running", "Cocina"),
-//                    certifications = listOf(
-//                        CertificationSeedData("Google Data Analytics Certificate", "2024-02-20", "Google"),
-//                        CertificationSeedData("Tableau Desktop Specialist", "2023-10-15", "Tableau")
-//                    ),
-//                    experiences = listOf(
-//                        ExperienceSeedData("Analista de Datos Practicante", "Análisis de métricas de ventas y creación de dashboards para toma de decisiones."),
-//                        ExperienceSeedData("Asistente de Investigación", "Procesamiento y análisis estadístico de datos para proyectos de investigación universitaria.")
-//                    ),
-//                    skills = listOf(
-//                        SkillSeedData("R", "Análisis estadístico y visualización de datos."),
-//                        SkillSeedData("Tableau", "Creación de dashboards interactivos y reportes ejecutivos."),
-//                        SkillSeedData("Excel Avanzado", "Análisis de datos, macros y funciones estadísticas avanzadas.")
-//                    ),
-//                    careers = listOf("Estadística", "Administración de Empresas"),
-//                    cvUrls = listOf("https://drive.google.com/maria-cv", "https://github.com/maria-data"),
-//                    languageNames = listOf("Español", "Inglés"),
-//                    degreeNames = listOf("Bachillerato", "Diplomado"),
-//                    collegeNames = listOf("UNA"),
-//                    interestNames = listOf("Ciencia de Datos", "Inteligencia Artificial")
-//                ),
-/*
 
     @Bean
     @Order(7)
@@ -683,6 +598,5 @@ class DataSeeder {
             println("⚠️ User report data already exists. No data was inserted.")
         }
     }
-*/
 
-
+}
