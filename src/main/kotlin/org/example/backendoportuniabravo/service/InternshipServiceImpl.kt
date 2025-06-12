@@ -2,6 +2,7 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
+import org.example.backendoportuniabravo.dto.InternshipResponse
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
 import org.example.backendoportuniabravo.entity.Company
 import org.example.backendoportuniabravo.entity.Internship
@@ -24,6 +25,7 @@ class InternshipServiceImpl(
     private val markedInternshipRepository: MarkedInternshipRepository,
     private val userRepository: UserRepository,
     private val modalityMapper: ModalityMapper,
+    private val modalityRepository: ModalityRepository,
 ) : InternshipService {
 
     /**
@@ -43,7 +45,7 @@ class InternshipServiceImpl(
             publicationDate = dto.publicationDate,
             duration = dto.duration,
             salary = dto.salary,
-            modality = modalityMapper.modalityRequestTOModality(dto.modality),
+            modality = modalityRepository.findById(dto.modality).orElseThrow { IllegalArgumentException("Modality not found") },
             schedule = dto.schedule,
             requirements = dto.requirements,
             activities = dto.activities,
@@ -178,7 +180,7 @@ class InternshipServiceImpl(
         }
     }
 
-    override fun getBookmarkedInternships(username: String): List<InternshipResponseDTO>? {
+    override fun getBookmarkedInternships(username: String): List<InternshipResponse>? {
         val relatedId = getRelatedId(username, userRepository)
 
         val company: Optional<Company> = companyRepository.findById(relatedId)
@@ -189,7 +191,7 @@ class InternshipServiceImpl(
         val bookmarkedInternships = internships.filter { it.bookmarked }
 
         return if (bookmarkedInternships.isNotEmpty()) {
-            bookmarkedInternships.map { internshipMapper.internshipToInternshipResponseDTO(it) }
+            bookmarkedInternships.map { internshipMapper.internshipTOInternshipResponse(it) }
         } else {
             null // Return null if no bookmarked internships are found
         }

@@ -125,7 +125,7 @@ interface CompanyService {
      * @return A list of all internships for the company.
      * @throws NoSuchElementException if no internships are found.
      */
-    fun getInternships(username: String): List<InternshipResponseDTO>
+    fun getInternships(username: String): List<InternshipResponse>
 
 
     /**
@@ -134,10 +134,12 @@ interface CompanyService {
      * @param internshipId The ID of the internship.
      * @return The internship response DTO if found, null otherwise.
      */
-    fun getInternship(username: String, internshipId: Long): InternshipResponseDTO?
+    fun getInternship(username: String, internshipId: Long): InternshipResponse?
 
 
     fun getAllModalities(): List<ModalityResponse>
+
+    fun updateInternship(username: String, dto: InternshipRequestUpdateDTO): InternshipResponse?
 
 }
 

@@ -79,13 +79,13 @@ class CompanyController (private val service: CompanyService) {
     }
 
     @GetMapping("{username}/internships")
-    fun getCompanyInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponseDTO>>? {
+    fun getCompanyInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponse>>? {
         val internships = service.getInternships(username)
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }
 
     @GetMapping("{username}/internships/{internshipId}")
-    fun getCompanyInternship(@PathVariable username: String, @PathVariable internshipId: Long) : ResponseEntity<InternshipResponseDTO> {
+    fun getCompanyInternship(@PathVariable username: String, @PathVariable internshipId: Long) : ResponseEntity<InternshipResponse> {
         val internship = service.getInternship(username, internshipId)
         return ResponseEntity.status(HttpStatus.OK).body(internship)
     }
@@ -96,5 +96,11 @@ class CompanyController (private val service: CompanyService) {
         return ResponseEntity.status(HttpStatus.OK).body(modalities)
     }
 
+
+    @PatchMapping("{username}/internships")
+    fun updateInternship(@PathVariable("username") username: String, @RequestBody dto: InternshipRequestUpdateDTO): ResponseEntity<InternshipResponse> {
+        val internship = service.updateInternship(username, dto)
+        return ResponseEntity.status(HttpStatus.OK).body(internship)
+    }
 
 }

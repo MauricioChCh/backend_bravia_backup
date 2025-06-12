@@ -2,6 +2,7 @@ package org.example.backendoportuniabravo.service
 
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
+import org.example.backendoportuniabravo.dto.InternshipResponse
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
 
 /**
@@ -73,5 +74,5 @@ interface InternshipService {
      * @param userId The ID of the user.
      * @return A list of bookmarked internships, or null if none are found.
      */
-    fun getBookmarkedInternships(username: String): List<InternshipResponseDTO>?
+    fun getBookmarkedInternships(username: String): List<InternshipResponse>?
 }

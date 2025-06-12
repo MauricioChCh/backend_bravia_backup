@@ -2,6 +2,7 @@ package org.example.backendoportuniabravo.webService
 
 import org.example.backendoportuniabravo.dto.InternshipPatchDTO
 import org.example.backendoportuniabravo.dto.InternshipRequestDTO
+import org.example.backendoportuniabravo.dto.InternshipResponse
 import org.example.backendoportuniabravo.dto.InternshipResponseDTO
 import org.example.backendoportuniabravo.entity.MarkedInternship
 import org.example.backendoportuniabravo.service.InternshipService
@@ -95,7 +96,7 @@ class InternshipController(private val service: InternshipService) {
     }
 
     @GetMapping("/users/{username}/bookmarked")
-    fun getBookmarkedInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponseDTO>>? {
+    fun getBookmarkedInternships(@PathVariable username: String) : ResponseEntity<List<InternshipResponse>>? {
         val internships = service.getBookmarkedInternships(username)
         return ResponseEntity.status(HttpStatus.OK).body(internships)
     }

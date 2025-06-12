@@ -14,7 +14,7 @@ data class InternshipResponseDTO(
     val companyName: String,
     val cityName: String? = null,
     val countryName: String,
-    val modality: ModalityResponse,
+    val modality: ModalityResponse?,
     val schedule: String,
     val requirements: String,
     val activities: String,
@@ -31,3 +31,21 @@ data class InternshipResponseDTO(
 )
 
 
+data class InternshipResponse(
+    val id: Long?,
+    val title: String,
+    val description: String? = null,
+    val companyName: String,
+    val cityName: String? = null,
+    val countryName: String,
+    val modality: String?,
+    val schedule: String,
+    val requirements: String,
+    val activities: String,
+    val link: String,
+    val publicationDate: Date,
+    val imageUrl: String? = null,
+    val duration: String? = null,
+    val salary: Double? = null,
+    val isBookmarked: Boolean = false,
+)
