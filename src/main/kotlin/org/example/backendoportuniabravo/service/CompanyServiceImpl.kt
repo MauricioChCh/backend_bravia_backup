@@ -42,7 +42,8 @@ class CompanyServiceImpl(
     private val markedInternshipRepository: MarkedInternshipRepository,
     private val modalityRepository: ModalityRepository,
     private val modalityMapper: ModalityMapper,
-    private val cityMapper: CityMapper
+    private val cityMapper: CityMapper,
+    private val countryMapper: CountryMapper
 ) : CompanyService {
 
     /**
@@ -484,6 +485,20 @@ class CompanyServiceImpl(
         }
     }
 
+    override fun getAllCountries(): List<CountryDetails> {
+        return countryRepository.findAll().map { country ->
+            countryMapper.countryToCountryDetails(country)
+        }
+    }
+
+    override fun getAllTags(): List<TagDetails> {
+        return tagRepository.findAll().map { tag ->
+            TagDetails(
+                id = tag.id,
+                name = tag.name,
+            )
+        }
+    }
 
     /**
      * Marks internships as bookmarked for a user.

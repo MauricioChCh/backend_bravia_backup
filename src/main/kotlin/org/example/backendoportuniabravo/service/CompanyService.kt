@@ -143,5 +143,9 @@ interface CompanyService {
 
     fun getAllCities(): List<CityDetails>
 
+    fun getAllCountries(): List<CountryDetails>
+
+    fun getAllTags(): List<TagDetails>
+
 }
 
